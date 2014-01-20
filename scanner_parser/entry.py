@@ -13,4 +13,5 @@ class InputError(EntryError):
 
 class Entry():
     " Lines of characters containing figures that represent an account number "
-    pass
+    def __init__(self,lines):
+        pass
