@@ -6,13 +6,6 @@ import random
 
 import settings
 
-def with_each(items):
-    " decorate a function by calling it once for each item in iterable "
-    def decorated_function(function):
-        for i in items:
-            function(i)
-    return decorated_function
-
 def gen_strings(requested_count,string_generator):
     " return a number of strings using the provided generator "
     generated_count = 0
@@ -42,7 +35,9 @@ def random_valid_string():
     " return a random string of valid length with valid characters "
     return random_valid_characters(settings.characters_per_figure)
 
-class StringType:
+class StringGenerators:
+
+    " collection of static methods that each return a figure string "
 
     @staticmethod
     def too_short():
@@ -63,20 +58,20 @@ class StringType:
     @staticmethod
     def adulterated():
         " return random string containing at least one bad character "
-        bad_character = random.choice(bad_characters)
         good_string = random_valid_string()
+        bad_character = random.choice(bad_characters)
         victim_character = random.choice(good_string)
         return good_string.replace(victim_character,bad_character)
 
     @staticmethod
-    def unrecognized():
+    def unknown():
         " return random valid string not found settings.figures "
-        figure = random_valid_figure()
+        figure = random_valid_string()
         while figure in settings.figures.keys():
-            figure = random_valid_figure()
+            figure = random_valid_string()
         return figure
 
     @staticmethod
-    def recognized():
+    def known():
         " return a random valid figure format from settings.figures "
         return random.choice(settings.figures.keys())

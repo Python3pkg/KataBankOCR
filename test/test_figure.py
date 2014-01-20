@@ -5,44 +5,54 @@
 import pytest
 
 import settings
-from figure_testing_tools import with_each, gen_strings
-from figure_testing_tools import StringType
-from scanner_parser.figure import Figure
+from figure_testing_tools import gen_strings
+from figure_testing_tools import StringGenerators as StrGen
+from scanner_parser.figure import Figure, InputError
 
 def test_instantiation_with_no_argument():
     with pytest.raises(TypeError):
         f = Figure()
 
-@with_each(settings.figures.keys())
-def test_instantiation_with_valid_string(fs):
-    Figure(fs)
+def test_instantiation_with_multiple_arguments(min=2,max=10):
+    args = min
+    while args <= max:
+        with pytest.raises(TypeError):
+            f = Figure(*range(args))
+        args += 1
+    
+def test_instantiation_with_valid_string():
+    for valid_string in settings.figures.keys():
+        f = Figure(valid_string)
+        assert isinstance(f,Figure)
 
-@with_each(gen_strings(50,StringType.too_short))
-def test_insufficient_string_length(short_string):
-    with pytest.raises('figure_string_too_short'):
-        f = Figure(short_string)
+def test_instantiation_with_non_string():
+    for non_string in (1,False,True,3.14359,[],{},0,-10):
+        with pytest.raises(InputError): # 'not a string'
+            f = Figure(non_string)
 
-@with_each(gen_strings(50,StringType.too_long))
-def test_excessive_string_length(long_string):
-    with pytest.raises('figure_string_too_long'):
-        f = Figure(long_string)
+def test_instantiation_with_insufficient_string_length():
+    for short_string in gen_strings(50,StrGen.too_short):
+        with pytest.raises(InputError): # 'figure string too short'
+            f = Figure(short_string)
 
-@with_each(gen_strings(50,StringType.adulterated))
-def test_adulterated_string(bad_string):
-    with pytest.raises('invalid_figure_characters'):
-        f = Figure(bad_string)
+def test_instantiation_with_excessive_string_length():
+    for long_string in gen_strings(50,StrGen.too_long):
+        with pytest.raises(InputError): # 'figure string too long'
+            f = Figure(long_string)
 
-@with_each((1,False,True,3.14359,[]))
-def test_non_string(non_string):
-    with pytest.raises('not a string'):
-        f = Figure(non_string)
+def test_instantiation_with_adulterated_string():
+    for bad_string in gen_strings(50,StrGen.adulterated):
+        with pytest.raises(InputError): # 'invalid figure characters'
+            f = Figure(bad_string)
 
-@with_each(gen_strings(50,StringType.unrecognized))
-def test_unrecognized_figures(unrecognized_string):
-    with pytest.raises('unrecognized_figure'):
-        f = Figure(unrecognized_string)
+def test_instantiation_with_unknown_string():
+    for unknown_string in gen_strings(50,StrGen.unknown):
+        with pytest.raises(InputError): # 'unknown figure'
+            f = Figure(unknown_string)
 
-@with_each(gen_strings(50,StringType.recognized))
-def test_recognized_figures(recognized_string):
-    f = Figure(recognized_string)
-    assert Figure.value == settings.figures[recognized_string]
+def test_instantiation_with_known_string():
+    for known_string in gen_strings(50,StrGen.known):
+        f = Figure(known_string)
+        expected = settings.figures[known_string]
+        actual = f.value
+        assert actual == expected
