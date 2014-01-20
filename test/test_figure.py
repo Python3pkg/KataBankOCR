@@ -3,13 +3,11 @@
 " Test the figure module "
 
 import pytest
-import random
 
 import settings
-from scanner_parser.figure import Figure
 from figure_testing_tools import with_each, gen_strings
 from figure_testing_tools import StringType
-
+from scanner_parser.figure import Figure
 
 def test_instantiation_with_no_argument():
     with pytest.raises(TypeError):
@@ -48,12 +46,3 @@ def test_unrecognized_figures(unrecognized_string):
 def test_recognized_figures(recognized_string):
     f = Figure(recognized_string)
     assert Figure.value == settings.figures[recognized_string]
-
-
-#lines_per_entry
-#figures_per_entry
-#figure_width
-#characters_per_figure
-#valid_figure_characters
-#figures
-#last_line_empty
