@@ -13,13 +13,13 @@ setting_types = {int:('lines_per_entry',
                  bool:('last_line_empty',),
                  }
 
-def test_setting_existence():
+def test_all_settings_exist():
     """ confirm each expected setting exists """
     for type in setting_types:
         for setting_name in setting_types[type]:
             assert settings.__dict__.has_key(setting_name)
 
-def test_type_correctness():
+def test_all_settings_of_correct_type():
     """ confirm each setting has the expected type """
     for type in setting_types:
         for setting_name in setting_types[type]:
@@ -29,21 +29,21 @@ def test_type_correctness():
 
 figures = settings.figures
 
-def test_uniqueness():
+def test_all_figures_unique():
     """ confirm no duplicate figures exist """
     assert len(set(figures)) == len(figures)
 
-def test_representativeness():
+def test_all_values_represented():
     """ confirm figures has exactly the expected values """
     assert set(figures.values()) == set(settings.values)
 
-def test_length():
+def test_figure_string_has_correct_length():
     """ confirm each figure contains the correct number of characters """
     for s in figures:
         assert len(s) == settings.characters_per_figure
 
-def test_components():
-    """ confirm each figure composed only of spaces, underscores, and pipes """
+def test_figure_composed_entirely_of_valid_components():
+    """ confirm each figure consists only of spaces, underscores, and pipes """ 
     chars = settings.valid_figure_characters
     for s in figures:
         assert set(chars).issuperset(s)
