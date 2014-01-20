@@ -11,12 +11,20 @@ from scanner_parser import entry
 #from figure_testing_tools import StringGenerators as StrGen
 from scanner_parser.entry import Entry, InputError
 
+ideas="""
+possible InputErrors
+    too many lines
+    too few lines
+    non string
+    line too short
+    line too long
+    last line un-empty
 
-#receive lines (list of strings)
-#confirm fourth line blank
-#loop over lines to accumulate figure strings
-#concatenate figure values into account number
+lines to figures
 
+concat figure values into account number
+
+"""
 
 
 #lines_per_entry
