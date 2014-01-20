@@ -30,7 +30,7 @@ def test_instantiation_with_valid_string():
 
 def test_instantiation_with_non_string():
     " confirm figure requires a string as its argument "
-    arbitrary_non_string_values = (0,1,-10,False,True,3.14359,[],{},set())
+    arbitrary_non_string_values = (0,1,-10,False,True,3.14359,(),[],{},set())
     for non_string in arbitrary_non_string_values:
         with pytest.raises(InputError): # 'not a string'
             f = Figure(non_string)
