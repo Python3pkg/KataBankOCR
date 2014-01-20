@@ -2,7 +2,9 @@
 
 " Tools to assist with testing the figure module "
 
+arbitrary_non_string_values = (0,1,-10,False,True,3.14359,(),[],{},set())
 
+# Valid entry lines and their represented account numbers
 entries= {
     (' _  _  _  _  _  _  _  _  _ ',
      '| || || || || || || || || |',
