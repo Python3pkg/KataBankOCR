@@ -8,17 +8,11 @@ import random
 import settings
 from scanner_parser import entry
 
-from entry_testing_tools import entries, arbitrary_non_string_values
+from testing_tools import repeats
+from entry_testing_tools import entries
+from entry_testing_tools import random_non_blank_valid_character
+from entry_testing_tools import arbitrary_non_string_values
 from scanner_parser.entry import Entry, InputError
-
-
-def repeats(count):
-    def decorator(function):
-        def decorated_function(*args, **kwargs):
-            for i in range(count):
-                function(*args, **kwargs)
-        return decorated_function
-    return decorator
 
 def test_instantiation_with_no_argument():
     " confirm Entry requires more than zero arguments "
@@ -63,7 +57,7 @@ def test_instantiation_with_tuple_of_excessive_length():
             e = Entry(range(lines))
         lines += 1
 
-@repeats(50)
+@repeats(1000)
 def test_instantiation_with_tuple_containing_a_non_string():
     " confirm Entry checks type of all tuple values "
     victim_list = list(random.choice(entries.keys()))
@@ -73,9 +67,9 @@ def test_instantiation_with_tuple_containing_a_non_string():
     victim_list[victim_line_index] = non_string_value
     adulterated_tuple = tuple(victim_list)
     with pytest.raises(InputError): # 'non-string in tuple'
-        e = Entry(adulerated_tuple)
+        e = Entry(adulterated_tuple)
 
-@repeats(50)
+@repeats(1000)
 def test_instantiation_with_a_tuple_containing_too_short_a_string():
     " confirm Entry checks minimum string length "
     victim_list = list(random.choice(entries.keys()))
@@ -88,13 +82,13 @@ def test_instantiation_with_a_tuple_containing_too_short_a_string():
     with pytest.raises(InputError): # 'string in tuple too short'
         e = Entry(altered_tuple)
 
-@repeats(50)
+@repeats(1000)
 def test_instantiation_with_a_tuple_containing_too_long_a_string():
     " confirm Entry checks maximum string length "
     victim_list = list(random.choice(entries.keys()))
     victim_line_index = random.choice(range(len(victim_list)))
     victim_line = victim_list[victim_line_index]
-    additional_length = random.choice(range(len(victim_line)))
+    additional_length = random.choice(range(len(victim_line))) + 1
     additional_text = victim_line[:additional_length]
     excessively_long_line = victim_line + additional_text
     victim_list[victim_line_index] = excessively_long_line
@@ -103,14 +97,14 @@ def test_instantiation_with_a_tuple_containing_too_long_a_string():
         e = Entry(altered_tuple)
 
 
-@repeats(50)
+@repeats(1000)
 def test_instantiation_with_a_tuple_containing_a_non_empty_last_line():
     " confirm Entry veryify last line in tuple as empty "
     if settings.last_line_empty:
         victim_list = list(random.choice(entries.keys()))
-        victime_line_index = settings.lines_per_entry-1
+        victim_line_index = settings.lines_per_entry-1
         victim_line = victim_list[victim_line_index]
-        additional_character = random.choice(settings.valid_figure_characters)
+        additional_character = random_non_blank_valid_character()
         replaced_character_position = random.choice(range(len(victim_line)))
         char,pos = additional_character, replaced_character_position
         altered_line = victim_line[:pos] + char + victim_line[pos+1:]

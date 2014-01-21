@@ -2,6 +2,10 @@
 
 " Tools to assist with testing the figure module "
 
+import random
+
+from testing_tools import random_valid_character
+
 arbitrary_non_string_values = (0,1,-10,False,True,3.14359,(),[],{},set())
 
 # Valid entry lines and their represented account numbers
@@ -51,4 +55,11 @@ entries= {
      '  ||_  _|  | _||_|  ||_| _|',
      '                           '):'123456789',
     }
+
+
+def random_non_blank_valid_character():
+    while True:
+        rvc = random_valid_character()
+        if len(rvc.strip()) > 0:
+            return rvc
 
