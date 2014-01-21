@@ -49,22 +49,23 @@ def test_instantiation_with_excessive_string_length():
     with pytest.raises(InputError): # 'figure string too long'
         f = Figure(StrGen.too_long())
 
+@repeats(1000)
 def test_instantiation_with_adulterated_string():
     " confirm Figure checks for inappropriate characters in its input string "
-    for bad_string in gen_strings(50,StrGen.adulterated):
-        with pytest.raises(InputError): # 'invalid figure characters'
-            f = Figure(bad_string)
+    with pytest.raises(InputError): # 'invalid figure characters'
+        f = Figure(StrGen.adulterated())
 
+@repeats(1000)
 def test_instantiation_with_unknown_string():
     " confirm Figure refuses unknown strings "
-    for unknown_string in gen_strings(50,StrGen.unknown):
-        with pytest.raises(InputError): # 'unknown figure'
-            f = Figure(unknown_string)
+    with pytest.raises(InputError): # 'unknown figure'
+        f = Figure(StrGen.unknown())
 
+@repeats(1000)
 def test_instantiation_with_known_string():
     " confirm Figure correctly identifies known strings "
-    for known_string in gen_strings(50,StrGen.known):
-        f = Figure(known_string)
-        expected = settings.figures[known_string]
-        actual = f.value
-        assert actual == expected
+    known_string = StrGen.known()
+    f = Figure(known_string)
+    expected = settings.figures[known_string]
+    actual = f.value
+    assert actual == expected
