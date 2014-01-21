@@ -11,12 +11,10 @@ from translators import account_number_to_lines
 class MakeAccountCharacter:
     " collection of methods that each return an account character "
 
-    values = settings.values
-
     @classmethod
     def valid(cls):
         " return a randomly selected valid account character "
-        return random.choice(cls.values)
+        return random.choice(settings.values)
 
 class MakeAccountString:
     " collection of methods that each return an account number string "
@@ -31,12 +29,13 @@ class MakeAccountString:
 class MakeFigureCharacter:
     " collection of methods that each return a figure character "
 
-    values = settings.valid_figure_characters
-
     @classmethod
     def valid(cls):
         " return a randomly selected valid figure character "
-        return random.choice(cls.values)
+        return random.choice(settings.valid_figure_characters)
+
+    # confirm at least one non-blank figure character exists
+    assert len(''.join(settings.valid_figure_characters).strip()) > 0
 
     @classmethod
     def non_blank_valid(cls):
