@@ -3,8 +3,8 @@
 """ Test the scanner_parser module"""
 
 import settings
+from makers import MakeInputFile
 from scanner_parser import scanner_parser
-from generators import GenFile
 
 FileErrors = """
     can't open file

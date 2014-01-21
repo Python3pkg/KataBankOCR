@@ -7,10 +7,9 @@ import random
 
 import settings
 
-from generators import GenCharacter, GenString
-from testing_tools import repeats
-from testing_tools import account_number_to_lines
-from testing_tools import numeral_to_figure_string
+from makers import MakeFigureCharacter, MakeAccountString, MakeEntryLines
+from decorators import repeats
+from translators import account_number_to_lines, numeral_to_figure_string
 from entry_testing_tools import entries, arbitrary_non_string_values
 from scanner_parser.entry import Entry, InputError, lines_to_figure_strings
 
@@ -57,66 +56,35 @@ def test_instantiation_with_tuple_of_excessive_length():
             e = Entry(range(lines))
         lines += 1
 
-@repeats(1000)
+@repeats(50)
 def test_instantiation_with_tuple_containing_a_non_string():
     " confirm Entry checks type of all tuple values "
-    victim_list = list(random.choice(entries.keys()))
-    victim_line_index = random.choice(range(len(victim_list)))
-    victim_line = victim_list[victim_line_index]
-    non_string_value = random.choice(arbitrary_non_string_values)
-    victim_list[victim_line_index] = non_string_value
-    adulterated_tuple = tuple(victim_list)
     with pytest.raises(InputError): # 'non-string in tuple'
-        e = Entry(adulterated_tuple)
+        e = Entry(MakeEntryLines.containing_non_string())
 
 @repeats(1000)
 def test_instantiation_with_a_tuple_containing_too_short_a_string():
     " confirm Entry checks minimum string length "
-    victim_list = list(random.choice(entries.keys()))
-    victim_line_index = random.choice(range(len(victim_list)))
-    victim_line = victim_list[victim_line_index]
-    new_line_length = random.choice(range(len(victim_line)))
-    abbreviated_line = victim_line[:new_line_length]
-    victim_list[victim_line_index] = abbreviated_line
-    altered_tuple = tuple(victim_list)
     with pytest.raises(InputError): # 'string in tuple too short'
-        e = Entry(altered_tuple)
+        e = Entry(MakeEntryLines.abbreviated_string())
 
 @repeats(1000)
 def test_instantiation_with_a_tuple_containing_too_long_a_string():
     " confirm Entry checks maximum string length "
-    victim_list = list(random.choice(entries.keys()))
-    victim_line_index = random.choice(range(len(victim_list)))
-    victim_line = victim_list[victim_line_index]
-    additional_length = random.choice(range(len(victim_line))) + 1
-    additional_text = victim_line[:additional_length]
-    excessively_long_line = victim_line + additional_text
-    victim_list[victim_line_index] = excessively_long_line
-    altered_tuple = tuple(victim_list)
     with pytest.raises(InputError): # 'string in tuple too long'
-        e = Entry(altered_tuple)
-
+        e = Entry(MakeEntryLines.extended_string())
 
 @repeats(1000)
 def test_instantiation_with_a_tuple_containing_a_non_empty_last_line():
     " confirm Entry verifies last line in tuple as empty "
     if settings.last_line_empty:
-        victim_list = list(random.choice(entries.keys()))
-        victim_line_index = settings.lines_per_entry-1
-        victim_line = victim_list[victim_line_index]
-        additional_character = GenCharacter.Figure.non_blank_valid()
-        replaced_character_position = random.choice(range(len(victim_line)))
-        char,pos = additional_character, replaced_character_position
-        altered_line = victim_line[:pos] + char + victim_line[pos+1:]
-        victim_list[victim_line_index] = altered_line
-        altered_tuple = tuple(victim_list)
         with pytest.raises(InputError): # 'last line in tuple not empty'
-            e = Entry(altered_tuple)
+            e = Entry(MakeEntryLines.non_empty_last_line())
 
 @repeats(1000)
 def test_lines_to_figure_strings():
     " confirm lines_to_figure_strings properly parses some known values "
-    account_number = GenString.AccountNumber.valid()
+    account_number = MakeAccountString.valid()
     entry_lines = account_number_to_lines(account_number)
     figure_strings = [numeral_to_figure_string(n) for n in account_number]
     assert lines_to_figure_strings(entry_lines) == figure_strings
@@ -124,7 +92,7 @@ def test_lines_to_figure_strings():
 @repeats(1000)
 def test_recognition_of_numbers_in_valid_lines():
     " confirm Entry parses valid entry lines into correct account number "
-    account_number = GenString.AccountNumber.valid()
+    account_number = MakeAccountString.valid()
     entry_lines = account_number_to_lines(account_number)
     e = Entry(tuple(entry_lines))
     assert e.account_number == account_number
