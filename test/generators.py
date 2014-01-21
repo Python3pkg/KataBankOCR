@@ -105,10 +105,9 @@ class GenLines:
         account_number = GenString.Account.valid()
         return account_number_to_lines(account_number)
 
-foo = 1
-
 class GenFile:
     " collection of methods that each return a file "
     @classmethod
-    def create_test_file(list_of_account_numers):
+    def valid():
+        " return a file representing 500 random valid account numbers "
         pass

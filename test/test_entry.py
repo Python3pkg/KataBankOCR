@@ -99,7 +99,7 @@ def test_instantiation_with_a_tuple_containing_too_long_a_string():
 
 @repeats(1000)
 def test_instantiation_with_a_tuple_containing_a_non_empty_last_line():
-    " confirm Entry veryify last line in tuple as empty "
+    " confirm Entry verifies last line in tuple as empty "
     if settings.last_line_empty:
         victim_list = list(random.choice(entries.keys()))
         victim_line_index = settings.lines_per_entry-1
