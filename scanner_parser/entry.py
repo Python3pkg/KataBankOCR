@@ -10,8 +10,8 @@ class EntryError(Exception):
 
 class InputError(EntryError):
     " Exception raised for errors in the input "
-    def __init__(self,value):
-        self.value = value
+    def __init__(self,msg):
+        self.message = msg
 
 def lines_to_figure_strings(lines):
     figure_count = settings.figures_per_entry

@@ -12,15 +12,13 @@ from scanner_parser.figure import Figure, InputError
 
 def test_instantiation_with_no_argument():
     " confirm Figure require more than zero arguments "
-    with pytest.raises(TypeError):
-        f = Figure()
+    pytest.raises(TypeError,Figure)
 
 def test_instantiation_with_multiple_arguments(min=2,max=10):
     " confirm Figure requires fewer than 2 arguments "
     args = min
     while args <= max:
-        with pytest.raises(TypeError):
-            f = Figure(*range(args))
+        pytest.raises(TypeError,Figure,*range(args))
         args += 1
     
 def test_instantiation_with_valid_string():
@@ -33,32 +31,32 @@ def test_instantiation_with_non_string():
     " confirm Figure requires a string as its argument "
     arbitrary_non_string_values = (0,1,-10,False,True,3.14,(),[],{},set())
     for non_string in arbitrary_non_string_values:
-        with pytest.raises(InputError): # 'not a string'
-            f = Figure(non_string)
+        e = pytest.raises(InputError, Figure, non_string)
+        assert str(e.value.message) == 'not a string'
 
-@repeats(1000)
+@repeats(100)
 def test_instantiation_with_insufficient_string_length():
     " confirm Figure checks minimum string length "
-    with pytest.raises(InputError): # 'figure string too short'
-        f = Figure(MakeFigureString.too_short())
+    e = pytest.raises(InputError, Figure, MakeFigureString.too_short())
+    assert e.value.message == 'figure string too short'
 
-@repeats(1000)
+@repeats(100)
 def test_instantiation_with_excessive_string_length():
     " confirm Figure checks maximum string length "
-    with pytest.raises(InputError): # 'figure string too long'
-        f = Figure(MakeFigureString.too_long())
+    e = pytest.raises(InputError, Figure, MakeFigureString.too_long())
+    assert e.value.message == 'figure string too long'
 
-@repeats(1000)
+@repeats(100)
 def test_instantiation_with_adulterated_string():
     " confirm Figure checks for inappropriate characters in its input string "
-    with pytest.raises(InputError): # 'invalid figure characters'
-        f = Figure(MakeFigureString.adulterated())
+    e = pytest.raises(InputError, Figure, MakeFigureString.adulterated())
+    assert e.value.message == 'invalid figure characters'
 
 @repeats(1000)
 def test_instantiation_with_unknown_string():
     " confirm Figure refuses unknown strings "
-    with pytest.raises(InputError): # 'unknown figure'
-        f = Figure(MakeFigureString.unknown())
+    e = pytest.raises(InputError, Figure, MakeFigureString.unknown())
+    assert e.value.message == 'unknown figure'
 
 @repeats(1000)
 def test_instantiation_with_known_string():

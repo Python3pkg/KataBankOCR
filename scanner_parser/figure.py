@@ -8,8 +8,8 @@ class FigureError(Exception):
 
 class InputError(FigureError):
     " Exception raised for errors in the input "
-    def __init__(self,value):
-        self.value = value
+    def __init__(self,msg):
+        self.message = msg
 
 class Figure():
     """ A multi-character string that represents a single character """
@@ -34,5 +34,5 @@ class Figure():
         if self.figure_string in settings.figures:
             self.value = settings.figures[self.figure_string]
         else:
-            raise(InputError('unrecognized figure'))
+            raise(InputError('unknown figure'))
 
