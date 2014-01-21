@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-" These functions create and return values useful for testing "
+" Class-grouped functions that create and return values useful for testing "
 
 import random
 
@@ -48,6 +48,7 @@ class MakeFigureCharacter:
 
 class MakeFigureString:
     " collection of methods that each return a figure string "
+
     valid_length = settings.characters_per_figure
     vfc = MakeFigureCharacter.valid
 
@@ -94,7 +95,7 @@ class MakeEntryLines:
     " collection of methods that each return a tuple of entry lines "
 
     @classmethod
-    def from_random_account_number(cls):
+    def valid(cls):
         " return a tuple of lines representing a random account number "
         account_number = MakeAccountString.valid()
         return account_number_to_lines(account_number)
@@ -104,7 +105,7 @@ class MakeEntryLines:
         """ return a list of entry lines and a random index from that list 
 
         provides a mutable target to abuse """
-        victim_list = list(cls.from_random_account_number())
+        victim_list = list(cls.valid())
         victim_line_index = random.choice(range(len(victim_list)))
         return victim_list, victim_line_index
 
@@ -155,6 +156,7 @@ class MakeEntryLines:
 
 class MakeInputFile:
     " collection of methods that each returns an input file for scannerparser "
+
     @classmethod
     def valid():
         " return a file representing 500 random valid account numbers "

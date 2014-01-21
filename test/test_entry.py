@@ -7,10 +7,9 @@ import random
 
 import settings
 
-from makers import MakeFigureCharacter, MakeAccountString, MakeEntryLines
+from makers import MakeAccountString, MakeEntryLines
 from decorators import repeats
 from translators import account_number_to_lines, numeral_to_figure_string
-from entry_testing_tools import entries, arbitrary_non_string_values
 from scanner_parser.entry import Entry, InputError, lines_to_figure_strings
 
 def test_instantiation_with_no_argument():
@@ -26,14 +25,15 @@ def test_instantiation_with_multiple_arguments(min=2,max=10):
             e = Entry(*range(args))
         args += 1
     
+@repeats(1000)
 def test_instantiation_with_valid_lines():
     " confirm Entry instantiates with a valid string argument "
-    for valid_string in entries.keys():
-        e = Entry(valid_string)
-        assert isinstance(e,Entry)
+    e = Entry(MakeEntryLines.valid())
+    assert isinstance(e,Entry)
 
 def test_instantiation_with_non_tuple():
     " confirm Entry requires a tuple as its argument "
+    arbitrary_non_string_values = (0,1,-10,False,True,3.14359,'',[],{},set())
     for non_string in arbitrary_non_string_values:
         with pytest.raises(InputError): # 'not a tuple'
             e = Entry(non_string)

@@ -24,5 +24,5 @@ def account_number_to_lines(account_number):
             substring = figure_string[first_char_index:last_char_index]
             line += substring
         lines.append(line)
-    return lines
+    return tuple(lines)
 
