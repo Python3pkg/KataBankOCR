@@ -2,6 +2,8 @@
 
 import settings
 
+from figure import Figure
+
 class EntryError(Exception):
     " Base class for exceptions in this module "
     pass
@@ -51,6 +53,6 @@ class Entry():
 
     def parse_lines(self):
         figure_strings = lines_to_figure_strings(self.lines)
-
-#        self.figures = [Figure(fs) for fs in figure_strings]
-#        self.account_number = ''.join(Figure(figure_string).value)
+        self.figures = [Figure(fs) for fs in figure_strings]
+        figure_values = [f.value for f in self.figures]
+        self.account_number = ''.join(figure_values)
