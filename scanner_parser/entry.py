@@ -12,10 +12,20 @@ class InputError(EntryError):
         self.value = value
 
 def lines_to_figure_strings(lines):
-    pass
+    figure_count = settings.figures_per_entry
+    figure_strings = ['' for i in range(figure_count)]
+    for line_index in range(len(lines)):
+        line = lines[line_index]
+        for figure_index in range(figure_count):
+            start_char_index = figure_index * settings.figure_width
+            end_char_index = start_char_index + settings.figure_width
+            substring = line[start_char_index:end_char_index]
+            figure_strings[figure_index] += substring
+    return figure_strings
 
 class Entry():
     " Lines of characters containing figures that represent an account number "
+
     def __init__(self,lines):
         self.lines = lines
         self.validate_lines()
@@ -40,5 +50,7 @@ class Entry():
             raise(InputError('last line in tuple not empty'))
 
     def parse_lines(self):
-        self.figure_strings = lines_to_figure_strings(self.lines)
+        figure_strings = lines_to_figure_strings(self.lines)
 
+#        self.figures = [Figure(fs) for fs in figure_strings]
+#        self.account_number = ''.join(Figure(figure_string).value)
