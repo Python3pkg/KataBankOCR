@@ -6,13 +6,12 @@ import pytest
 import random
 
 import settings
-from scanner_parser import entry
 
-from testing_tools import repeats, random_account_number
-from testing_tools import random_non_blank_valid_character
+from generators import GenCharacter, GenString
+from testing_tools import repeats
+from testing_tools import account_number_to_lines
+from testing_tools import numeral_to_figure_string
 from entry_testing_tools import entries, arbitrary_non_string_values
-from entry_testing_tools import account_number_to_lines
-from entry_testing_tools import numeral_to_figure_string
 from scanner_parser.entry import Entry, InputError, lines_to_figure_strings
 
 def test_instantiation_with_no_argument():
@@ -105,7 +104,7 @@ def test_instantiation_with_a_tuple_containing_a_non_empty_last_line():
         victim_list = list(random.choice(entries.keys()))
         victim_line_index = settings.lines_per_entry-1
         victim_line = victim_list[victim_line_index]
-        additional_character = random_non_blank_valid_character()
+        additional_character = GenCharacter.Figure.non_blank_valid()
         replaced_character_position = random.choice(range(len(victim_line)))
         char,pos = additional_character, replaced_character_position
         altered_line = victim_line[:pos] + char + victim_line[pos+1:]
@@ -117,17 +116,25 @@ def test_instantiation_with_a_tuple_containing_a_non_empty_last_line():
 @repeats(1000)
 def test_lines_to_figure_strings():
     " confirm lines_to_figure_strings properly parses some known values "
-    account_number = random_account_number()
+    account_number = GenString.AccountNumber.valid()
     entry_lines = account_number_to_lines(account_number)
     figure_strings = [numeral_to_figure_string(n) for n in account_number]
     assert lines_to_figure_strings(entry_lines) == figure_strings
 
 @repeats(1000)
-def test_lines_to_account_numbers():
-    account_number = random_account_number()
+def test_recognition_of_numbers_in_valid_lines():
+    " confirm Entry parses valid entry lines into correct account number "
+    account_number = GenString.AccountNumber.valid()
     entry_lines = account_number_to_lines(account_number)
     e = Entry(tuple(entry_lines))
     assert e.account_number == account_number
 
-
-
+future = """
+@repeats(1000)
+def test_recognition_of_non_figure_containing_lines():
+    " confirm Entry rejects lines not containing only known figures "
+    entry_lines = account_number_to_lines(account_number)
+    adulterate lines
+    e = Entry(tuple(adulterated_entry_lines))
+    assert '?' in e.account_number
+"""

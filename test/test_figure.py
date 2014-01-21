@@ -7,8 +7,7 @@ import pytest
 import settings
 
 from testing_tools import repeats
-from figure_testing_tools import gen_strings
-from figure_testing_tools import StringGenerators as StrGen
+from generators import GenString
 from scanner_parser.figure import Figure, InputError
 
 def test_instantiation_with_no_argument():
@@ -41,30 +40,30 @@ def test_instantiation_with_non_string():
 def test_instantiation_with_insufficient_string_length():
     " confirm Figure checks minimum string length "
     with pytest.raises(InputError): # 'figure string too short'
-        f = Figure(StrGen.too_short())
+        f = Figure(GenString.Figure.too_short())
 
 @repeats(1000)
 def test_instantiation_with_excessive_string_length():
     " confirm Figure checks maximum string length "
     with pytest.raises(InputError): # 'figure string too long'
-        f = Figure(StrGen.too_long())
+        f = Figure(GenString.Figure.too_long())
 
 @repeats(1000)
 def test_instantiation_with_adulterated_string():
     " confirm Figure checks for inappropriate characters in its input string "
     with pytest.raises(InputError): # 'invalid figure characters'
-        f = Figure(StrGen.adulterated())
+        f = Figure(GenString.Figure.adulterated())
 
 @repeats(1000)
 def test_instantiation_with_unknown_string():
     " confirm Figure refuses unknown strings "
     with pytest.raises(InputError): # 'unknown figure'
-        f = Figure(StrGen.unknown())
+        f = Figure(GenString.Figure.unknown())
 
 @repeats(1000)
 def test_instantiation_with_known_string():
     " confirm Figure correctly identifies known strings "
-    known_string = StrGen.known()
+    known_string = GenString.Figure.known()
     f = Figure(known_string)
     expected = settings.figures[known_string]
     actual = f.value
