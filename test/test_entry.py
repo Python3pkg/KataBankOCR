@@ -13,6 +13,7 @@ from entry_testing_tools import entries
 from entry_testing_tools import random_non_blank_valid_character
 from entry_testing_tools import arbitrary_non_string_values
 from scanner_parser.entry import Entry, InputError
+from scanner_parser.entry import lines_to_figure_strings
 
 def test_instantiation_with_no_argument():
     " confirm Entry requires more than zero arguments "
@@ -113,9 +114,11 @@ def test_instantiation_with_a_tuple_containing_a_non_empty_last_line():
         with pytest.raises(InputError): # 'last line in tuple not empty'
             e = Entry(altered_tuple)
 
-ideas="""
+def test_lines_to_figure_strings():
+    assert False
 
-lines to figures
+
+ideas="""
 
 concat figure values into account number
 

@@ -16,7 +16,7 @@ class Entry():
     def __init__(self,lines):
         self.lines = lines
         self.validate_lines()
-        self.parse_string()
+        self.parse_lines()
 
     def validate_lines(self):
         if not isinstance(self.lines,tuple):
@@ -36,6 +36,6 @@ class Entry():
         if settings.last_line_empty and len(last_line.strip()) > 0:
             raise(InputError('last line in tuple not empty'))
 
-    def parse_string(self):
+    def parse_lines(self):
         pass
 
