@@ -11,6 +11,9 @@ class InputError(EntryError):
     def __init__(self,value):
         self.value = value
 
+def lines_to_figure_strings(lines):
+    pass
+
 class Entry():
     " Lines of characters containing figures that represent an account number "
     def __init__(self,lines):
@@ -37,5 +40,5 @@ class Entry():
             raise(InputError('last line in tuple not empty'))
 
     def parse_lines(self):
-        pass
+        self.figure_strings = lines_to_figure_strings(self.lines)
 
