@@ -6,16 +6,14 @@ import random
 
 import settings
 
+from testing_tools import random_valid_character
+
 def gen_strings(requested_count,string_generator):
     " return a number of strings using the provided generator "
     generated_count = 0
     while generated_count <= requested_count:
         yield string_generator()
         generated_count += 1
-
-def random_valid_character():
-    " return a randomly selected valid figure character "
-    return random.choice(settings.valid_figure_characters)
 
 def random_valid_characters(length):
     " return a string built of randomly seleced valid figure characters "

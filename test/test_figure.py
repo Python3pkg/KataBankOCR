@@ -5,6 +5,8 @@
 import pytest
 
 import settings
+
+from testing_tools import repeats
 from figure_testing_tools import gen_strings
 from figure_testing_tools import StringGenerators as StrGen
 from scanner_parser.figure import Figure, InputError
@@ -35,17 +37,17 @@ def test_instantiation_with_non_string():
         with pytest.raises(InputError): # 'not a string'
             f = Figure(non_string)
 
+@repeats(1000)
 def test_instantiation_with_insufficient_string_length():
     " confirm Figure checks minimum string length "
-    for short_string in gen_strings(50,StrGen.too_short):
-        with pytest.raises(InputError): # 'figure string too short'
-            f = Figure(short_string)
+    with pytest.raises(InputError): # 'figure string too short'
+        f = Figure(StrGen.too_short())
 
+@repeats(1000)
 def test_instantiation_with_excessive_string_length():
     " confirm Figure checks maximum string length "
-    for long_string in gen_strings(50,StrGen.too_long):
-        with pytest.raises(InputError): # 'figure string too long'
-            f = Figure(long_string)
+    with pytest.raises(InputError): # 'figure string too long'
+        f = Figure(StrGen.too_long())
 
 def test_instantiation_with_adulterated_string():
     " confirm Figure checks for inappropriate characters in its input string "
