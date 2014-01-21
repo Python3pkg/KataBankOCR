@@ -6,8 +6,8 @@ import pytest
 
 import settings
 
-from decorators import repeats
-from makers import MakeFigureString
+from tools.decorators import repeats
+from tools.makers import MakeFigureString
 from scanner_parser.figure import Figure, InputError
 
 def test_instantiation_with_no_argument():

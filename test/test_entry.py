@@ -7,9 +7,9 @@ import random
 
 import settings
 
-from makers import MakeAccountString, MakeEntryLines
-from decorators import repeats
-from translators import account_number_to_lines, numeral_to_figure_string
+from tools.decorators import repeats
+from tools.makers import MakeAccountString, MakeEntryLines
+from tools.translators import account_number_to_lines, numeral_to_figure_string
 from scanner_parser.entry import Entry, InputError, lines_to_figure_strings
 
 def test_instantiation_with_no_argument():
@@ -63,19 +63,19 @@ def test_instantiation_with_tuple_containing_a_non_string():
     e = pytest.raises(InputError, Entry, MakeEntryLines.containing_non_string())
     assert e.value.message == 'non-string in tuple'
 
-@repeats(1000)
+@repeats(100)
 def test_instantiation_with_a_tuple_containing_too_short_a_string():
     " confirm Entry checks minimum string length "
     e = pytest.raises(InputError, Entry, MakeEntryLines.abbreviated_string())
     assert e.value.message == 'string in tuple too short'
 
-@repeats(1000)
+@repeats(100)
 def test_instantiation_with_a_tuple_containing_too_long_a_string():
     " confirm Entry checks maximum string length "
     e = pytest.raises(InputError, Entry, MakeEntryLines.extended_string())
     assert e.value.message == 'string in tuple too long'
 
-@repeats(1000)
+@repeats(100)
 def test_instantiation_with_a_tuple_containing_a_non_empty_last_line():
     " confirm Entry verifies last line in tuple as empty "
     if settings.last_line_empty:
