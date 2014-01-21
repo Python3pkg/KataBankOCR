@@ -122,18 +122,12 @@ def test_lines_to_figure_strings():
     figure_strings = [numeral_to_figure_string(n) for n in account_number]
     assert lines_to_figure_strings(entry_lines) == figure_strings
 
-ideas="""
+@repeats(1000)
+def test_lines_to_account_numbers():
+    account_number = random_account_number()
+    entry_lines = account_number_to_lines(account_number)
+    e = Entry(tuple(entry_lines))
+    assert e.account_number == account_number
 
-concat figure values into account number
 
-"""
-
-
-#lines_per_entry
-#figures_per_entry
-#figure_width
-#characters_per_figure
-#valid_figure_characters
-#figures
-#last_line_empty
 
