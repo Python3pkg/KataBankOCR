@@ -143,8 +143,35 @@ class MakeEntryLines:
             return line
         return cls._altered(adulterate_line, settings.lines_per_entry - 1)
 
+class MakeInputLines:
+    @classmethod
+    def valid(cls,account_number_count):
+        " return lines representing random account numbers "
+        assert isinstance(account_number_count,int)
+        assert 0 < account_number_count < 1000
+        tuples = [MakeEntryLines.valid() for i in range(account_number_count)]
+        return reduce(operator.add,tuples)
+
 class MakeInputFile:
     " collection of methods that each returns an input file "
+
+    @classmethod
+    def valid(cls,path,account_number_count):
+        " write entry lines representing random account numbers to path "
+        F = path.open('w')
+        for line in MakeInputLines.valid():
+                F.write(line+'\n')
+        F.close()
+
+    @classmethod
+    def _altered(cls,func,victim_line_index=None):
+        " make a valid tuple of lines, func a [random] line, return tuple "
+        victim_list = list(cls.valid())
+        if victim_line_index is None:
+            victim_line_index = random.choice(range(len(victim_list)))
+        victim_list[victim_line_index] = func(victim_list[victim_line_index])
+        return tuple(victim_list)
+
 
     @classmethod
     def valid(cls,path,account_number_count):
