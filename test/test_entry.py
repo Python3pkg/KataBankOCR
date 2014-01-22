@@ -19,11 +19,8 @@ def test_instantiation_with_no_argument():
 
 def test_instantiation_with_multiple_arguments(min=2,max=10):
     " confirm Entry requires fewer than 2 arguments "
-    args = min
-    while args <= max:
-        with pytest.raises(TypeError):
-            e = Entry(*range(args))
-        args += 1
+    for arg_count in range(min,max+1):
+        pytest.raises(TypeError, Entry, *range(arg_count))
     
 @repeats(1000)
 def test_instantiation_with_valid_lines():

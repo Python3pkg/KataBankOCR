@@ -16,10 +16,8 @@ def test_instantiation_with_no_argument():
 
 def test_instantiation_with_multiple_arguments(min=2,max=10):
     " confirm Figure requires fewer than 2 arguments "
-    args = min
-    while args <= max:
-        pytest.raises(TypeError,Figure,*range(args))
-        args += 1
+    for arg_count in range(min,max+1):
+        pytest.raises(TypeError, Figure, *range(arg_count))
     
 def test_instantiation_with_valid_string():
     " confirm Figure instantiates with a valid string argument "
