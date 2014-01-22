@@ -5,4 +5,7 @@
 import settings
 
 class Parser():
-    pass
+    " Parses file at path into account numbers and return them "
+
+    def __init__(self,path):
+        pass
