@@ -19,7 +19,7 @@ class MakeEntryLines:
         return account_string_to_lines(account_string)
 
     @classmethod
-    def valid(cls):
+    def from_account_string(cls, account_string):
         " return a tuple of lines representing the provided account string "
         account_string = MakeAccountString.random()
         return account_string_to_lines(account_string)
