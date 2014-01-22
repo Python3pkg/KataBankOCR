@@ -7,9 +7,10 @@ import pytest
 import settings
 
 from tools.decorators import repeats
+from tools.makers.input_lines import MakeInputLines
 from tools.makers.input_file import MakeInputFile
 from tools.makers.entry_lines import MakeEntryLines
-from parser.parser import Parser
+from parser.parser import Parser, InputError
 
 def test_instantiation_with_no_argument():
     " confirm Parser requires more than zero arguments "
@@ -21,11 +22,18 @@ def test_instantiation_with_multiple_arguments(min=2,max=10):
     for arg_count in range(min,max+1):
         pytest.raises(TypeError, Parser, *range(arg_count))
     
+def test_instantiation_with_valid_file(tmpdir):
+    " confirm Parser instantiates when given the path to valid file "
+    lines = MakeInputLines.random()
+    valid_file_path = MakeInputFile.write(tmpdir,lines)
+    p = Parser(valid_file_path)
+    assert isinstance(p, Parser)
+    
 @repeats(1000)
 def test_instantiation_with_valid_lines():
     " confirm Parser instantiates with a valid path string argument "
 #    path = 
-#    p = Entry(MakeEntryLines.valid())
+#    p = Entry(MakeInputLines.random())
 #    assert isinstance(e,Entry)
     pass
 
@@ -49,11 +57,8 @@ def test_recognition_of_numbers_in_valid_file():
 
 # NOT a real test - just briefly testing MakeInputFile
 def test_file(tmpdir):
-    account_number_count = 500
-    file_name = "%d_valid_account_numbers.txt" % account_number_count
-    path = tmpdir.join(file_name)
-    MakeInputFile.valid(path,account_number_count)
-    F = path.open()
+    lines = MakeInputLines.random()
+    F = MakeInputFile.write(tmpdir,lines).open()
     A = F.readline()
     B = F.readline()
     assert A != B
