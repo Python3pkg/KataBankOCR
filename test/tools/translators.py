@@ -11,9 +11,9 @@ def numeral_to_figure_string(numeral):
         if settings.figures[figure] == numeral:
             return figure
 
-def account_number_to_lines(account_number):
-    " return the tuple of lines that represents the given account number "
-    figure_strings = [numeral_to_figure_string(n) for n in account_number]
+def account_string_to_lines(account_string):
+    " return the tuple of lines that represents the given account string "
+    figure_strings = [numeral_to_figure_string(n) for n in account_string]
     lines = []
     for line_index in range(settings.lines_per_entry):
         line = ''

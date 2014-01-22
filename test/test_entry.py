@@ -10,7 +10,7 @@ import settings
 from tools.decorators import repeats
 from tools.makers.account_string import MakeAccountString
 from tools.makers.entry_lines import MakeEntryLines
-from tools.translators import account_number_to_lines, numeral_to_figure_string
+from tools.translators import account_string_to_lines, numeral_to_figure_string
 from parser.entry import Entry, InputError, lines_to_figure_strings
 
 def test_instantiation_with_no_argument():
@@ -83,25 +83,25 @@ def test_instantiation_with_a_tuple_containing_a_non_empty_last_line():
 @repeats(1000)
 def test_lines_to_figure_strings():
     " confirm lines_to_figure_strings properly parses random entry lines "
-    account_number = MakeAccountString.random()
-    entry_lines = account_number_to_lines(account_number)
-    figure_strings = [numeral_to_figure_string(n) for n in account_number]
+    account_string = MakeAccountString.random()
+    entry_lines = account_string_to_lines(account_string)
+    figure_strings = [numeral_to_figure_string(n) for n in account_string]
     assert lines_to_figure_strings(entry_lines) == figure_strings
 
 @repeats(1000)
-def test_recognition_of_numbers_in_valid_lines():
-    " confirm Entry parses random entry lines into correct account number "
-    account_number = MakeAccountString.random()
-    entry_lines = account_number_to_lines(account_number)
+def test_correctly_parses_lines():
+    " confirm Entry parses random entry lines into correct account strings "
+    account_string = MakeAccountString.random()
+    entry_lines = account_string_to_lines(account_string)
     e = Entry(tuple(entry_lines))
-    assert e.account_number == account_number
+    assert e.account_string == account_string
 
 future = """
 @repeats(1000)
 def test_recognition_of_non_figure_containing_lines():
     " confirm Entry rejects lines not containing only known figures "
-    entry_lines = account_number_to_lines(account_number)
+    entry_lines = account_string_to_lines(account_string)
     adulterate lines
     e = Entry(tuple(adulterated_entry_lines))
-    assert '?' in e.account_number
+    assert '?' in e.account_string
 """

@@ -28,7 +28,7 @@ def lines_to_figure_strings(lines):
     return figure_strings
 
 class Entry():
-    " Lines of characters containing figures that represent an account number "
+    " Lines of characters containing figures that represent an account string "
 
     def __init__(self,lines):
         self.lines = lines
@@ -57,4 +57,4 @@ class Entry():
         figure_strings = lines_to_figure_strings(self.lines)
         self.figures = [Figure(fs) for fs in figure_strings]
         figure_values = [f.value for f in self.figures]
-        self.account_number = ''.join(figure_values)
+        self.account_string = ''.join(figure_values)

@@ -4,19 +4,25 @@ import random
 
 import settings
 
-from tools.translators import account_number_to_lines
+from tools.translators import account_string_to_lines
 
 from tools.makers.account_string import MakeAccountString
 from tools.makers.figure_character import MakeFigureCharacter
 
 class MakeEntryLines:
-    "  methods that return a tuple of lines representing an account number "
+    "  methods that return a tuple of lines representing an account string "
 
     @classmethod
     def valid(cls):
-        " return a tuple of lines representing a random account number "
-        account_number = MakeAccountString.random()
-        return account_number_to_lines(account_number)
+        " return a tuple of lines representing a random account string "
+        account_string = MakeAccountString.random()
+        return account_string_to_lines(account_string)
+
+    @classmethod
+    def valid(cls):
+        " return a tuple of lines representing the provided account string "
+        account_string = MakeAccountString.random()
+        return account_string_to_lines(account_string)
 
     @classmethod
     def _altered(cls,func,victim_line_index=None):

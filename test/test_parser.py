@@ -9,6 +9,7 @@ from settings import lines_per_entry
 from tools.makers.input_lines import MakeInputLines
 from tools.makers.input_file import MakeInputFile
 from tools.makers.entry_lines import MakeEntryLines
+from tools.makers.account_string import MakeAccountString
 from parser.parser import Parser, InputError
 
 def test_instantiation_with_no_argument():
@@ -40,11 +41,13 @@ def test_instantiation_with_abbreviated_file(tmpdir):
 #    e = pytest.raises(InputError, Parser, path)
 #    assert e.value.message == 'file ended mid entry'
     
-def test_creates_entries(tmpdir):
+def test_correctly_parses_file(tmpdir):
     " confirm Parser creates entries from lines "
-    lines = MakeInputLines.random()
-    valid_file_path = MakeInputFile.write(tmpdir,lines)
-    p = Parser(valid_file_path)
+    account_strings = [MakeAccountString.random() for i in range(500)]
+#    entry_lines = [MakeEntry
+#    lines = MakeInputLines.random()
+#    valid_file_path = MakeInputFile.write(tmpdir,lines)
+#    p = Parser(valid_file_path)
 #    assert len(p.entries) == lines / lines_per_entry
 
 full_check = """
