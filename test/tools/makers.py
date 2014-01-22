@@ -3,6 +3,7 @@
 " Class-grouped functions that create and return values useful for testing "
 
 import os
+import operator
 import random
 
 import settings
@@ -144,8 +145,10 @@ class MakeEntryLines:
         return cls._altered(adulterate_line, settings.lines_per_entry - 1)
 
 class MakeInputLines:
+    " collection of methods that each returns a list of input lines "
+
     @classmethod
-    def valid(cls,account_number_count):
+    def valid(cls,account_number_count=500):
         " return lines representing random account numbers "
         assert isinstance(account_number_count,int)
         assert 0 < account_number_count < 1000
@@ -156,12 +159,17 @@ class MakeInputFile:
     " collection of methods that each returns an input file "
 
     @classmethod
-    def valid(cls,path,account_number_count):
-        " write entry lines representing random account numbers to path "
+    def _write(cls,path,lines):
+        " write lines to path "
         F = path.open('w')
-        for line in MakeInputLines.valid():
-                F.write(line+'\n')
+        for line in lines:
+            F.write(line+'\n')
         F.close()
+
+    @classmethod
+    def valid(cls,path,account_number_count=500):
+        " write entry lines representing random account numbers to path "
+        cls._write(path,MakeInputLines.valid(account_number_count))
 
     @classmethod
     def _altered(cls,func,victim_line_index=None):
@@ -172,15 +180,4 @@ class MakeInputFile:
         victim_list[victim_line_index] = func(victim_list[victim_line_index])
         return tuple(victim_list)
 
-
-    @classmethod
-    def valid(cls,path,account_number_count):
-        " write entry lines representing random account numbers to path "
-        assert isinstance(account_number_count,int)
-        assert 0 < account_number_count < 1000
-        F = path.open('w')
-        for i in range(account_number_count):
-            for line in MakeEntryLines.valid():
-                F.write(line+'\n')
-        F.close()
 

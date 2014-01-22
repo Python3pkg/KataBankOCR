@@ -46,9 +46,11 @@ def test_recognition_of_numbers_in_valid_file():
 """
 #def test_handling_of_file_containing_faulty_figures():
 
+# NOT a real test - just briefly testing MakeInputFiles
 def test_file(tmpdir):
     account_number_count = 500
-    path = tmpdir.join(str(account_number_count) + '_valid_account_numbers.txt')
+    file_name = "%d_valid_account_numbers.txt" % account_number_count
+    path = tmpdir.join(file_name)
     MakeInputFile.valid(path,account_number_count)
     F = path.open()
     A = F.readline()
