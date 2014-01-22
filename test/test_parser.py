@@ -28,7 +28,13 @@ def test_instantiation_with_valid_file(tmpdir):
     valid_file_path = MakeInputFile.write(tmpdir,lines)
     p = Parser(valid_file_path)
     assert isinstance(p, Parser)
-    
+
+def test_instantiation_with_abbreviated_file(tmpdir):
+    " confirm Parser verifies file length against settings.lines_per_enty "
+    lines = MakeInputLines.abbreviated()
+    path = MakeInputFile.write(tmpdir,lines)
+    pytest.raises(InputError, Parser, path)
+
 @repeats(1000)
 def test_instantiation_with_valid_lines():
     " confirm Parser instantiates with a valid path string argument "
