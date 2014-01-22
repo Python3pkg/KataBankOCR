@@ -31,15 +31,15 @@ def test_instantiation_with_valid_file(tmpdir):
 
 def test_file_open_failure(tmpdir):
     " confirm Parser verifies ability to open file at given path "
-#    e = pytest.raises(InputError, Parser, 'mxyzptlk')
-#    assert e.value.message == 'failed to open file'
+    e = pytest.raises(InputError, Parser, 'mxyzptlk')
+    assert e.value.message == 'failed to open file'
 
 def test_instantiation_with_abbreviated_file(tmpdir):
     " confirm Parser verifies file length against settings.lines_per_enty "
     lines = MakeInputLines.abbreviated()
     path = MakeInputFile.write(tmpdir,lines)
-#    e = pytest.raises(InputError, Parser, path)
-#    assert e.value.message == 'file ended mid entry'
+    e = pytest.raises(InputError, Parser, path)
+    assert e.value.message == 'file ended mid entry'
     
 def test_correctly_parses_file(tmpdir):
     " confirm Parser creates entries from lines "
