@@ -17,4 +17,4 @@ class Parser():
     " Parses file at path into account numbers and return them "
 
     def __init__(self,path):
-        pass
+        self.path = path

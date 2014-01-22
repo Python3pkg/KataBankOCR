@@ -4,9 +4,8 @@
 
 import pytest
 
-import settings
+from settings import lines_per_entry
 
-from tools.decorators import repeats
 from tools.makers.input_lines import MakeInputLines
 from tools.makers.input_file import MakeInputFile
 from tools.makers.entry_lines import MakeEntryLines
@@ -29,27 +28,24 @@ def test_instantiation_with_valid_file(tmpdir):
     p = Parser(valid_file_path)
     assert isinstance(p, Parser)
 
+def test_file_open_failure(tmpdir):
+    " confirm Parser verifies ability to open file at given path "
+#    e = pytest.raises(InputError, Parser, 'mxyzptlk')
+#    assert e.value.message == 'failed to open file'
+
 def test_instantiation_with_abbreviated_file(tmpdir):
     " confirm Parser verifies file length against settings.lines_per_enty "
     lines = MakeInputLines.abbreviated()
     path = MakeInputFile.write(tmpdir,lines)
-    pytest.raises(InputError, Parser, path)
-
-@repeats(1000)
-def test_instantiation_with_valid_lines():
-    " confirm Parser instantiates with a valid path string argument "
-#    path = 
-#    p = Entry(MakeInputLines.random())
-#    assert isinstance(e,Entry)
-    pass
-
-
-
-FileErrors = """
-    can't open file
-    file empty
-    file ended mid-entry
-"""
+#    e = pytest.raises(InputError, Parser, path)
+#    assert e.value.message == 'file ended mid entry'
+    
+def test_creates_entries(tmpdir):
+    " confirm Parser creates entries from lines "
+    lines = MakeInputLines.random()
+    valid_file_path = MakeInputFile.write(tmpdir,lines)
+    p = Parser(valid_file_path)
+#    assert len(p.entries) == lines / lines_per_entry
 
 full_check = """
 def test_recognition_of_numbers_in_valid_file():
