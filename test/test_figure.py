@@ -8,7 +8,7 @@ import settings
 
 from tools.decorators import repeats
 from tools.makers import MakeFigureString
-from scanner_parser.figure import Figure, InputError
+from parser.figure import Figure, InputError
 
 def test_instantiation_with_no_argument():
     " confirm Figure require more than zero arguments "

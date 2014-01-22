@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+" The Entry Module "
+
 import settings
 
 from figure import Figure

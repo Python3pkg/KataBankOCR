@@ -4,7 +4,7 @@
 
 import settings
 from tools.makers import MakeInputFile
-from scanner_parser import scanner_parser
+from parser.parser import Parser
 
 FileErrors = """
     can't open file

@@ -10,7 +10,7 @@ import settings
 from tools.decorators import repeats
 from tools.makers import MakeAccountString, MakeEntryLines
 from tools.translators import account_number_to_lines, numeral_to_figure_string
-from scanner_parser.entry import Entry, InputError, lines_to_figure_strings
+from parser.entry import Entry, InputError, lines_to_figure_strings
 
 def test_instantiation_with_no_argument():
     " confirm Entry requires more than zero arguments "
