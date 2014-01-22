@@ -6,6 +6,9 @@ figures_per_entry=9
 characters_per_figure=12
 figure_width=3
 valid_figure_characters=(' ', '_', '|')
+
+input_file_path='basic_input'
+
 values=('0','1','2','3','4','5','6','7','8','9',)
 
 # 10 strings composed of spaces, underscores and pipes
