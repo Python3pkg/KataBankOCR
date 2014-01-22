@@ -21,3 +21,10 @@ def test_recognition_of_numbers_in_valid_file():
     assert e.account_number == account_number
 """
 #def test_handling_of_file_containing_faulty_figures():
+
+def test_file(tmpdir):
+    account_number_count = 500
+    path = tmpdir.join(str(account_number_count) + '_valid_account_numbers.txt')
+    MakeInputFile.valid(path,account_number_count)
+
+    #more

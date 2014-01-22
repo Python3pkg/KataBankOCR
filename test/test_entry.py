@@ -85,16 +85,16 @@ def test_instantiation_with_a_tuple_containing_a_non_empty_last_line():
 
 @repeats(1000)
 def test_lines_to_figure_strings():
-    " confirm lines_to_figure_strings properly parses some known values "
-    account_number = MakeAccountString.valid()
+    " confirm lines_to_figure_strings properly parses random entry lines "
+    account_number = MakeAccountString.random()
     entry_lines = account_number_to_lines(account_number)
     figure_strings = [numeral_to_figure_string(n) for n in account_number]
     assert lines_to_figure_strings(entry_lines) == figure_strings
 
 @repeats(1000)
 def test_recognition_of_numbers_in_valid_lines():
-    " confirm Entry parses valid entry lines into correct account number "
-    account_number = MakeAccountString.valid()
+    " confirm Entry parses random entry lines into correct account number "
+    account_number = MakeAccountString.random()
     entry_lines = account_number_to_lines(account_number)
     e = Entry(tuple(entry_lines))
     assert e.account_number == account_number

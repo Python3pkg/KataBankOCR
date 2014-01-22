@@ -2,6 +2,7 @@
 
 " Class-grouped functions that create and return values useful for testing "
 
+import os
 import random
 
 import settings
@@ -20,7 +21,7 @@ class MakeAccountString:
     " collection of methods that each return an account number string "
 
     @classmethod
-    def valid(cls):
+    def random(cls):
         " return an account number of valid length and character set "
         L = settings.figures_per_entry
         ac = MakeAccountCharacter.valid
@@ -96,7 +97,7 @@ class MakeEntryLines:
     @classmethod
     def valid(cls):
         " return a tuple of lines representing a random account number "
-        account_number = MakeAccountString.valid()
+        account_number = MakeAccountString.random()
         return account_number_to_lines(account_number)
 
     @classmethod
@@ -143,9 +144,16 @@ class MakeEntryLines:
         return cls._altered(adulterate_line, settings.lines_per_entry - 1)
 
 class MakeInputFile:
-    " collection of methods that each returns an input file for scannerparser "
+    " collection of methods that each returns an input file "
 
     @classmethod
-    def valid():
-        " return a file representing 500 random valid account numbers "
-        pass
+    def valid(cls,path,account_number_count):
+        " write entry lines representing random account numbers to path "
+        assert isinstance(account_number_count,int)
+        assert 0 < account_number_count < 1000
+        F = path.open('w')
+        for i in range(account_number_count):
+            for line in MakeEntryLines.valid():
+                F.write(line+'\n')
+        F.close()
+
