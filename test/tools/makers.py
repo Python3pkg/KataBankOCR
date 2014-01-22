@@ -100,58 +100,47 @@ class MakeEntryLines:
         return account_number_to_lines(account_number)
 
     @classmethod
-    def _victim(cls):
-        """ return a list of entry lines and a random index from that list 
-
-        provides a mutable target to abuse """
+    def _altered(cls,func,victim_line_index=None):
+        " make a valid tuple of lines, func a [random] line, return tuple "
         victim_list = list(cls.valid())
-        victim_line_index = random.choice(range(len(victim_list)))
-        return victim_list, victim_line_index
+        if victim_line_index is None:
+            victim_line_index = random.choice(range(len(victim_list)))
+        victim_list[victim_line_index] = func(victim_list[victim_line_index])
+        return tuple(victim_list)
 
     @classmethod
     def containing_non_string(cls):
         " return (an otherwise valid) tuple containing one non-string "
-        victim_list, victim_line_index = cls._victim()
-        victim_line = victim_list[victim_line_index]
         arbitrary_non_string_values = (0,1,-10,False,True,3.14,(),[],{},set())
         non_string_value = random.choice(arbitrary_non_string_values)
-        victim_list[victim_line_index] = non_string_value
-        return tuple(victim_list)
+        return cls._altered(lambda L:non_string_value)
 
     @classmethod
     def abbreviated_string(cls):
         " return (an otherwise valid) tuple containing one abbreviated string "
-        victim_list, victim_line_index = cls._victim()
-        victim_line = victim_list[victim_line_index]
-        new_line_length = random.choice(range(len(victim_line)))
-        abbreviated_line = victim_line[:new_line_length]
-        victim_list[victim_line_index] = abbreviated_line
-        return tuple(victim_list)
+        line_length = settings.figures_per_entry * settings.figure_width
+        new_line_length = random.choice(range(line_length))
+        return cls._altered(lambda L:L[new_line_length])
 
     @classmethod
     def extended_string(cls):
-        " return (an otherwise valid) tuple containing one elongated string "
-        victim_list, victim_line_index = cls._victim()
-        victim_line = victim_list[victim_line_index]
-        additional_length = random.choice(range(len(victim_line))) + 1
-        additional_text = victim_line[:additional_length]
-        excessively_long_line = victim_line + additional_text
-        victim_list[victim_line_index] = excessively_long_line
-        return tuple(victim_list)
+        " return (an otherwise valid) tuple containing one extended string "
+        def extend_line(line):
+            additional_length = random.choice(range(len(line))) + 1
+            additional_text = line[:additional_length]
+            return line + additional_text
+        return cls._altered(extend_line)
 
     @classmethod
     def non_empty_last_line(cls):
         " return (an otherwise valid) tuple containing a non-empty last line "
-        victim_list, foo = cls._victim()
-        victim_line_index = settings.lines_per_entry -1
-        victim_line = victim_list[victim_line_index]
-        if len(victim_line.strip()) == 0:
-            additional_character = MakeFigureCharacter.non_blank_valid()
-            replaced_character_position = random.choice(range(len(victim_line)))
-            char,pos = additional_character, replaced_character_position
-            altered_line = victim_line[:pos] + char + victim_line[pos+1:]
-            victim_list[victim_line_index] = altered_line
-        return tuple(victim_list)
+        def adulterate_line(line):
+            if len(line.strip()) == 0:
+                new_char = MakeFigureCharacter.non_blank_valid()
+                char_index = random.choice(range(len(line)))
+                line = line[:char_index] + new_char + line[char_index+1:]
+            return line
+        return cls._altered(adulterate_line, settings.lines_per_entry - 1)
 
 class MakeInputFile:
     " collection of methods that each returns an input file for scannerparser "
