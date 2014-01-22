@@ -7,7 +7,8 @@ import pytest
 import settings
 
 from tools.decorators import repeats
-from tools.makers import MakeInputFile
+from tools.makers.input_file import MakeInputFile
+from tools.makers.entry_lines import MakeEntryLines
 from parser.parser import Parser
 
 def test_instantiation_with_no_argument():
@@ -46,7 +47,7 @@ def test_recognition_of_numbers_in_valid_file():
 """
 #def test_handling_of_file_containing_faulty_figures():
 
-# NOT a real test - just briefly testing MakeInputFiles
+# NOT a real test - just briefly testing MakeInputFile
 def test_file(tmpdir):
     account_number_count = 500
     file_name = "%d_valid_account_numbers.txt" % account_number_count

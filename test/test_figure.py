@@ -7,7 +7,7 @@ import pytest
 import settings
 
 from tools.decorators import repeats
-from tools.makers import MakeFigureString
+from tools.makers.figure_string import MakeFigureString
 from parser.figure import Figure, InputError
 
 def test_instantiation_with_no_argument():
