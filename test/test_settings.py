@@ -11,6 +11,7 @@ setting_types = {int:('lines_per_entry',
                  tuple:('valid_figure_characters',),
                  dict:('figures',),
                  bool:('last_line_empty',),
+                 str:('input_file_path',),
                  }
 
 def test_all_settings_exist():
