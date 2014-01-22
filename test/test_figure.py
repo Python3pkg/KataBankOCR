@@ -12,7 +12,7 @@ from parser.figure import Figure, InputError
 
 def test_instantiation_with_no_argument():
     " confirm Figure require more than zero arguments "
-    pytest.raises(TypeError,Figure)
+    pytest.raises(TypeError, Figure)
 
 def test_instantiation_with_multiple_arguments(min=2,max=10):
     " confirm Figure requires fewer than 2 arguments "
@@ -30,7 +30,7 @@ def test_instantiation_with_non_string():
     arbitrary_non_string_values = (0,1,-10,False,True,3.14,(),[],{},set())
     for non_string in arbitrary_non_string_values:
         e = pytest.raises(InputError, Figure, non_string)
-        assert str(e.value.message) == 'not a string'
+        assert e.value.message == 'not a string'
 
 @repeats(100)
 def test_instantiation_with_insufficient_string_length():
