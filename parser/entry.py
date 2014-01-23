@@ -37,7 +37,7 @@ class Entry():
 
     def validate_lines(self):
         if not isinstance(self.lines,tuple):
-            raise(InputError('not a tuple'))
+            raise(InputError(str(self.lines)+' not a tuple'))
         if len(self.lines) < settings.lines_per_entry:
             raise(InputError('tuple too short'))
         if len(self.lines) > settings.lines_per_entry:

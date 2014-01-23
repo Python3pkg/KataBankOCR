@@ -33,7 +33,7 @@ def test_instantiation_with_non_tuple():
     arbitrary_non_string_values = (0,1,-10,False,True,3.14359,'',[],{},set())
     for non_string in arbitrary_non_string_values:
         e = pytest.raises(InputError, Entry, non_string)
-        assert e.value.message == 'not a tuple'
+        assert 'not a tuple' in e.value.message
 
 def test_instantiation_with_tuple_of_insufficient_length():
     " confirm Entry checks for minimum tuple length "
@@ -41,7 +41,7 @@ def test_instantiation_with_tuple_of_insufficient_length():
     while tuple_length < settings.lines_per_entry:
         lines = MakeEntryLines.valid()[:tuple_length]
         e = pytest.raises(InputError, Entry, lines)
-        assert e.value.message == 'tuple too short'
+        assert 'tuple too short' in e.value.message
         tuple_length += 1
 
 def test_instantiation_with_tuple_of_excessive_length():
@@ -51,7 +51,7 @@ def test_instantiation_with_tuple_of_excessive_length():
     lines = tuple(repeated_line for i in range(tuple_length))
     while tuple_length < settings.lines_per_entry * 5:
         e = pytest.raises(InputError,Entry, lines)
-        assert e.value.message == 'tuple too long'
+        assert 'tuple too long' in e.value.message
         tuple_length += 1
 
 @repeats(50)
@@ -64,13 +64,13 @@ def test_instantiation_with_tuple_containing_a_non_string():
 def test_instantiation_with_a_tuple_containing_too_short_a_string():
     " confirm Entry checks minimum string length "
     e = pytest.raises(InputError, Entry, MakeEntryLines.abbreviated_string())
-    assert e.value.message == 'string in tuple too short'
+    assert 'string in tuple too short' in e.value.message
 
 @repeats(100)
 def test_instantiation_with_a_tuple_containing_too_long_a_string():
     " confirm Entry checks maximum string length "
     e = pytest.raises(InputError, Entry, MakeEntryLines.extended_string())
-    assert e.value.message == 'string in tuple too long'
+    assert 'string in tuple too long' == e.value.message
 
 @repeats(100)
 def test_instantiation_with_a_tuple_containing_a_non_empty_last_line():
@@ -78,7 +78,7 @@ def test_instantiation_with_a_tuple_containing_a_non_empty_last_line():
     if settings.last_line_empty:
         lines = MakeEntryLines.non_empty_last_line()
         e = pytest.raises(InputError, Entry, lines)
-        assert e.value.message == 'last line in tuple not empty'
+        assert 'last line in tuple not empty' == e.value.message
 
 @repeats(1000)
 def test_lines_to_figure_strings():

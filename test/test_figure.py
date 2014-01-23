@@ -30,31 +30,31 @@ def test_instantiation_with_non_string():
     arbitrary_non_string_values = (0,1,-10,False,True,3.14,(),[],{},set())
     for non_string in arbitrary_non_string_values:
         e = pytest.raises(InputError, Figure, non_string)
-        assert e.value.message == 'not a string'
+        assert 'not a string' in e.value.message 
 
 @repeats(100)
 def test_instantiation_with_insufficient_string_length():
     " confirm Figure checks minimum string length "
     e = pytest.raises(InputError, Figure, MakeFigureString.too_short())
-    assert e.value.message == 'figure string too short'
+    assert 'too short. correct length:' in e.value.message
 
 @repeats(100)
 def test_instantiation_with_excessive_string_length():
     " confirm Figure checks maximum string length "
     e = pytest.raises(InputError, Figure, MakeFigureString.too_long())
-    assert e.value.message == 'figure string too long'
+    assert 'too long. correct length:' in e.value.message
 
 @repeats(100)
 def test_instantiation_with_adulterated_string():
     " confirm Figure checks for inappropriate characters in its input string "
     e = pytest.raises(InputError, Figure, MakeFigureString.adulterated())
-    assert e.value.message == 'invalid figure characters'
+    assert 'invalid figure character' in e.value.message
 
 @repeats(1000)
 def test_instantiation_with_unknown_string():
     " confirm Figure refuses unknown strings "
     e = pytest.raises(InputError, Figure, MakeFigureString.unknown())
-    assert e.value.message == 'unknown figure'
+    assert 'unknown figure' in e.value.message
 
 @repeats(1000)
 def test_instantiation_with_known_string():

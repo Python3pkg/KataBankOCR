@@ -20,19 +20,21 @@ class Figure():
         self.parse_string()
 
     def validate_string(self):
-        if not isinstance(self.figure_string,str):
-            raise(InputError('not a string'))
+        fs = self.figure_string
+        if not isinstance(fs, str):
+            raise(InputError(str(fs)+' not a string'))
         valid_characters = settings.valid_figure_characters
-        if not set(self.figure_string).issubset(valid_characters):
-            raise(InputError('invalid figure characters'))
-        if len(self.figure_string) < settings.characters_per_figure:
-            raise(InputError('figure string too short'))
-        if len(self.figure_string) > settings.characters_per_figure:
-            raise(InputError('figure string too long'))
+        if not set(fs).issubset(valid_characters):
+            raise(InputError('"%s" contains invalid figure characters'%fs))
+        length = settings.characters_per_figure
+        if len(fs) < length:
+            raise(InputError('"%s" too short. correct length: %d'%(fs,length)))
+        if len(fs) > length:
+            raise(InputError('"%s" too long. correct length: %d'%(fs,length)))
 
     def parse_string(self):
         if self.figure_string in settings.figures:
             self.value = settings.figures[self.figure_string]
         else:
-            raise(InputError('unknown figure'))
+            raise(InputError('unknown figure "%s"'%self.figure_string))
 
