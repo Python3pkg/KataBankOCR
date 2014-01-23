@@ -27,7 +27,12 @@ class Parser():
         " read file of entries and identify its account strings "
         lpe = settings.lines_per_entry
         with open(str(self.path)) as input_file:
-            entry_lines = [input_file.readline()[:-1] for i in range(lpe)]
-            entry = Entry(tuple(entry_lines))
-            self.account_strings.append(entry.account_string)
+            while True:
+                entry_lines = [input_file.readline()[:-1] for i in range(lpe)]
+                if any(entry_lines) and not all(entry_lines):
+                    raise(InputError('file ended mid entry'))
+                if not any(entry_lines):
+                    break
+                account_string = Entry(tuple(entry_lines)).account_string
+                self.account_strings.append(account_string)
 
