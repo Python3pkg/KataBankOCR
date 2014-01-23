@@ -35,20 +35,38 @@ class Entry():
         self.validate_lines()
         self.parse_lines()
 
-    def validate_lines(self):
+    def validate_lines_type(self):
+        " confirm lines references of a tuple of strings "
         if not isinstance(self.lines, tuple):
-            raise(InputError(str(self.lines)+' not a tuple'))
-        if len(self.lines) < settings.lines_per_entry:
-            raise(InputError('tuple too short'))
-        if len(self.lines) > settings.lines_per_entry:
-            raise(InputError('tuple too long'))
-        if not all(isinstance(line,str) for line in self.lines):
-            raise(InputError('non-string in tuple'))
-        line_length = settings.figure_width * settings.figures_per_entry
-        if any(len(line) < line_length for line in self.lines):
-            raise(InputError('string in tuple too short'))
-        if any(len(line) > line_length for line in self.lines):
-            raise(InputError('string in tuple too long'))
+            msg = '"%s" not a tuple.'
+            raise(InputError(msg % str(self.lines)))
+        for line in self.lines:
+            if not isinstance(line,str):
+                raise(InputError('non-string in tuple'))
+
+
+    def validate_line_count(self):
+        " confirm tuple has appropriate length "
+        count = len(self.lines)
+        expected = settings.lines_per_entry
+        if count != expected:
+            msg = 'tuple wrong length. counted %s and expected %d.'
+            raise(InputError(msg % (expected, count)))
+
+    def validate_line_lengths(self):
+        " confirm each line in tuple has appropriate length "
+        valid_line_length = settings.figure_width * settings.figures_per_entry
+        for line in self.lines:
+            if len(line) < valid_line_length:
+                raise(InputError('string too short: "%s"' % line))
+            if len(line) > valid_line_length:
+                raise(InputError('string too long: "%s"' % line))
+
+    def validate_lines(self):
+        self.validate_lines_type()
+        self.validate_line_count()
+        self.validate_line_lengths()
+
         last_line = self.lines[settings.lines_per_entry-1]
         if settings.last_line_empty and len(last_line.strip()) > 0:
             raise(InputError('last line in tuple not empty'))
