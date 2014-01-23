@@ -15,6 +15,8 @@ class InputError(EntryError):
     def __init__(self,msg):
         self.message = msg
 
+valid_line_length = settings.figure_width * settings.figures_per_entry
+
 def lines_to_figure_strings(lines):
     figure_count = settings.figures_per_entry
     figure_strings = ['' for i in range(figure_count)]
@@ -55,24 +57,26 @@ class Entry():
 
     def validate_line_lengths(self):
         " confirm each line in tuple has appropriate length "
-        valid_line_length = settings.figure_width * settings.figures_per_entry
         for line in self.lines:
             if len(line) == valid_line_length + 1 and line[-1:] == '\n':
-                line = line[:-1]
+                line = line[:-1] # quietly drop silly line-feeds
             elif len(line) < valid_line_length:
                 raise(InputError('string too short: "%s"' % line))
             elif len(line) > valid_line_length:
                 print len(line), line
                 raise(InputError('string too long: "%s"' % line))
 
+    def validate_last_line_empty(self):
+        " confirm last line in tuple contains only whitespace "
+        last_line = self.lines[settings.lines_per_entry-1]
+        if settings.last_line_empty and len(last_line.strip()) > 0:
+            raise(InputError('last line in tuple not empty'))
+
     def validate_lines(self):
         self.validate_lines_type()
         self.validate_line_count()
         self.validate_line_lengths()
-
-        last_line = self.lines[settings.lines_per_entry-1]
-        if settings.last_line_empty and len(last_line.strip()) > 0:
-            raise(InputError('last line in tuple not empty'))
+        self.validate_last_line_empty()
 
     def parse_lines(self):
         figure_strings = lines_to_figure_strings(self.lines)
