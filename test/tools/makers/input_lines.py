@@ -24,8 +24,4 @@ class MakeInputLines:
             a_files_worth_of_lines.extend(entry_lines)
         return a_files_worth_of_lines
 
-    @classmethod
-    def abbreviated(cls):
-        " return one line less than a full file worth of lines "
-        return cls.random()[:-1]
 

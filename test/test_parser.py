@@ -3,6 +3,7 @@
 """ Test the scanner_parser module"""
 
 import pytest
+from itertools import chain
 
 from settings import lines_per_entry
 
@@ -31,12 +32,11 @@ def test_instantiation_with_valid_file(tmpdir):
 
 def test_file_open_failure(tmpdir):
     " confirm Parser verifies ability to open file at given path "
-#    e = pytest.raises(InputError, Parser, 'mxyzptlk')
-#    assert 'failed to open file at ' in e.value.message
+    pytest.raises(IOError, Parser, 'mxyzptlk')
 
 def test_instantiation_with_abbreviated_file(tmpdir):
     " confirm Parser recognizes EOF mid-entry due to insufficient line count "
-    lines = MakeInputLines.abbreviated()
+    lines = MakeInputLines.random()[:-1]
     path = MakeInputFile.write(tmpdir,lines)
 #    e = pytest.raises(InputError, Parser, path)
 #    assert e.value.message == 'file ended mid entry'
@@ -44,17 +44,8 @@ def test_instantiation_with_abbreviated_file(tmpdir):
 def test_correctly_parses_file(tmpdir):
     " confirm Parser creates entries from lines "
     account_strings = [MakeAccountString.random() for i in range(500)]
-#    entry_lines = [MakeEntry
-#    lines = MakeInputLines.random()
-#    valid_file_path = MakeInputFile.write(tmpdir,lines)
-#    p = Parser(valid_file_path)
-#    assert len(p.entries) == lines / lines_per_entry
-
-
-# NOT a real test - just briefly testing MakeInputFile
-def test_file(tmpdir):
-    lines = MakeInputLines.random()
-    F = MakeInputFile.write(tmpdir,lines).open()
-    A = F.readline()
-    B = F.readline()
-    assert A != B
+    tuples_of_lines = map(MakeEntryLines.from_account_string, account_strings)
+    lines = sum(tuples_of_lines,())
+    path = MakeInputFile.write(tmpdir,lines)    
+    assert len(Parser(path).account_strings) == len(account_strings)
+    assert Parser(path).account_strings == account_strings
