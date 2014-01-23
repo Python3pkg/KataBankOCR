@@ -11,7 +11,6 @@ setting_types = {int:('lines_per_entry',
                  tuple:('valid_figure_characters',),
                  dict:('figures',),
                  bool:('last_line_empty',),
-                 str:('input_file_path',),
                  }
 
 def test_all_settings_exist():
@@ -48,14 +47,3 @@ def test_figure_composed_entirely_of_valid_components():
     chars = settings.valid_figure_characters
     for s in figures:
         assert set(chars).issuperset(s)
-
-def test_can_read_input_file():
-    " confirm provided path yields readable file "
-    F = open(settings.input_file_path,'r')
-
-def test_input_file_length_a_multiple_of_lines_per_entry():
-    " confirm input file at path of sufficient length "
-    line_count = sum(1 for line in open(settings.input_file_path,'r'))
-    assert line_count.__mod__(settings.lines_per_entry) == 0
-
-

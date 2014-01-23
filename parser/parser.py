@@ -55,7 +55,7 @@ class Parser():
         lpe = settings.lines_per_entry
         for line_index in range(0, len(self.lines), lpe):
             entry_lines = self.lines[line_index:line_index + lpe]
-            entry_lines = tuple(line[:-1] for line in entry_lines)
+            entry_lines = tuple(line for line in entry_lines)
             account_string = Entry(entry_lines).account_string
             self.account_strings.append(account_string)
 

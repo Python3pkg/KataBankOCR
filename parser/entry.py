@@ -57,9 +57,12 @@ class Entry():
         " confirm each line in tuple has appropriate length "
         valid_line_length = settings.figure_width * settings.figures_per_entry
         for line in self.lines:
-            if len(line) < valid_line_length:
+            if len(line) == valid_line_length + 1 and line[-1:] == '\n':
+                line = line[:-1]
+            elif len(line) < valid_line_length:
                 raise(InputError('string too short: "%s"' % line))
-            if len(line) > valid_line_length:
+            elif len(line) > valid_line_length:
+                print len(line), line
                 raise(InputError('string too long: "%s"' % line))
 
     def validate_lines(self):

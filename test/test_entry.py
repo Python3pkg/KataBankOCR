@@ -60,13 +60,13 @@ def test_instantiation_with_tuple_containing_a_non_string():
     e = pytest.raises(InputError, Entry, MakeEntryLines.containing_non_string())
     assert e.value.message == 'non-string in tuple'
 
-@repeats(100)
+@repeats(500)
 def test_instantiation_with_a_tuple_containing_too_short_a_string():
     " confirm Entry checks minimum string length "
     e = pytest.raises(InputError, Entry, MakeEntryLines.abbreviated_string())
     assert 'string too short: ' in e.value.message
 
-@repeats(100)
+@repeats(500)
 def test_instantiation_with_a_tuple_containing_too_long_a_string():
     " confirm Entry checks maximum string length "
     e = pytest.raises(InputError, Entry, MakeEntryLines.extended_string())
