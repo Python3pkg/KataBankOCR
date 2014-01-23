@@ -2,6 +2,8 @@
 
 " The Parser module "
 
+import fileinput
+
 import settings
 
 from entry import Entry
@@ -16,23 +18,50 @@ class InputError(ParserError):
         self.message = msg
 
 class Parser():
-    " Parses file at path into account strings "
+    " Parses file at path into account strings. If no path, uses StdIn. "
 
-    def __init__(self,path):
+    def __init__(self,path=None):
         self.path = path
         self.account_strings = []
-        self.parse_file()
+        self.get_lines()
+        self.validate_lines()
+        self.parse_lines()
 
-    def parse_file(self):
-        " read file of entries and identify its account strings "
-        lpe = settings.lines_per_entry
+    def lines_from_stdin(self):
+        " read and return all lines from standard input "
+        return list(fileinput.input())
+
+    def lines_from_path(self):
+        " read and return all lines from file at path "
         with open(str(self.path)) as input_file:
-            while True:
-                entry_lines = [input_file.readline()[:-1] for i in range(lpe)]
-                if not any(entry_lines):
-                    break # finished reading file
-                if not all(entry_lines):
-                    raise(InputError('file ended mid entry'))
-                account_string = Entry(tuple(entry_lines)).account_string
-                self.account_strings.append(account_string)
+            return list(input_file)
+
+    def get_lines(self):
+        " read all lines from either path or standard input "
+        if self.path:
+            self.lines = self.lines_from_path()
+        else:
+            self.lines = self.lines_from_stdin()
+
+    def validate_lines(self):
+        " parse lines into entries and decipher their account strings "
+        if not self.lines: 
+            raise(InputError('nothing to parse'))
+        elif len(self.lines).__mod__(settings.lines_per_entry) != 0:
+            raise(InputError('file ended mid entry'))
+
+    def parse_lines(self):
+        " parse lines into entries and decipher their account strings "
+        lpe = settings.lines_per_entry
+        for line_index in range(0, len(self.lines), lpe):
+            entry_lines = self.lines[line_index:line_index + lpe]
+            entry_lines = tuple(line[:-1] for line in entry_lines)
+            account_string = Entry(entry_lines).account_string
+            self.account_strings.append(account_string)
+
+def main():
+    print Parser().account_strings
+
+if __name__ == "__main__":
+    main()
 

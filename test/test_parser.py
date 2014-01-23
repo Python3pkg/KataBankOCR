@@ -15,8 +15,9 @@ from parser.parser import Parser, InputError
 
 def test_instantiation_with_no_argument():
     " confirm Parser requires more than zero arguments "
-    with pytest.raises(TypeError):
-        p = Parser()
+    pytest.raises(IOError, Parser)
+#    e = pytest.raises(InputError, Parser)
+#    assert e.value.message == 'nothing to parse'
 
 def test_instantiation_with_multiple_arguments(min=2,max=10):
     " confirm Parser requires fewer than 2 arguments "
@@ -24,10 +25,9 @@ def test_instantiation_with_multiple_arguments(min=2,max=10):
         pytest.raises(TypeError, Parser, *range(arg_count))
     
 def test_instantiation_with_valid_file(tmpdir):
-    " confirm Parser instantiates when given the path to valid file "
-    lines = MakeInputLines.random()
-    valid_file_path = MakeInputFile.write(tmpdir,lines)
-    p = Parser(valid_file_path)
+    " confirm Parser instantiates when given the path to a valid input file "
+    path = MakeInputFile.random(tmpdir)
+    p = Parser(path)
     assert isinstance(p, Parser)
 
 def test_file_open_failure(tmpdir):
@@ -40,6 +40,12 @@ def test_instantiation_with_abbreviated_file(tmpdir):
     path = MakeInputFile.write(tmpdir,lines)
     e = pytest.raises(InputError, Parser, path)
     assert e.value.message == 'file ended mid entry'
+   
+def test_instantiation_with_empty_file(tmpdir):
+    " confirm Parser recognizes empty file "
+    path = MakeInputFile.from_account_strings(tmpdir, [])
+    e = pytest.raises(InputError, Parser, path)
+    assert e.value.message == 'nothing to parse'
    
 @pytest.fixture() 
 def account_strings_and_path(tmpdir):
@@ -60,7 +66,7 @@ def test_main_parses_from_std_in(account_strings_and_path):
     account_strings, path = account_strings_and_path
     with path.open() as input_file:
         output = subprocess.check_output('parser/parser.py', stdin=input_file)
-    assert output == str(account_strings)
+    assert output[:-1] == str(account_strings)
 
 
 
