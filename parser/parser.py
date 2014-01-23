@@ -29,10 +29,10 @@ class Parser():
         with open(str(self.path)) as input_file:
             while True:
                 entry_lines = [input_file.readline()[:-1] for i in range(lpe)]
-                if any(entry_lines) and not all(entry_lines):
-                    raise(InputError('file ended mid entry'))
                 if not any(entry_lines):
-                    break
+                    break # finished reading file
+                if not all(entry_lines):
+                    raise(InputError('file ended mid entry'))
                 account_string = Entry(tuple(entry_lines)).account_string
                 self.account_strings.append(account_string)
 

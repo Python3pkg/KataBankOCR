@@ -3,7 +3,7 @@
 """ Test the scanner_parser module"""
 
 import pytest
-from itertools import chain
+import subprocess
 
 from settings import lines_per_entry
 
@@ -40,13 +40,27 @@ def test_instantiation_with_abbreviated_file(tmpdir):
     path = MakeInputFile.write(tmpdir,lines)
     e = pytest.raises(InputError, Parser, path)
     assert e.value.message == 'file ended mid entry'
-    
-def test_correctly_parses_file(tmpdir):
-    " confirm Parser creates entries from lines "
+   
+@pytest.fixture() 
+def account_strings_and_path(tmpdir):
+    " return 500 valid account strings and a path to a file representing them "
     account_strings = [MakeAccountString.random() for i in range(500)]
     tuples_of_lines = map(MakeEntryLines.from_account_string, account_strings)
     lines = sum(tuples_of_lines,())
-    path = MakeInputFile.write(tmpdir,lines)    
-#    assert len(Parser(path).account_strings) == len(account_strings)
-#    assert Parser(path).account_strings == account_strings
+    path = MakeInputFile.write(tmpdir,lines)
+    return account_strings, path
+
+def test_correctly_parses_file(account_strings_and_path):
+    " confirm Parser creates entries from lines "
+    account_strings, path = account_strings_and_path
+    assert Parser(path).account_strings == account_strings
+
+def test_main_parses_from_std_in(account_strings_and_path):
+    " confirm Parser.main parses correctly "
+    account_strings, path = account_strings_and_path
+    with path.open() as input_file:
+        output = subprocess.check_output('parser/parser.py', stdin=input_file)
+    assert output == str(account_strings)
+
+
 
