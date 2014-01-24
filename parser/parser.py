@@ -6,16 +6,8 @@ import fileinput
 
 import settings
 
+from errors import InputError
 from entry import Entry
-
-class ParserError(Exception):
-    " Base class for exceptions in this module "
-    pass
-
-class InputError(ParserError):
-    " Exception raised for errors in the input "
-    def __init__(self,msg):
-        self.message = msg
 
 class Parser():
     " Parses file at path into account strings. If no path, uses StdIn. "
@@ -55,7 +47,6 @@ class Parser():
         lpe = settings.lines_per_entry
         for line_index in range(0, len(self.lines), lpe):
             entry_lines = self.lines[line_index:line_index + lpe]
-            entry_lines = tuple(line for line in entry_lines)
             account_string = Entry(entry_lines).account_string
             self.account_strings.append(account_string)
 

@@ -11,7 +11,8 @@ from tools.makers.input_lines import MakeInputLines
 from tools.makers.input_file import MakeInputFile
 from tools.makers.entry_lines import MakeEntryLines
 from tools.makers.account_string import MakeAccountString
-from parser.parser import Parser, InputError
+from parser.errors import InputError
+from parser.parser import Parser
 
 def test_instantiation_with_no_argument():
     " confirm Parser requires more than zero arguments "
@@ -51,8 +52,8 @@ def test_instantiation_with_empty_file(tmpdir):
 def account_strings_and_path(tmpdir):
     " return 500 valid account strings and a path to a file representing them "
     account_strings = [MakeAccountString.random() for i in range(500)]
-    tuples_of_lines = map(MakeEntryLines.from_account_string, account_strings)
-    lines = sum(tuples_of_lines,())
+    lists_of_lines = map(MakeEntryLines.from_account_string, account_strings)
+    lines = sum(lists_of_lines,[])
     path = MakeInputFile.write(tmpdir,lines)
     return account_strings, path
 

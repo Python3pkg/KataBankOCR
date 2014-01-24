@@ -4,82 +4,77 @@
 
 import settings
 
+from validators import validate_input_length, validate_input_type
+from errors import InputError
 from figure import Figure
 
-class EntryError(Exception):
-    " Base class for exceptions in this module "
-    pass
-
-class InputError(EntryError):
-    " Exception raised for errors in the input "
-    def __init__(self,msg):
-        self.message = msg
-
-valid_line_length = settings.figure_width * settings.figures_per_entry
-
-def lines_to_figure_strings(lines):
-    figure_count = settings.figures_per_entry
-    figure_strings = ['' for i in range(figure_count)]
-    for line_index in range(len(lines)):
-        line = lines[line_index]
-        for figure_index in range(figure_count):
-            start_char_index = figure_index * settings.figure_width
-            end_char_index = start_char_index + settings.figure_width
-            substring = line[start_char_index:end_char_index]
-            figure_strings[figure_index] += substring
-    return figure_strings
+line_length = settings.figure_width * settings.figures_per_entry
 
 class Entry():
-    " Lines of characters containing figures that represent an account string "
+    " A list of lines that represents an account string "
 
-    def __init__(self,lines):
-        self.lines = lines
-        self.validate_lines()
-        self.parse_lines()
+    def __init__(self,input):
+        lines = self.sanitize_and_validate_input(input)
+        self.account_string = self.parse_lines_to_account_string(lines)
 
-    def validate_lines_type(self):
-        " confirm lines references of a tuple of strings "
-        if not isinstance(self.lines, tuple):
-            msg = '"%s" not a tuple.'
-            raise(InputError(msg % str(self.lines)))
-        for line in self.lines:
-            if not isinstance(line,str):
-                raise(InputError('non-string in tuple'))
+    def sanitize_and_validate_input(self,input):
+        " confirm type, remove line-feeds, and validate lines "
+        lines = self.validate_input_as_list_of_strings(input)
+        lines = self.trim_line_feeds_from_lines_if_necessary(lines)
+        self.validate_lines(lines)
+        return lines
 
+    def validate_input_as_list_of_strings(self,input):
+        " confirm input takes form of a list of strings "
+        validate_input_type(input, list, 'Entry input')
+        self.validate_elements_all_strings(input)
+        return input
 
-    def validate_line_count(self):
-        " confirm tuple has appropriate length "
-        count = len(self.lines)
+    def validate_elements_all_strings(self,input):
+        " confirm elements of input all strings "
+        for element in input:
+            validate_input_type(element, str, 'Entry list element')
+
+    def trim_line_feeds_from_lines_if_necessary(self,lines):
+        " remove any superfluous line-feeds "
+        ends_in_line_feed = lambda line: line[-1:] == '\n'
+        one_char_too_long = lambda line: len(line) == line_length + 1
+        needs_trimming = lambda L: ends_in_line_feed(L) and one_char_too_long(L)
+        return [line[:-1] if needs_trimming(line) else line for line in lines]
+
+    def validate_lines(self, lines):
+        " validate valid line count, lengths, and last line empty "
         expected = settings.lines_per_entry
-        if count != expected:
-            msg = 'tuple wrong length. counted %s and expected %d.'
-            raise(InputError(msg % (expected, count)))
+        validate_input_length(lines, expected, 'Entry list of lines')
+        self.validate_line_lengths(lines)
+        self.validate_last_line_empty(lines)
 
-    def validate_line_lengths(self):
-        " confirm each line in tuple has appropriate length "
-        for line in self.lines:
-            if len(line) == valid_line_length + 1 and line[-1:] == '\n':
-                line = line[:-1] # quietly drop silly line-feeds
-            elif len(line) < valid_line_length:
-                raise(InputError('string too short: "%s"' % line))
-            elif len(line) > valid_line_length:
-                print len(line), line
-                raise(InputError('string too long: "%s"' % line))
+    def validate_line_lengths(self, lines):
+        " confirm each line in list has appropriate length "
+        for i in range(len(lines)):
+            validate_input_length(lines[i], line_length, 'Entry line %d' % i)
 
-    def validate_last_line_empty(self):
-        " confirm last line in tuple contains only whitespace "
-        last_line = self.lines[settings.lines_per_entry-1]
-        if settings.last_line_empty and len(last_line.strip()) > 0:
-            raise(InputError('last line in tuple not empty'))
+    def validate_last_line_empty(self, lines):
+        " confirm last line in list contains only whitespace "
+        last_line = lines[settings.lines_per_entry-1]
+        if settings.last_line_empty and not last_line.isspace():
+            raise(InputError('last line in list not empty'))
 
-    def validate_lines(self):
-        self.validate_lines_type()
-        self.validate_line_count()
-        self.validate_line_lengths()
-        self.validate_last_line_empty()
+    def parse_lines_to_account_string(self, lines):
+        " lines >-> figure_strings >-> figure_values >-> an account_string "
+        figure_strings = self.parse_lines_to_figure_strings(lines)
+        figure_values = [Figure(s).value for s in figure_strings]
+        account_string = ''.join(v for v in figure_values)
+        return account_string
 
-    def parse_lines(self):
-        figure_strings = lines_to_figure_strings(self.lines)
-        self.figures = [Figure(fs) for fs in figure_strings]
-        figure_values = [f.value for f in self.figures]
-        self.account_string = ''.join(figure_values)
+    def parse_lines_to_figure_strings(self, lines):
+        figure_count = settings.figures_per_entry
+        figure_strings = ['' for i in range(figure_count)]
+        for line_index in range(len(lines)):
+            line = lines[line_index]
+            for figure_index in range(figure_count):
+                start_char_index = figure_index * settings.figure_width
+                end_char_index = start_char_index + settings.figure_width
+                substring = line[start_char_index:end_char_index]
+                figure_strings[figure_index] += substring
+        return figure_strings

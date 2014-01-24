@@ -8,7 +8,11 @@ import settings
 
 from tools.decorators import repeats
 from tools.makers.figure_string import MakeFigureString
+from parser.errors import InputError, InputTypeError, InputLengthError
 from parser.figure import Figure, InputError
+
+input_length_error_message = '%s of unexpected length. expected %d. found %d.'
+input_type_error_message = '%s of unexpected type. expected %s. found %s.'
 
 def test_instantiation_with_no_argument():
     " confirm Figure require more than zero arguments "
@@ -29,26 +33,26 @@ def test_instantiation_with_non_string():
     " confirm Figure requires a string as its argument "
     arbitrary_non_string_values = (0,1,-10,False,True,3.14,(),[],{},set())
     for non_string in arbitrary_non_string_values:
-        e = pytest.raises(InputError, Figure, non_string)
-        assert 'not a string' in e.value.message 
+        e = pytest.raises(InputTypeError, Figure, non_string)
+        assert 'unexpected type' in e.value.message
 
 @repeats(100)
 def test_instantiation_with_insufficient_string_length():
     " confirm Figure checks minimum string length "
-    e = pytest.raises(InputError, Figure, MakeFigureString.too_short())
-    assert 'too short. correct length:' in e.value.message
+    e = pytest.raises(InputLengthError, Figure, MakeFigureString.too_short())
+    assert 'unexpected length' in e.value.message
 
 @repeats(100)
 def test_instantiation_with_excessive_string_length():
     " confirm Figure checks maximum string length "
-    e = pytest.raises(InputError, Figure, MakeFigureString.too_long())
-    assert 'too long. correct length:' in e.value.message
+    e = pytest.raises(InputLengthError, Figure, MakeFigureString.too_long())
+    assert 'unexpected length' in e.value.message
 
 @repeats(100)
 def test_instantiation_with_adulterated_string():
     " confirm Figure checks for inappropriate characters in its input string "
     e = pytest.raises(InputError, Figure, MakeFigureString.adulterated())
-    assert 'invalid figure character' in e.value.message
+    assert 'contains non-figure character' in e.value.message
 
 @repeats(1000)
 def test_instantiation_with_unknown_string():

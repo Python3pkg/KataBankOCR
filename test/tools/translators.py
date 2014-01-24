@@ -12,7 +12,7 @@ def numeral_to_figure_string(numeral):
             return figure
 
 def account_string_to_lines(account_string):
-    " return the tuple of lines that represents the given account string "
+    " return the list of lines that represents the given account string "
     figure_strings = [numeral_to_figure_string(n) for n in account_string]
     lines = []
     for line_index in range(settings.lines_per_entry):
@@ -24,5 +24,5 @@ def account_string_to_lines(account_string):
             substring = figure_string[first_char_index:last_char_index]
             line += substring
         lines.append(line)
-    return tuple(lines)
+    return lines
 

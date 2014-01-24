@@ -12,7 +12,7 @@ class MakeInputLines:
         " return lines representing 500 random account numbers "
         a_files_worth_of_lines = []
         for account_number_index in range(500):
-            a_files_worth_of_lines.extend(MakeEntryLines.valid())
+            a_files_worth_of_lines.extend(MakeEntryLines.random())
         return a_files_worth_of_lines
 
     @classmethod

@@ -1,40 +1,35 @@
 #!/usr/bin/env python
 
-import settings
-
-class FigureError(Exception):
-    " Base class for exceptions in this module "
-    pass
-
-class InputError(FigureError):
-    " Exception raised for errors in the input "
-    def __init__(self,msg):
-        self.message = msg
+from settings import figures, valid_figure_characters, characters_per_figure
+from validators import validate_input_type, validate_input_length
+from errors import InputError
 
 class Figure():
-    """ A multi-character string that represents a single character """
+    " A multi-character string that represents a single account character "
 
-    def __init__(self,figure_string):
-        self.figure_string = figure_string
-        self.validate_string()
-        self.parse_string()
+    def __init__(self, input):
+        " validate input as figure string and identify account character "
+        fs = self.validate_input_as_figure_string(input)
+        self.value = self.parse_figure_string_to_account_character(fs)
 
-    def validate_string(self):
-        fs = self.figure_string
-        if not isinstance(fs, str):
-            raise(InputError(str(fs)+' not a string'))
-        valid_characters = settings.valid_figure_characters
-        if not set(fs).issubset(valid_characters):
-            raise(InputError('"%s" contains invalid figure characters'%fs))
-        length = settings.characters_per_figure
-        if len(fs) < length:
-            raise(InputError('"%s" too short. correct length: %d'%(fs,length)))
-        if len(fs) > length:
-            raise(InputError('"%s" too long. correct length: %d'%(fs,length)))
+    def validate_input_as_figure_string(self, input):
+        " confirm type, length, and character composition or raise an error "
+        validate_input_type(input, str, 'Figure input')
+        validate_input_length(input, characters_per_figure, 'Figure input')
+        self.validate_input_composition(input)
+        return input
+        
+    def validate_input_composition(self, input):
+        " confirm figure string contains only valid characters or raise an error "
+        if not set(input).issubset(valid_figure_characters):
+            msg = 'Figure input "%s" contains non-figure character(s): "%s"'
+            invalid_characters = set(input) - set(valid_figure_characters)
+            raise(InputError(msg % (input, str(invalid_characters))))
 
-    def parse_string(self):
-        if self.figure_string in settings.figures:
-            self.value = settings.figures[self.figure_string]
+    def parse_figure_string_to_account_character(self, figure_string):
+        " find figure string in settings dict or raise InputError "
+        if figure_string in figures:
+            return figures[figure_string]
         else:
-            raise(InputError('unknown figure "%s"'%self.figure_string))
+            raise(InputError('unknown figure "%s"' % figure_string))
 
