@@ -7,7 +7,8 @@ import settings
 setting_types = {int:('lines_per_entry',
                       'figures_per_entry',
                       'figure_width',
-                      'characters_per_figure',),
+                      'figure_length',
+                      ),
                  tuple:('valid_figure_characters',),
                  dict:('figures',),
                  bool:('last_line_empty',),
@@ -40,7 +41,7 @@ def test_all_values_represented():
 def test_figure_string_has_correct_length():
     " confirm each figure contains the correct number of characters "
     for s in figures:
-        assert len(s) == settings.characters_per_figure
+        assert len(s) == settings.figure_length
 
 def test_figure_composed_entirely_of_valid_components():
     " confirm each figure consists only of spaces, underscores, and pipes "

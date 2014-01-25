@@ -1,13 +1,14 @@
 #!/usr/bin/env python
 
-lines_per_entry=4
-last_line_empty=True
-figures_per_entry=9
-characters_per_figure=12
-figure_width=3
-valid_figure_characters=(' ', '_', '|')
+figure_width = 3
+figures_per_entry = 9
+line_length = figure_width * figures_per_entry  # 27
+lines_per_entry = 4
+figure_length = figure_width * lines_per_entry  # 12
+last_line_empty = True
+valid_figure_characters = (' ', '_', '|')
 
-values=('0','1','2','3','4','5','6','7','8','9',)
+values=('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')
 
 # 10 strings composed of spaces, underscores and pipes
 # that represent the characters 0 through 9

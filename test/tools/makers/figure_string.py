@@ -2,7 +2,7 @@
 
 import random
 
-from settings import characters_per_figure as valid_length
+from settings import figure_length
 from settings import valid_figure_characters as valid_chars
 from settings import figures
 
@@ -20,14 +20,14 @@ class MakeFigureString:
     @classmethod
     def too_short(cls):
         " return a random string of insufficient length "
-        length = random.choice(range(1, valid_length))
+        length = random.choice(range(1, figure_length))
         return ''.join(cls.vfc() for i in range(length))
 
     @classmethod
     def too_long(cls):
         " return a random string of excessive length "
-        L = valid_length
-        length = random.choice(range(L + 1, L * 2))
+        L = figure_length
+        length = random.choice(range(L + 1, L * 5))
         return ''.join(cls.vfc() for i in range(length))
 
     @classmethod
@@ -42,7 +42,7 @@ class MakeFigureString:
     def unknown(cls):
         " return random valid string not found in figures "
         while True:
-            fs = ''.join(cls.vfc() for i in range(valid_length))
+            fs = ''.join(cls.vfc() for i in range(figure_length))
             if fs not in figures.keys():
                 return fs
 

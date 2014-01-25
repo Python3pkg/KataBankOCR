@@ -32,8 +32,9 @@ class Entry():
 
     def validate_elements_all_strings(self,input):
         " confirm elements of input all strings "
-        for element in input:
-            validate_input_type(element, str, 'Entry list element')
+        for index in range(len(input)):
+            validate_input_type(input[index], str, 
+                                'Entry list element %d' % index)
 
     def trim_line_feeds_from_lines_if_necessary(self,lines):
         " remove any superfluous line-feeds "

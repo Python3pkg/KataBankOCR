@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from settings import figures, valid_figure_characters, characters_per_figure
+from settings import figures, valid_figure_characters, figure_length
 from validators import validate_input_type, validate_input_length
 from errors import InputError
 
@@ -15,7 +15,7 @@ class Figure():
     def validate_input_as_figure_string(self, input):
         " confirm type, length, and character composition or raise an error "
         validate_input_type(input, str, 'Figure input')
-        validate_input_length(input, characters_per_figure, 'Figure input')
+        validate_input_length(input, figure_length, 'Figure input')
         self.validate_input_composition(input)
         return input
         
