@@ -27,7 +27,7 @@ def test_validator_passes_silently_on_good_input(validator, args):
         (validate_input_length, InputLengthError, ('', 1)),
         (validate_input_type, InputTypeError, ('', list)),
         ])
-def test_validators_raise_appropriate_error_type(validator, error, args):
+def test_validator_raises_appropriate_error_type(validator, error, args):
     " confirm each validator raises the appropriate error "
     assert pytest.raises(error, validator, *args)
 

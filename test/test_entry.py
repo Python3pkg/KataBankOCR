@@ -8,8 +8,21 @@ from parser.entry import Entry
 from common_tools import entry_list_from_account_string
 from common_tools import invalid_lengths, fit_string_to_length
 
+def altered_list_altered_index_its_value(target_list, alteration_function):
+    """ alter a list element and return tuple of
+    (altered list, altered index,  new value) """
+    target_index = random.choice(range(len(target_list)))
+    new_value = alteration_function(target_list[target_index])
+    target_list[target_index] = new_value
+    return (target_list, target_index, new_value)
+
 class TestEntry:
     " test the Entry class "
+
+    @pytest.fixture
+    def entry_list(self, get_account_string):
+        " return a list of strings that represents a random account string "
+        return entry_list_from_account_string(get_account_string())
 
     class TestInit:
         " test Entry initialization "
@@ -23,8 +36,8 @@ class TestEntry:
             " confirm Entry requires fewer than 2 arguments "
             pytest.raises(TypeError, Entry, *range(arg_count))
 
-    class TestInputValidation:
-        " confirm Entry validates its input "
+    class TestInputType:
+        " confirm Entry validates the type of its input "
 
         @pytest.fixture(params=(0, 1, -10, False, True,
                                 'foo', '', (), {}, set(), 3.14159))
@@ -38,21 +51,13 @@ class TestEntry:
             assert e.value.message == "Entry input of unexpected type. " +\
                 "expected:<type 'list'>. found:%s." % type(non_list)
 
+    class TestInputLength:
+        " confirm Entry validates the length of its input "
+
         @pytest.fixture(params=invalid_lengths(settings.lines_per_entry))
-        def invalid_entry_list_length(self, request):
-            " return an in invalid length for an entry list "
-            return request.param
-
-        @pytest.fixture
-        def entry_list(self, get_account_string):
-            " return a list of strings that represents a random account string "
-            return entry_list_from_account_string(get_account_string())
-
-        @pytest.fixture
-        def invalid_length_entry_list(self, entry_list, 
-                                      invalid_entry_list_length):
+        def invalid_length_entry_list(self, request, entry_list):
             " return an entry list of invalid length "
-            return [entry_list[0] for i in range(invalid_entry_list_length)]
+            return [entry_list[0] for i in range(request.param)]
 
         def test_with_list_of_invalid_length(self, invalid_length_entry_list):
             " confirm Entry detects an invalid length list "
@@ -62,31 +67,25 @@ class TestEntry:
                 "expected:%d. " % settings.lines_per_entry +\
                 "found:%d." % len(invalid_length_entry_list)
 
+    class TestElementType:
+        " confirm Entry validates the type of each element in its input list "
+
         @pytest.fixture(params=(0, 1, -10, False, True, 
                                 [], (), {}, set(), 3.14159))
-        def arbitrary_non_string_value(self, request):
-            " return a non-string value "
+        def non_string_value(self, request):
+            " return an arbitrary non-string value "
             return request.param
-
-        def altered_list_altered_index_its_value(self, target_list,
-                                                 alteration_function):
-            """ alter a list element and return tuple of
-            (altered list, altered index,  new value) """
-            target_index = random.choice(range(len(target_list)))
-            new_value = alteration_function(target_list[target_index])
-            target_list[target_index] = new_value
-            return (target_list, target_index, new_value)
 
         @pytest.fixture
         def entry_list_with_non_string_its_index_and_value(
-            self, arbitrary_non_string_value, entry_list):
-            """ return a tuple used to test an entry list containing a non-string
-            create valid entry list, replace a random line with a non-string,
-            return tuple of (adulterated list, altered index, non-string value)
+            self, non_string_value, entry_list):
+            """ return a tuple used to test an entry list containing a non-string.
+            Create valid entry list, replace a random line with a non-string, &
+            return a tuple of (adulterated list, altered index, non-string value).
             """
-            alteration_function = lambda s: arbitrary_non_string_value 
-            return self.altered_list_altered_index_its_value(entry_list, 
-                                                             alteration_function)
+            alteration_function = lambda x: non_string_value 
+            return altered_list_altered_index_its_value(entry_list, 
+                                                        alteration_function)
 
         def test_with_list_containing_a_non_string(
             self, entry_list_with_non_string_its_index_and_value):
@@ -97,6 +96,9 @@ class TestEntry:
             assert e.value.message == "Entry list element %d " % index +\
                 "of unexpected type. expected:<type 'str'>. " +\
                 "found:%s." % type(value)
+
+    class TestLineLength:
+        " confirm Entry validates the length of each line in its entry list "
 
         @pytest.fixture(params=invalid_lengths(settings.line_length))
         def invalid_line_length(self, request):
@@ -113,8 +115,8 @@ class TestEntry:
             self, invalid_length_line, entry_list):
             " return a tuple of (adulterated_list, altered index, bad_line) "
             alteration_function = lambda s: invalid_length_line
-            return self.altered_list_altered_index_its_value(entry_list,
-                                                             alteration_function)
+            return altered_list_altered_index_its_value(entry_list,
+                                                        alteration_function)
 
         def test_with_entry_list_containing_line_of_invalid_length(
             self, entry_list_with_wrong_length_line_its_index_and_value):
@@ -126,6 +128,9 @@ class TestEntry:
                 "Entry line %d of unexpected length. " % index +\
                 "expected:%d. " % settings.line_length +\
                 "found:%d." % len(bad_line)
+
+    class TestLastLineEmpty:
+        " confirm Entry ensures last line contains only whitespace "
 
         @pytest.fixture
         def non_whitespace_line(self,):

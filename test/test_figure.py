@@ -11,7 +11,7 @@ class TestFigure:
     " test the Figure class "
 
     class TestInit:
-        " test figure initialization "
+        " test figure instantiation "
         
         def test_with_no_argument(self):
             " confirm Figure require more than zero arguments "
@@ -77,15 +77,15 @@ class TestFigure:
         def test_with_unknown_string(self, unknown_figure_string):
             " confirm Figure refuses unknown strings "
             e = pytest.raises(InputError, Figure, unknown_figure_string)
-            assert 'unknown figure' in e.value.message
-
+            assert e.value.message == \
+                'Unknown figure "%s"' % unknown_figure_string
 
     class TestAdulterated:
         " confirm Figure identifies adulterated strings "
 
         some_non_figure_characters = ('\t', '-', 'I', 'l', '/', '\\', '\r')
-        assert not set(some_non_figure_characters) &\
-            set(settings.valid_figure_characters)
+        char_valid = lambda char: char in settings.valid_figure_characters
+        assert not any(map(char_valid, some_non_figure_characters))
         @pytest.fixture(params=some_non_figure_characters)
         def non_figure_character(self, request):
             " return arbitrary character not in settings.valid_figure_charcters "

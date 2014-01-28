@@ -62,7 +62,7 @@ class TestParser:
 
         @pytest.fixture
         def path_to_empty_file(self, tmpdir):
-            " return path to a file missing its last line "
+            " return path to an empty file "
             return  file_path_from_entry_lists(tmpdir, [])
 
         def test_with_empty_file(self, path_to_empty_file):

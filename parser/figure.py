@@ -30,5 +30,5 @@ class Figure():
         if figure_string in settings.figures:
             return settings.figures[figure_string]
         else:
-            raise(InputError('unknown figure "%s"' % figure_string))
+            raise(InputError('Unknown figure "%s"' % figure_string))
 
