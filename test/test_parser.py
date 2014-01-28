@@ -43,7 +43,8 @@ class TestParser:
 
         def test_with_bad_path(self):
             " confirm Parser verifies ability to open file at given path "
-            pytest.raises(IOError, Parser, 'mxyzptlk')
+            bad_path = 'mxyzptlk_foobarbaz'
+            pytest.raises(IOError, Parser, bad_path)
 
         @pytest.fixture
         def path_to_abbreviated_file(self, path):
@@ -73,12 +74,12 @@ class TestParser:
         " confirm Parser resolves file to list of correct account strings "
 
         def test_correctly_parses_file(self, path_and_account_strings):
-            " confirm Parser creates entries from lines "
+            " confirm Parser identifies account strings from path "
             path, account_strings = path_and_account_strings
             assert Parser(path).account_strings == account_strings
 
         def test_main_parses_from_std_in(self, path_and_account_strings):
-            " confirm Parser.main parses correctly "
+            " confirm Parser.main identifies accounts via std-in "
             path, account_strings = path_and_account_strings
             with path.open() as input_file:
                 output = subprocess.check_output('parser/parser.py', 
