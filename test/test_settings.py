@@ -16,6 +16,9 @@ class TestSettings:
                                 ('figure_width',int),
                                 ('figure_length',int),
                                 ('valid_figure_characters',tuple),
+                                ('some_known_valid_account_strings',tuple),
+                                ('some_known_invalid_account_strings',tuple),
+                                ('valid_figure_characters',tuple),
                                 ('figures',dict),
                                 ('checksum',FunctionType),
                                 ('last_line_empty',bool),))
@@ -86,16 +89,14 @@ class TestSettings:
     class TestChecksumFunctionality:
         " confirm checksum correct categorizes known account strings "
         
-        @pytest.mark.parametrize('account_string', ('123456789', '490867715',
-                                                    '899999999', '490867715',
-                                                    '686666666', '559555555'))
+        @pytest.mark.parametrize('account_string',
+                                 settings.some_known_valid_account_strings)
         def test_with_known_good_string(self, account_string):
             " confirm checksum reports a known good account string as valid "
             assert settings.checksum(account_string) == True
 
-        @pytest.mark.parametrize('account_string', ('490067715', '888888888',
-                                                    '555555555', '333333333',
-                                                    '111111111', '777777777',))
+        @pytest.mark.parametrize('account_string',
+                                 settings.some_known_invalid_account_strings)
         def test_with_known_bad_string(self, account_string):
             " confirm checksum reports a known bad account string as invalid "
             assert settings.checksum(account_string) ==  False

@@ -82,3 +82,9 @@ def checksum(account_string):
     " return True for a valid ccount_string and False for invalid account string "
     value = lambda index: int(account_string[index]) * (9 - index)
     return sum(value(i) for i in range(figures_per_entry)).__mod__(11) == 0
+# The Checksum will return True for these strings
+some_known_valid_account_strings = ('123456789', '490867715', '899999999',
+                                    '000000051', '686666666', '559555555')
+# The Checksum will return False for these strings
+some_known_invalid_account_strings = ('490067715', '888888888', '555555555',
+                                      '333333333', '111111111', '777777777')
