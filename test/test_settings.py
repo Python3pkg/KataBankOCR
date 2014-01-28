@@ -2,6 +2,9 @@ import pytest
 
 import settings
 
+from common_tools import invalid_lengths
+from types import FunctionType
+
 class TestSettings:
     " Test the settings file "
 
@@ -14,6 +17,7 @@ class TestSettings:
                                 ('figure_length',int),
                                 ('valid_figure_characters',tuple),
                                 ('figures',dict),
+                                ('checksum',FunctionType),
                                 ('last_line_empty',bool),))
         def setting_name_and_type(self, request):
             " return (setting_name, setting_type) "
@@ -67,3 +71,31 @@ class TestSettings:
             " confirm account character validitiy "
             assert account_character in settings.valid_account_characters
 
+    class TestChecksumArggumentCount:
+        " confirm checksum accepts exactly one argument "
+        
+        def test_with_no_argument(self):
+            " confirm checksum requires more than zero arguments "
+            pytest.raises(TypeError, settings.checksum)
+
+        @pytest.mark.parametrize('arg_count', range(2, 20))
+        def test_with_multiple_arguments(self, arg_count):
+            " confirm checksum requires fewer than 2 arguments "
+            pytest.raises(TypeError, settings.checksum, *range(arg_count))
+
+    class TestChecksumFunctionality:
+        " confirm checksum correct categorizes known account strings "
+        
+        @pytest.mark.parametrize('account_string', ('123456789', '490867715',
+                                                    '899999999', '490867715',
+                                                    '686666666', '559555555'))
+        def test_with_known_good_string(self, account_string):
+            " confirm checksum reports a known good account string as valid "
+            assert isinstance(settings.checksum(account_string), True)
+
+        @pytest.mark.parametrize('account_string', ('490067715', '888888888',
+                                                    '555555555', '333333333',
+                                                    '111111111', '777777777',))
+        def test_with_known_bad_string(self, account_string):
+            " confirm checksum reports a known bad account string as invalid "
+            assert isinstance(settings.checksum(account_string), False)
