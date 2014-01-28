@@ -1,9 +1,6 @@
 " Various possible errors "
 
-class EntryError(Exception):
-    " Base class for exceptions in this module "
-
-class InputError(EntryError):
+class InputError(Exception):
     " Exception raised for errors in the input "
     def __init__(self, msg):
         self.message = msg

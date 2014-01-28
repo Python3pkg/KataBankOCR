@@ -1,4 +1,4 @@
-" Collect pytest fixtures "
+" Fixtures used by multiple test modules "
 
 import pytest
 import random

@@ -10,42 +10,31 @@ class Parser():
     " Parses file at path into account strings. If no path, uses StdIn. "
 
     def __init__(self,path=None):
-        self.path = path
-        self.account_strings = []
-        self.get_lines()
-        self.validate_lines()
-        self.parse_lines()
+        " parse file or std-in into account strings "
+        lines = self._get_lines(path)
+        self._validate_lines(lines)
+        self.account_strings = self._lines_from_account_strings(lines)
 
-    def lines_from_stdin(self):
-        " read and return all lines from standard input "
+    def _get_lines(self, path):
+        " read all lines from either path or standard input "
+        if path:
+            with open(str(path)) as input_file:
+                return list(input_file)
         return list(fileinput.input())
 
-    def lines_from_path(self):
-        " read and return all lines from file at path "
-        with open(str(self.path)) as input_file:
-            return list(input_file)
-
-    def get_lines(self):
-        " read all lines from either path or standard input "
-        if self.path:
-            self.lines = self.lines_from_path()
-        else:
-            self.lines = self.lines_from_stdin()
-
-    def validate_lines(self):
-        " parse lines into entries and decipher their account strings "
-        if not self.lines: 
+    def _validate_lines(self, lines):
+        " confirm appropriate number of lines read "
+        if not lines: 
             raise(InputError('nothing to parse'))
-        elif len(self.lines).__mod__(settings.lines_per_entry) != 0:
+        elif len(lines).__mod__(settings.lines_per_entry) != 0:
             raise(InputError('file ended mid entry'))
 
-    def parse_lines(self):
-        " parse lines into entries and decipher their account strings "
-        for line_index in range(0, len(self.lines), settings.lines_per_entry):
-            entry_lines = self.lines[line_index:line_index + 
-                                     settings.lines_per_entry]
-            account_string = Entry(entry_lines).account_string
-            self.account_strings.append(account_string)
+    def _lines_from_account_strings(self, lines):
+        " parse lines into entries and return their account strings "
+        entry_start_indexes = range(0, len(lines), settings.lines_per_entry)
+        entry_list = lambda index: lines[index:index + settings.lines_per_entry]
+        account_string = lambda index:Entry(entry_list(index)).account_string
+        return map(account_string, entry_start_indexes)
 
 def main():
     print Parser().account_strings

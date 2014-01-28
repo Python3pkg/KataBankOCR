@@ -156,10 +156,10 @@ class TestEntry:
             if settings.last_line_empty:
                 bad_list = entry_list_with_non_whitespace_last_line
                 e = pytest.raises(InputError, Entry, bad_list)
-                assert e.value.message == 'last line in list not empty'
+                assert e.value.message == 'Last line in list not empty'
 
     class TestFunctionality:
-        " confirm Entry resolves list of known figgure strings to an acc. string "
+        " confirm Entry parses entry_list to figures to correct account string "
 
         def test_correctly_parses_entry_list(self, get_account_string):
             " confirm Entry parses valid entry lines into correct account string "

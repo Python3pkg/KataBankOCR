@@ -1,8 +1,8 @@
 " functions used by multiple test modules "
 
+from __future__ import print_function
 import pytest
 import random
-
 import settings
 
 def figure_string_from_account_character(account_character):
@@ -29,7 +29,7 @@ def file_path_from_entry_lists(tmpdir, entry_lists):
     path = tmpdir.join('input_file.txt')
     F = path.open('w')
     for line in lines:
-        F.write(line+'\n')
+        print(line, file=F)
     F.close()
     return path
 
