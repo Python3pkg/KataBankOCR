@@ -77,3 +77,8 @@ line_length = figure_width * figures_per_entry  # 27
 # All Input Files contain _approximately_ the same number of entries
 approximate_entries_per_file = 500
 
+# The Checksum differentiates between 'valid' and 'invalid' account strings
+def checksum(account_string):
+    " return True for a valid ccount_string and False for invalid account string "
+    value = lambda index: int(account_string[index]) * (9 - index)
+    return sum(value(i) for i in range(figures_per_entry)).__mod__(11) == 0

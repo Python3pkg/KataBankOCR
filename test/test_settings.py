@@ -91,11 +91,11 @@ class TestSettings:
                                                     '686666666', '559555555'))
         def test_with_known_good_string(self, account_string):
             " confirm checksum reports a known good account string as valid "
-            assert isinstance(settings.checksum(account_string), True)
+            assert settings.checksum(account_string) == True
 
         @pytest.mark.parametrize('account_string', ('490067715', '888888888',
                                                     '555555555', '333333333',
                                                     '111111111', '777777777',))
         def test_with_known_bad_string(self, account_string):
             " confirm checksum reports a known bad account string as invalid "
-            assert isinstance(settings.checksum(account_string), False)
+            assert settings.checksum(account_string) ==  False
