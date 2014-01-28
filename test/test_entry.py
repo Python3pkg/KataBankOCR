@@ -44,25 +44,6 @@ class TestEntry:
             return request.param
 
         @pytest.fixture
-        def entry_list(self):
-            " return a list of strings that represents a random account string "
-            figure_indexes = range(settings.figures_per_entry)
-            get_figure_string = lambda: random.choice(settings.figures.keys())
-            figure_strings = [get_figure_string() for i in figure_indexes]
-            lines = []
-            for line_index in range(settings.lines_per_entry):
-                line = ''
-                for figure_index in figure_indexes:
-                    figure_string = figure_strings[figure_index]
-                    first_char_index = line_index * settings.figure_width
-                    last_char_index = first_char_index + settings.figure_width
-                    substring = figure_string[first_char_index:last_char_index]
-                    line += substring
-                lines.append(line)
-            return lines
-
-
-        @pytest.fixture
         def entry_list(self, get_account_string):
             " return a list of strings that represents a random account string "
             return entry_list_from_account_string(get_account_string())
@@ -151,10 +132,11 @@ class TestEntry:
             " return a line containing at least one non-whitespace character "
             assert not ''.join(settings.valid_figure_characters).isspace()
             get_char = lambda x: random.choice(settings.valid_figure_characters)
-            while True:
+            for i in range(10):
                 line = ''.join(map(get_char, range(settings.line_length)))
                 if not line.isspace():
                     return line
+            raise ValueError('Failed to generate a non-whitespace line')
 
         @pytest.fixture
         def entry_list_with_non_whitespace_last_line(

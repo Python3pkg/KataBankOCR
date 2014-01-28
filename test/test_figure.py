@@ -72,7 +72,7 @@ class TestFigure:
                 figure_string = ''.join(figure_characters)
                 if figure_string not in settings.figures.keys():
                     return figure_string
-            raise ValueError('Failed to find an unknown figure string')
+            raise ValueError('Failed to generate an unknown figure string')
 
         def test_with_unknown_string(self, unknown_figure_string):
             " confirm Figure refuses unknown strings "
