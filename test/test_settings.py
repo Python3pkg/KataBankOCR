@@ -71,7 +71,7 @@ class TestSettings:
             " confirm account character validitiy "
             assert account_character in settings.valid_account_characters
 
-    class TestChecksumArggumentCount:
+    class TestChecksumArgumentCount:
         " confirm checksum accepts exactly one argument "
         
         def test_with_no_argument(self):
