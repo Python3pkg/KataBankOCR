@@ -6,7 +6,7 @@ from common_tools import invalid_lengths
 from types import FunctionType
 
 class TestSettings:
-    " Test the settings file "
+    " Test the settings module "
 
     class TestDefinedType:
         " confirm all settings defined and of correct type "
@@ -20,6 +20,8 @@ class TestSettings:
                                 ('some_known_invalid_account_strings',tuple),
                                 ('valid_figure_characters',tuple),
                                 ('figures',dict),
+                                ('illegible_account_character',str),
+                                ('invalid_account_marker',str),
                                 ('checksum',FunctionType),
                                 ('last_line_empty',bool),))
         def setting_name_and_type(self, request):
@@ -100,3 +102,15 @@ class TestSettings:
         def test_with_known_bad_string(self, account_string):
             " confirm checksum reports a known bad account string as invalid "
             assert settings.checksum(account_string) ==  False
+
+    class TestIllegibleAccountCharacter:
+        " confirm illegible_account_character's characteristics "
+        
+        def test_illegible_account_character_length(self):
+            " confirm llegible_account_character exactly one character long "
+            assert len(settings.illegible_account_character) == 1
+
+        def test_illegible_account_character_distinct_from_valid_characters(self):
+            " confirm llegible_account_character not in valid_account_characters "
+            assert settings.illegible_account_character \
+                not in settings.valid_account_characters

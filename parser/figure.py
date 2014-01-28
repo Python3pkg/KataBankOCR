@@ -29,5 +29,5 @@ class Figure():
         " find figure string in settings dict or raise InputError "
         if figure_string in settings.figures:
             return settings.figures[figure_string]
-        return '?'
+        return settings.illegible_account_character
 

@@ -167,4 +167,47 @@ class TestEntry:
             entry_list = entry_list_from_account_string(account_string)
             assert Entry(entry_list).account_string == account_string
 
+    class TestProblem:
+        " confirm Entry marks each account string as valid/invalid/illegible "
 
+        @pytest.fixture
+        def valid_account_string(self, get_account_string):
+            " return a valid account string "
+            # brutish
+            while True:
+                account_string = get_account_string()
+                if settings.checksum(account_string):
+                    return account_string
+
+        def test_with_valid_account_string(self, valid_account_string):
+            " confirm Entry has no problem with a valid account string "
+            entry_list = entry_list_from_account_string(valid_account_string)
+            assert Entry(entry_list).Problem == None
+
+        @pytest.fixture
+        def invalid_account_string(self, get_account_string):
+            " return a invalid account string "
+            # brutish
+            while True:
+                account_string = get_account_string()
+                if not settings.checksum(account_string):
+                    return account_string
+
+        def test_with_valid_account_string(self, valid_account_string):
+            " confirm Entry has marks an invalid account string "
+            entry_list = entry_list_from_account_string(valid_account_string)
+            assert Entry(entry_list).Problem == settings.invalid_account_marker
+
+        @pytest.fixture
+        def valid_account_string(self, get_account_string):
+            " return a valid account string "
+            # brutish
+            while True:
+                account_string = get_account_string()
+                if settings.checksum(account_string):
+                    return account_string
+
+        def test_with_valid_account_string(self, valid_account_string):
+            " confirm Entry has no problem with a valid account string "
+            entry_list = entry_list_from_account_string(valid_account_string)
+            assert Entry(entry_list).Problem == None

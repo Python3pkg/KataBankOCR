@@ -76,7 +76,8 @@ class TestFigure:
 
         def test_with_unknown_string(self, unknown_figure_string):
             " confirm Figure identifies unknown strings "
-            assert Figure(unknown_figure_string).account_character == '?'
+            assert Figure(unknown_figure_string).account_character == \
+                settings.illegible_account_character
 
     class TestAdulterated:
         " confirm Figure identifies adulterated strings "
