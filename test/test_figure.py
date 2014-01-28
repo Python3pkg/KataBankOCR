@@ -75,10 +75,8 @@ class TestFigure:
             raise ValueError('Failed to generate an unknown figure string')
 
         def test_with_unknown_string(self, unknown_figure_string):
-            " confirm Figure refuses unknown strings "
-            e = pytest.raises(InputError, Figure, unknown_figure_string)
-            assert e.value.message == \
-                'Unknown figure "%s"' % unknown_figure_string
+            " confirm Figure identifies unknown strings "
+            assert Figure(unknown_figure_string).account_character == '?'
 
     class TestAdulterated:
         " confirm Figure identifies adulterated strings "
