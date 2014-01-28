@@ -29,6 +29,5 @@ class Figure():
         " find figure string in settings dict or raise InputError "
         if figure_string in settings.figures:
             return settings.figures[figure_string]
-        else:
-            raise(InputError('Unknown figure "%s"' % figure_string))
+        return '?'
 
