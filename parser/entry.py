@@ -12,6 +12,7 @@ class Entry():
         and then determine the account string represented by those lines """
         entry_list = self._sanitize_and_validate_input(input)
         self.account_string = self._account_string_from_entry_list(entry_list)
+        self.problem = self._get_problem()
 
     def _sanitize_and_validate_input(self,input):
         " confirm type, remove line-feeds, and validate lines "
@@ -76,3 +77,11 @@ class Entry():
         " return the portion of a figure string within a line "
         start_index = figure_index * settings.figure_width
         return line[start_index:start_index + settings.figure_width]
+
+    def _get_problem(self):
+        " return appropriate problem marker for the account string "
+        if settings.illegible_account_character in self.account_string:
+            return settings.illegible_account_marker
+        elif not settings.checksum(self.account_string):
+            return settings.invalid_account_marker
+        return None
