@@ -5,8 +5,8 @@ import settings
 from parser.errors import InputError
 from parser.parser import Parser
 
-from tools.builders import file_path_from_entry_lists
-from tools.builders import entry_list_from_account_string
+from common_tools import file_path_from_entry_lists
+from common_tools import entry_list_from_account_string
 
 class TestParser:
     " test the Parser class "

@@ -5,7 +5,7 @@ import settings
 from parser.errors import InputError, InputTypeError, InputLengthError
 from parser.figure import Figure
 
-from tools.helpers import invalid_lengths, fit_string_to_length
+from common_tools import invalid_lengths, fit_string_to_length
 
 class TestFigure:
     " test the Figure class "

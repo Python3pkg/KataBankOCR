@@ -5,8 +5,8 @@ import settings
 from parser.errors import InputError, InputTypeError, InputLengthError
 from parser.entry import Entry
 
-from tools.builders import entry_list_from_account_string
-from tools.helpers import invalid_lengths, fit_string_to_length
+from common_tools import entry_list_from_account_string
+from common_tools import invalid_lengths, fit_string_to_length
 
 class TestEntry:
     " test the Entry class "
