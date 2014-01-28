@@ -1,6 +1,4 @@
-#!/usr/bin/env python
-
-" functions that validate or raise errors as necessary "
+" functions that raise errors on invalid input "
 
 from errors import InputLengthError, InputTypeError
 

@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 
-" The Parser module "
-
 import fileinput
-
 import settings
 
 from errors import InputError
@@ -44,9 +41,9 @@ class Parser():
 
     def parse_lines(self):
         " parse lines into entries and decipher their account strings "
-        lpe = settings.lines_per_entry
-        for line_index in range(0, len(self.lines), lpe):
-            entry_lines = self.lines[line_index:line_index + lpe]
+        for line_index in range(0, len(self.lines), settings.lines_per_entry):
+            entry_lines = self.lines[line_index:line_index + 
+                                     settings.lines_per_entry]
             account_string = Entry(entry_lines).account_string
             self.account_strings.append(account_string)
 

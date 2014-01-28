@@ -1,50 +1,69 @@
-#!/usr/bin/env python
-
-""" Test the settings file"""
+import pytest
 
 import settings
 
-setting_types = {int:('lines_per_entry',
-                      'figures_per_entry',
-                      'figure_width',
-                      'figure_length',
-                      ),
-                 tuple:('valid_figure_characters',),
-                 dict:('figures',),
-                 bool:('last_line_empty',),
-                 }
+class TestSettings:
+    " Test the settings file "
 
-def test_all_settings_exist():
-    """ confirm each expected setting exists """
-    for type in setting_types:
-        for setting_name in setting_types[type]:
-            assert settings.__dict__.has_key(setting_name)
+    class TestDefinedType:
+        " confirm all settings defined and of correct type "
+    
+        @pytest.fixture(params=(('lines_per_entry',int),
+                                ('figures_per_entry',int),
+                                ('figure_width',int),
+                                ('figure_length',int),
+                                ('valid_figure_characters',tuple),
+                                ('figures',dict),
+                                ('last_line_empty',bool),))
+        def setting_name_and_type(self, request):
+            " return (setting_name, setting_type) "
+            return request.param
 
-def test_all_settings_of_correct_type():
-    """ confirm each setting has the expected type """
-    for type in setting_types:
-        for setting_name in setting_types[type]:
-            assert isinstance(settings.__dict__[setting_name],type)
+        def test_setting_defined(self, setting_name_and_type):
+            """ confirm setting defined """
+            assert settings.__dict__.has_key(setting_name_and_type[0])
 
-""" Test the figures"""
+        def test_setting_of_correct_type(self, setting_name_and_type):
+            """ confirm setting has expected type """
+            setting_name, setting_type = setting_name_and_type
+            setting_value = settings.__dict__[setting_name]
+            assert isinstance(setting_value, setting_type)
 
-figures = settings.figures
+    class TestSingularity:
+        " confirm uniqueness of all figures and account characters "
 
-def test_all_figures_unique():
-    " confirm no duplicate figures exist "
-    assert len(set(figures)) == len(figures)
+        def test_figure_string_singularity(self):
+            " confirm no duplicate figures exist "
+            figure_characters = settings.figures.keys()
+            assert len(set(figure_characters)) == len(figure_characters)
 
-def test_all_values_represented():
-    " confirm figures has exactly the expected values "
-    assert set(figures.values()) == set(settings.values)
+        def test_account_character_singularity(self):
+            " confirm no duplicate account_characters exist "
+            account_characters = settings.figures.keys()
+            assert len(set(account_characters)) == len(account_characters)
 
-def test_figure_string_has_correct_length():
-    " confirm each figure contains the correct number of characters "
-    for s in figures:
-        assert len(s) == settings.figure_length
+    class TestConstruction:
+        " confirm length and composition of all figures and account characters "
 
-def test_figure_composed_entirely_of_valid_components():
-    " confirm each figure consists only of spaces, underscores, and pipes "
-    chars = settings.valid_figure_characters
-    for s in figures:
-        assert set(chars).issuperset(s)
+        @pytest.fixture(params=settings.figures.keys())
+        def figure_string(self, request):
+            " return a figure string that represents an account character "
+            return request.param
+
+        def test_figure_string_has_correct_length(self, figure_string):
+            " confirm figure string contains the correct number of characters "
+            assert len(figure_string) == settings.figure_length
+
+        def test_figure_composed_of_valid_components(self, figure_string):
+            " confirm figure composed only of valid figure characters "
+            assert set(figure_string).issubset(settings.valid_figure_characters)
+
+        @pytest.fixture(params=settings.figures.values())
+        def account_character(self, request):
+            " return an account character represented by a figure string "
+            return request.param
+
+        def test_account_character_validitity(self, account_character):
+            " confirm account character validitiy "
+            assert account_character in settings.valid_account_characters
+

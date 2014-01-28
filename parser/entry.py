@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 " The Entry Module "
 
 import settings
@@ -14,68 +12,73 @@ class Entry():
     " A list of lines that represents an account string "
 
     def __init__(self,input):
-        lines = self.sanitize_and_validate_input(input)
-        self.account_string = self.parse_lines_to_account_string(lines)
+        """ receive, sanitize, & validate entry lines (a list of strings)
+        and then determine the account string represented by those lines """
+        entry_list = self._sanitize_and_validate_input(input)
+        self.account_string = self._lines_to_account_string(entry_list)
 
-    def sanitize_and_validate_input(self,input):
+    def _sanitize_and_validate_input(self,input):
         " confirm type, remove line-feeds, and validate lines "
-        lines = self.validate_input_as_list_of_strings(input)
-        lines = self.trim_line_feeds_from_lines_if_necessary(lines)
-        self.validate_lines(lines)
+        self._validate_input_as_list_of_strings(input)
+        lines = self._trim_line_feeds_from_lines_if_necessary(input)
+        self._validate_lines(lines)
         return lines
 
-    def validate_input_as_list_of_strings(self,input):
+    def _validate_input_as_list_of_strings(self,input):
         " confirm input takes form of a list of strings "
         validate_input_type(input, list, 'Entry input')
-        self.validate_elements_all_strings(input)
-        return input
+        self._validate_elements_all_strings(input)
 
-    def validate_elements_all_strings(self,input):
+    def _validate_elements_all_strings(self,input):
         " confirm elements of input all strings "
         for index in range(len(input)):
-            validate_input_type(input[index], str, 
+            validate_input_type(input[index], str,
                                 'Entry list element %d' % index)
 
-    def trim_line_feeds_from_lines_if_necessary(self,lines):
+    def _trim_line_feeds_from_lines_if_necessary(self,lines):
         " remove any superfluous line-feeds "
         ends_in_line_feed = lambda line: line[-1:] == '\n'
         one_char_too_long = lambda line: len(line) == line_length + 1
         needs_trimming = lambda L: ends_in_line_feed(L) and one_char_too_long(L)
         return [line[:-1] if needs_trimming(line) else line for line in lines]
 
-    def validate_lines(self, lines):
+    def _validate_lines(self, lines):
         " validate valid line count, lengths, and last line empty "
         expected = settings.lines_per_entry
         validate_input_length(lines, expected, 'Entry list of lines')
-        self.validate_line_lengths(lines)
-        self.validate_last_line_empty(lines)
+        self._validate_line_lengths(lines)
+        self._validate_last_line_empty(lines)
 
-    def validate_line_lengths(self, lines):
+    def _validate_line_lengths(self, lines):
         " confirm each line in list has appropriate length "
         for i in range(len(lines)):
             validate_input_length(lines[i], line_length, 'Entry line %d' % i)
 
-    def validate_last_line_empty(self, lines):
+    def _validate_last_line_empty(self, lines):
         " confirm last line in list contains only whitespace "
         last_line = lines[settings.lines_per_entry-1]
         if settings.last_line_empty and not last_line.isspace():
             raise(InputError('last line in list not empty'))
 
-    def parse_lines_to_account_string(self, lines):
-        " lines >-> figure_strings >-> figure_values >-> an account_string "
-        figure_strings = self.parse_lines_to_figure_strings(lines)
-        figure_values = [Figure(s).value for s in figure_strings]
-        account_string = ''.join(v for v in figure_values)
+    def _lines_to_account_string(self, lines):
+        " lines >-> figure_strings >-> account_characters >-> an account_string "
+        figure_strings = self._lines_to_figure_strings(lines)
+        account_characters = [Figure(s).account_character for s in figure_strings]
+        account_string = ''.join(c for c in account_characters)
         return account_string
 
-    def parse_lines_to_figure_strings(self, lines):
-        figure_count = settings.figures_per_entry
-        figure_strings = ['' for i in range(figure_count)]
-        for line_index in range(len(lines)):
-            line = lines[line_index]
-            for figure_index in range(figure_count):
-                start_char_index = figure_index * settings.figure_width
-                end_char_index = start_char_index + settings.figure_width
-                substring = line[start_char_index:end_char_index]
+    def _lines_to_figure_strings(self, lines):
+        " build figure strings form substrings in each line "
+        figure_indexes = range(settings.figures_per_entry)
+        figure_strings = ['' for i in figure_indexes]
+        for line in lines:
+            for figure_index in figure_indexes:
+                substring = self._figure_substring_from_line(line, figure_index)
                 figure_strings[figure_index] += substring
         return figure_strings
+
+    def _figure_substring_from_line(self, line, figure_index):
+        " return a portion of a figure string from a line "
+        start_index = figure_index * settings.figure_width
+        return line[start_index:start_index + settings.figure_width]
+

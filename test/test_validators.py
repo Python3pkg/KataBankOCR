@@ -1,47 +1,44 @@
-#!/usr/bin/env python
-
-" Test the validators module "
-
+" test validators "
 import pytest
 
-from parser.errors import InputTypeError as TypErr
-from parser.errors import InputLengthError as LenErr
-from parser.validators import validate_input_length as val_len
-from parser.validators import validate_input_type as val_typ
+from parser.errors import InputTypeError
+from parser.errors import InputLengthError
+from parser.validators import validate_input_length
+from parser.validators import validate_input_type
 
 @pytest.mark.parametrize("validator, args", [
-        (val_len, ('', 0)),
-        (val_len, ([], 0)),
-        (val_len, ((), 0)),
-        (val_len, ('A', 1)),
-        (val_len, ([1,2], 2)),
-        (val_len, ((1,2,3), 3)),
-        (val_len, ('', 0, 'Named input')),
-        (val_typ, ('foo', str)),
-        (val_typ, ([], list)),
-        (val_typ, ((), tuple)),
-        (val_typ, ('foo', str, 'Named input')),
+        (validate_input_length, ('', 0)),
+        (validate_input_length, ([], 0)),
+        (validate_input_length, ((), 0)),
+        (validate_input_length, ('A', 1)),
+        (validate_input_length, ([1, 2], 2)),
+        (validate_input_length, ((1, 2, 3), 3)),
+        (validate_input_length, ('', 0, 'Named input')),
+        (validate_input_type, ('foo', str)),
+        (validate_input_type, ([], list)),
+        (validate_input_type, ((), tuple)),
+        (validate_input_type, ('foo', str, 'Named input')),
         ])
 def test_validator_passes_silently_on_good_input(validator, args):
-    " confirm validator successfully returns nothing when given valid input "
+    " confirm validator returns nothing when given valid input "
     assert None == validator(*args)
 
 @pytest.mark.parametrize("validator, error, args", [
-        (val_len, LenErr, ('', 1)),
-        (val_typ, TypErr, ('', list)),
+        (validate_input_length, InputLengthError, ('', 1)),
+        (validate_input_type, InputTypeError, ('', list)),
         ])
 def test_validators_raise_appropriate_error_type(validator, error, args):
     " confirm each validator raises the appropriate error "
     assert pytest.raises(error, validator, *args)
 
 @pytest.mark.parametrize("validator, error, args, message", [
-        (val_len, LenErr, ('A', 2), 
+        (validate_input_length, InputLengthError, ('A', 2), 
          "Input of unexpected length. expected:2. found:1."),
-        (val_len, LenErr, ([], 1, 'Given name'),
+        (validate_input_length, InputLengthError, ([], 1, 'Given name'),
          "Given name of unexpected length. expected:1. found:0."),
-        (val_typ, TypErr, ('foo', list), 
+        (validate_input_type, InputTypeError, ('foo', list), 
          "Input of unexpected type. expected:<type 'list'>. found:<type 'str'>."),
-        (val_typ, TypErr, ('foo', list, 'Provided value'),
+        (validate_input_type, InputTypeError, ('foo', list, 'Provided value'),
          "Provided value of unexpected type. " +
          "expected:<type 'list'>. found:<type 'str'>."),
         ])
