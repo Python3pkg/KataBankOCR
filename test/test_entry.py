@@ -6,7 +6,7 @@ from parser.errors import InputError, InputTypeError, InputLengthError
 from parser.entry import Entry
 
 from common_tools import entry_list_from_account_string
-from common_tools import invalid_lengths, fit_string_to_length
+from common_tools import invalid_lengths, fit_string_to_length, adulterate_string
 
 def altered_list_altered_index_its_value(target_list, alteration_function):
     """ alter a list element and return tuple of
@@ -201,13 +201,10 @@ class TestEntry:
         @pytest.fixture
         def illegible_account_string(self, get_account_string):
             " return account string containing the illegible account character "
-            # brutish
-            while True:
-                account_string = get_account_string()
-                if settings.checksum(account_string):
-                    return account_string
+            return adulterate_string(get_account_string(),
+                                     settings.illegible_account_character)
 
         def test_with_illegible_account_string(self, illegible_account_string):
             " confirm Entry marks an illegible account string as such"
             entry_list = entry_list_from_account_string(illegible_account_string)
-#            assert Entry(entry_list).problem == settings.illegible_account_marker
+            assert Entry(entry_list).problem == settings.illegible_account_marker

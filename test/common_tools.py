@@ -5,12 +5,25 @@ import pytest
 import random
 import settings
 
+def get_unknown_figure_string():
+    " return string of good length & charset, not matching an account character "
+    for i in range(100):
+        figure_characters = list(random.choice(settings.figures.keys()))
+        random.shuffle(figure_characters)
+        figure_string = ''.join(figure_characters)
+        if settings.last_line_empty:
+            figure_string = figure_string[:-settings.figure_width]
+            figure_string = figure_string + ' ' * settings.figure_width
+        if figure_string not in settings.figures.keys():
+            return figure_string
+    raise ValueError('Failed to generate an unknown figure string')
+
 def figure_string_from_account_character(account_character):
     " return the figure string that represents the given account character "
-    assert account_character in settings.figures.values()
     for figure in settings.figures:
         if settings.figures[figure] == account_character:
             return figure
+    return get_unknown_figure_string()
 
 def entry_list_from_account_string(account_string):
     " return the list of lines that represents the given account string "
@@ -47,4 +60,11 @@ def fit_string_to_length(string, length):
         return string[:length]
     # Still too short. Double it and recurse.
     return fit_string_to_length(string+string, length)
+
+def adulterate_string(string, adulterant):
+    " return a string with a random character replaced by adulterant "
+    victim_character_index = random.choice(range(len(string)))
+    return '%s%s%s' % (string[:victim_character_index],
+                       adulterant,
+                       string[victim_character_index + 1:])
 

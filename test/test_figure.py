@@ -5,7 +5,8 @@ import settings
 from parser.errors import InputError, InputTypeError, InputLengthError
 from parser.figure import Figure
 
-from common_tools import invalid_lengths, fit_string_to_length
+from common_tools import invalid_lengths, fit_string_to_length, adulterate_string
+from common_tools import get_unknown_figure_string
 
 class TestFigure:
     " test the Figure class "
@@ -63,20 +64,9 @@ class TestFigure:
     class TestUnknown:
         " confirm Figure identifies unknown strings "
 
-        @pytest.fixture
-        def unknown_figure_string(self):
-            " return str w/ good length & charset, but no account character "
-            for i in range(10):
-                figure_characters = list(random.choice(settings.figures.keys()))
-                random.shuffle(figure_characters)
-                figure_string = ''.join(figure_characters)
-                if figure_string not in settings.figures.keys():
-                    return figure_string
-            raise ValueError('Failed to generate an unknown figure string')
-
-        def test_with_unknown_string(self, unknown_figure_string):
+        def test_with_unknown_string(self):
             " confirm Figure identifies unknown strings "
-            assert Figure(unknown_figure_string).account_character == \
+            assert Figure(get_unknown_figure_string()).account_character == \
                 settings.illegible_account_character
 
     class TestAdulterated:
@@ -91,20 +81,10 @@ class TestFigure:
             return request.param
 
         @pytest.fixture
-        def figure_string_adulterator(self, non_figure_character):
-            " return function that returns string containing an invalid character"
-            def adulterated_string(string):
-                victim_character_index = random.choice(range(len(string)))
-                return '%s%s%s' % (string[:victim_character_index],
-                                   non_figure_character,
-                                   string[victim_character_index+1:])
-            return adulterated_string
-
-        @pytest.fixture
-        def adulterated_figure_string(self, figure_string_adulterator):
+        def adulterated_figure_string(self, non_figure_character):
             " return figure string containing an invalid character "
             figure_string = random.choice(settings.figures.keys())
-            return figure_string_adulterator(figure_string)
+            return adulterate_string(figure_string, non_figure_character)
 
         def test_with_adulterated_string(self, adulterated_figure_string):
             " confirm Figure checks input string for inappropriate characters "
