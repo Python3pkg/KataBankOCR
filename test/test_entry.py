@@ -193,13 +193,13 @@ class TestEntry:
                 if not settings.checksum(account_string):
                     return account_string
 
-        def test_with_valid_account_string(self, valid_account_string):
-            " confirm Entry has marks an invalid account string "
+        def test_with_invalid_account_string(self, invalid_account_string):
+            " confirm Entry marks an invalid account string as such"
             entry_list = entry_list_from_account_string(valid_account_string)
             assert Entry(entry_list).Problem == settings.invalid_account_marker
 
         @pytest.fixture
-        def valid_account_string(self, get_account_string):
+        def illegible_account_string(self, get_account_string):
             " return a valid account string "
             # brutish
             while True:
@@ -207,7 +207,7 @@ class TestEntry:
                 if settings.checksum(account_string):
                     return account_string
 
-        def test_with_valid_account_string(self, valid_account_string):
-            " confirm Entry has no problem with a valid account string "
+        def test_with_illegible_account_string(self, valid_account_string):
+            " confirm Entry marks an illegible account string as such"
             entry_list = entry_list_from_account_string(valid_account_string)
             assert Entry(entry_list).Problem == None
