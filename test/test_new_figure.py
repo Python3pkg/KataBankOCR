@@ -81,4 +81,3 @@ class TestGetNumeral:
         expected = settings.illegible_numeral
         assert expected == found
         
-
