@@ -73,7 +73,7 @@ figures = {' _ '+
            '|_|'+
            ' _|'+
            '   ':'9'}
-# All other figures yield the illegible numeral
+# All other Figures yield the illegible Numeral
 illegible_numeral = '?'
 # A Entry including an illegible Numeral displays an additional flag
 illegible_flag = ' ILL'
