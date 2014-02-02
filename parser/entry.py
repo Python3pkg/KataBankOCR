@@ -9,17 +9,17 @@ class Entry():
     " A list (of lines/strings) that represents an Account "
 
     @classmethod
-    def check(cls, lines):
+    def check(cls, entry):
         " raise InputError on list or element with bad type or length "
-        validate_type(list, lines, 'Entry Input')
-        validate_length(settings.lines_per_entry, lines, 'Entry Input')
-        validate_element_types(str, lines, 'Entry Element')
-        validate_element_lengths(settings.strokes_per_line, lines, 'Entry Line')
+        validate_type(list, entry, 'Entry Input')
+        validate_length(settings.lines_per_entry, entry, 'Entry Input')
+        validate_element_types(str, entry, 'Entry Element')
+        validate_element_lengths(settings.strokes_per_line, entry, 'Entry Line')
 
     @classmethod
-    def figures_from_entry(cls, lines):
-        " return Figures within lines "
-        return map(''.join, zip(*map(cls._substrings_from_line, lines)))
+    def figures_from_entry(cls, entry):
+        " return Figures within Entry "
+        return map(''.join, zip(*map(cls._substrings_from_line, entry)))
 
     @classmethod
     def _substrings_from_line(cls, line):
