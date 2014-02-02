@@ -7,13 +7,7 @@ from parser.errors import InputError, InputTypeError, InputLengthError
 from parser.entry import Entry
 
 from common_tools import entry_from_account
-from common_tools import invalid_lengths, fit_to_length, adulterate_string
-
-def replace_random_element(target_list, new_element):
-    " Return list after replacing a random element "
-    target_index = random.choice(range(len(target_list)))
-    target_list[target_index] = new_element
-    return target_list
+from common_tools import invalid_lengths, fit_to_length, replace_random_element
 
 class TestEntry:
     " test the Entry class "
@@ -173,7 +167,7 @@ class TestEntry:
         @pytest.fixture
         def illegible_account(self, get_account):
             " return Account containing the illegible Numeral "
-            return adulterate_string(get_account(), settings.illegible_numeral)
+            return replace_random_element(get_account(), settings.illegible_numeral)
 
         def test_with_illegible_account(self, illegible_account):
             " confirm Entry marks an illegible Account as such"

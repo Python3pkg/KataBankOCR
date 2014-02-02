@@ -7,7 +7,7 @@ import settings
 from parser.errors import InputError, InputTypeError, InputLengthError
 from parser.figure import Figure
 
-from common_tools import invalid_lengths, fit_to_length, adulterate_string
+from common_tools import invalid_lengths, fit_to_length, replace_random_element
 from common_tools import get_unknown_figure
 
 @pytest.fixture(params=settings.figures.keys())
@@ -57,7 +57,7 @@ class TestCheck:
 
         def test_with_adulterated_string(self, figure, non_stroke):
             " confirm Figure checks input for invalid Strokes "
-            adulterated_figure = adulterate_string(figure, non_stroke)
+            adulterated_figure = replace_random_element(figure, non_stroke)
             found_strokes = set(adulterated_figure)
             invalid_strokes = found_strokes - set(settings.valid_strokes)
             sorted_invalid_strokes = sorted(list(invalid_strokes))

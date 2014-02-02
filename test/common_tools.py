@@ -51,18 +51,31 @@ def invalid_lengths(valid_length, multiplier=4):
     return [L for L in lengths if L != valid_length]
 
 def fit_to_length(value, length):
-    " return duplicated & abbreviated version such that len(value) == length "
+    " return duplicated & abbreviated value such that len(value) == length "
     if len(value) == length:
         return value
     elif len(value) > length:
         return value[:length]
     # Still too short. Double it and recurse.
-    return fit_to_length(value+value, length)
+    return fit_to_length(value + value, length)
 
-def adulterate_string(string, adulterant):
-    " return a string with a random character replaced by adulterant "
-    victim_character_index = random.choice(range(len(string)))
-    return '%s%s%s' % (string[:victim_character_index],
-                       adulterant,
-                       string[victim_character_index + 1:])
+def replace_random_element(target, new_element):
+    " Return string or list after replacing a random element "
+    assert type(target) in (str, list)
+    target_index = random.choice(range(len(target)))
+    if isinstance(target, str):
+        return replace_character_in_string(target, target_index, new_element)
+    elif isinstance(target, list):
+        target[target_index] = new_element
+        return target
+    else:
+        raise ValuError('replace_random_element received "%s" ' % target +
+                        "instead of a string or list.")
 
+def replace_character_in_string(string, index, new_character):
+    " Return string after replacing a character "
+    return '%s%s%s' % (string[:index], new_character, string[index + 1:])
+
+def replace_element_in_list(target_list, index, new_element):
+    " Return list after replacing an element "
+    return target_list[:index] + [new_element,] + target_list[index + 1:]
