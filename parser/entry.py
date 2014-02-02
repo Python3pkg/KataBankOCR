@@ -52,8 +52,8 @@ class Entry():
 
     def _account_from_entry(self, entry_list):
         " parse an Entry into an Account "
-        figures = map(Figure, self._figure_from_lines(entry_list))
-        return ''.join(f.numeral for f in figures)
+        numerals = map(Figure.get_numeral, self._figure_from_lines(entry_list))
+        return ''.join(numerals)
 
     def _figure_from_lines(self, lines):
         " build a Figure from the Substrings in each Line "
