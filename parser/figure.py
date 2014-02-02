@@ -4,11 +4,12 @@ from validators import validate_type, validate_length
 
 def _validate_strokes(string):
     " confirm Figure composed only of valid Strokes "
-    invalid_strokes = set(string) - set(settings.valid_strokes)
+    found_strokes = set(string)
+    invalid_strokes = found_strokes - set(settings.valid_strokes)
     if invalid_strokes:
-        invalid_strokes = ''.join(sorted(list(invalid_strokes)))
+        sorted_invalid_strokes = ''.join(sorted(list(invalid_strokes)))
         msg = 'Figure "%s" contains non-Stroke element(s): %s'
-        raise(InputError(msg % (string, invalid_strokes)))
+        raise(InputError(msg % (string, sorted_invalid_strokes)))
 
 class Figure():
     """ A collection of Strokes (stored as a string) that represents

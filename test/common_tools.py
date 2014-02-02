@@ -59,10 +59,11 @@ def fit_to_length(value, length):
     # Still too short. Double it and recurse.
     return fit_to_length(value + value, length)
 
-def replace_random_element(target, new_element):
-    " Return string or list after replacing a random element "
+def replace_element(target, new_element, target_index=None):
+    " Return string or list after replacing a [random] element "
     assert type(target) in (str, list)
-    target_index = random.choice(range(len(target)))
+    if target_index is None:
+        target_index = random.choice(range(len(target)))
     if isinstance(target, str):
         return replace_character_in_string(target, target_index, new_element)
     elif isinstance(target, list):
