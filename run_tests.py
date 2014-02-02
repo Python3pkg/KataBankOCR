@@ -6,12 +6,14 @@ import pytest
 
 
 def main():
+    print 'Testing settings...'
     exit_status = pytest.main(['-k', 'settings.py'])
     exited_cleanly = 0
     if exit_status == exited_cleanly:
+        print 'Settings look fine. Will now test everything.'
         pytest.main(['-k', 'test'])
     else:
-        print 'Testing halted after test failures in settings.py'
+        print 'Settings failed. Testing halted.'
 
 if __name__ == "__main__":
     main()

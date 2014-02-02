@@ -99,3 +99,4 @@ class TestFigure:
             expected = settings.figures[figure]
             found = Figure(figure).numeral
             assert expected == found
+
