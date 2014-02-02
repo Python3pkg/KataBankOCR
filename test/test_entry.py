@@ -116,7 +116,7 @@ class TestResultFromNumerals:
         def test_with_invalid_account(self, invalid_account):
             " confirm Entry.result_from_numerals marks an invalid Account as such"
             entry = entry_from_account(invalid_account)
-            expected = account + settings.invalid_flag
+            expected = account + settings.invalid_status
             found = Entry.result_from_numerals(invalid_account)
             assert expected == found
 
@@ -154,6 +154,6 @@ class TestResultFromNumerals:
         def test_with_illegible_account(self, illegible_account):
             " confirm Entry.result_from_numerals marks an illegible Account as such"
             entry = entry_from_account(illegible_account)
-            expected = illegible_account + settings.illegible_flag
+            expected = illegible_account + settings.illegible_status
             found = Entry.result_from_numerals(illegible_account)
             assert expected == found

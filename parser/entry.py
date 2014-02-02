@@ -50,9 +50,9 @@ class Entry():
 
     @classmethod
     def _get_problem(cls, account):
-        " return appropriate problem flag for the Account "
+        " return appropriate problem status for the Account "
         if settings.illegible_numeral in account:
-            return settings.illegible_flag
+            return settings.illegible_status
         elif not settings.checksum(account):
-            return settings.invalid_flag
+            return settings.invalid_status
         return None

@@ -73,8 +73,8 @@ figures = {' _ '+
            '   ':'9'}
 # All other Figures yield the illegible Numeral
 illegible_numeral = '?'
-# A Entry including an illegible Numeral displays an additional flag
-illegible_flag = ' ILL'
+# An Entry with an illegible Numeral receives the illegible status
+illegible_status = ' ILL'
 
 # The Checksum function differentiates between a 'valid' and an 'invalid' Account
 # The Checksum function divides by a constant
@@ -93,5 +93,5 @@ some_known_valid_accounts = ('123456789', '490867715', '899999999',
 # The Checksum will return False for each of these Accounts
 some_known_invalid_accounts = ('490067715', '888888888', '555555555',
                                '333333333', '111111111', '777777777')
-# An Entry with an invalid Account will display an additional flag
-invalid_flag = ' ERR'
+# An Entry with an invalid Account receives the invalid status
+invalid_status = ' ERR'

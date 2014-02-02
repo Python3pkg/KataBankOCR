@@ -25,8 +25,8 @@ class TestSettings:
                                   ('valid_numerals',tuple),
                                   ('figures',dict),
                                   ('illegible_numeral',str),
-                                  ('illegible_flag',str),
-                                  ('invalid_flag',str),
+                                  ('illegible_status',str),
+                                  ('invalid_status',str),
                                   ('checksum',FunctionType),
                                   )
 
