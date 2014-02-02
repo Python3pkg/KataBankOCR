@@ -1,7 +1,6 @@
 import settings
 
-from validators import validate_type, validate_length
-from validators import validate_element_types, validate_element_lengths
+from validators import Validate
 from errors import InputError
 from figure import Figure
 
@@ -11,10 +10,10 @@ class Entry():
     @classmethod
     def check(cls, entry):
         " raise InputError on list or element with bad type or length "
-        validate_type(list, entry, 'Entry Input')
-        validate_length(settings.lines_per_entry, entry, 'Entry Input')
-        validate_element_types(str, entry, 'Entry Element')
-        validate_element_lengths(settings.strokes_per_line, entry, 'Entry Line')
+        Validate.type(list, entry, 'Entry Input')
+        Validate.length(settings.lines_per_entry, entry, 'Entry Input')
+        Validate.element_types(str, entry, 'Entry Element')
+        Validate.element_lengths(settings.strokes_per_line, entry, 'Entry Line')
 
     @classmethod
     def figures_from_entry(cls, entry):
