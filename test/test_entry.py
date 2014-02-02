@@ -8,8 +8,10 @@ import settings
 from parser.errors import InputError, InputTypeError, InputLengthError
 from parser.entry import Entry
 
-from common_tools import entry_from_account
+from common_tools import figure_from_numeral, entry_from_account
 from common_tools import invalid_lengths, fit_to_length, replace_element
+
+
 
 @pytest.fixture
 def entry(get_account):
@@ -27,9 +29,9 @@ class TestCheck:
             " return an arbitrary non-list value "
             return request.param
 
-        def test_instantiation_with_non_list(self, non_list):
-            " confirm Entry requires a list as its argument "
-            pytest.raises(InputTypeError, Entry, non_list)
+        def test_wit_non_list(self, non_list):
+            " confirm Entry.check detects a non_list "
+            pytest.raises(InputTypeError, Entry.check, non_list)
 
     class TestLength:
         " confirm Entry.check validates length "
@@ -40,34 +42,34 @@ class TestCheck:
             return fit_to_length(entry, request.param)
 
         def test_with_input_of_invalid_length(self, invalid_length_entry):
-            " confirm Entry.check detects input of invalid length "
-            pytest.raises(InputError,Entry, invalid_length_entry)
+            " confirm Entry.check detects an invalid length "
+            pytest.raises(InputError, Entry.check, invalid_length_entry)
 
     class TestElementTypes:
         " confirm Entry.check validates the type of each element "
 
         def test_with_list_containing_a_non_string(self, entry, non_string):
-            " confirm Entry detects a non-string in its input "
+            " confirm Entry.check detects a non-string in its input "
             entry = replace_element(entry, non_string)
-            pytest.raises(InputError, Entry, entry)
+            pytest.raises(InputError, Entry.check, entry)
 
     class TestLineLengths:
         " confirm Entry.check validates the length of each line "
 
         @pytest.fixture(params=invalid_lengths(settings.strokes_per_line))
-        def invalid_entry_length(self, request):
+        def invalid_stroke_count(self, request):
             " return an invalid length for a line "
             return request.param
 
-        def test_with_entry_containing_line_of_invalid_length(self, entry, invalid_entry_length):
-            " confirm Entry checks length of each line "
+        def test_with_entry_containing_line_of_invalid_length(self, entry, invalid_stroke_count):
+            " confirm Entry.check detects an invalid length line "
             first_line = entry[0]
-            line_of_invalid_length = fit_to_length(first_line, invalid_entry_length)
+            line_of_invalid_length = fit_to_length(first_line, invalid_stroke_count)
             entry = replace_element(entry, line_of_invalid_length)
-            pytest.raises(InputLengthError, Entry, entry)
+            pytest.raises(InputLengthError, Entry.check, entry)
 
     class TestLastLineEmpty:
-        " confirm Entry ensures last line contains only whitespace "
+        " confirm Entry.check ensures last line contains only whitespace "
 
         @pytest.fixture
         def non_whitespace_line(self,):
@@ -83,28 +85,42 @@ class TestCheck:
             raise ValueError('Failed to generate a non-whitespace line')
 
         def test_with_entry_containing_a_non_empty_last_line(self, entry, non_whitespace_line):
-            " confirm Entry verifies last line as empty "
+            " confirm Entry.check verifies last line as empty "
             if settings.last_line_empty:
                 index_of_last_line = -1
                 entry = replace_element(entry, non_whitespace_line, index_of_last_line)
-                e = pytest.raises(InputError, Entry, entry)
+                e = pytest.raises(InputError, Entry.check, entry)
                 assert e.value.message == 'Last line not empty'
 
 class TestGetFigures:
     " test the Entry.get_figures method "
 
-    def test_correctly_parses_entry_to_account(self, get_account):
-        " confirm Entry parses valid Entry into correct Account "
+    def test_correctly_parses_entry_to_figures(self, get_account):
+        " confirm Entry.get_figures splits an Entry into its Figures "
         account = get_account()
+        numerals = list(account)
+        figures = map(figure_from_numeral, numerals)
+        expected = figures
         entry = entry_from_account(account)
-        assert Entry(entry).account == account
+        found = Entry.get_figures(entry)
+        assert expected == found
 
 class TestJoinNumeral:
     " test the Entry.join_numerals "
 
+    def test_correctly_joins_numerals(self, get_account):
+        " confirm Entry.join_numerals correctly joins numerals "
+        account = get_account()
+        expected = account
+        numerals = list(account)
+        found = Entry.join_numerals(numerals)
+        assert expected == found
 
-    class TestProblem:
-        " confirm Entry appropriately includes valid/invalid/illegible flags "
+class TestBuildResult:
+    " test the Entry.build_result "
+
+    class TestInvalid:
+        " test Entry.build_result with an invalid account "
 
         @pytest.fixture
         def invalid_account(self, get_account):
@@ -122,9 +138,14 @@ class TestJoinNumeral:
             return 1
 
         def test_with_invalid_account(self, invalid_account):
-            " confirm Entry marks an invalid Account as such"
+            " confirm Entry.build_result marks an invalid Account as such"
             entry = entry_from_account(invalid_account)
-            assert Entry(entry).problem == settings.invalid_flag
+            expected = account + ' ' + settings.invalid_flag
+            found = Entry.build_result(invalid_account)
+            assert expected == found
+
+    class TestInvalid:
+        " test Entry.build_result with an valid account "
 
         @pytest.fixture
         def valid_account(self, get_account):
@@ -141,9 +162,13 @@ class TestJoinNumeral:
             return account.zfill(settings.figures_per_entry)
 
         def test_with_valid_account(self, valid_account):
-            " confirm Entry has no problem with a valid Account "
-            entry = entry_from_account(valid_account)
-            assert Entry(entry).problem == None
+            " confirm Entry.build_result leaves a valid account unmarked "
+            expected = valid_account
+            found = Entry.build_result(valid_account)
+            assert expected == found
+
+    class TestInvalid:
+        " test Entry.build_result with an illegible account "
 
         @pytest.fixture
         def illegible_account(self, get_account):
@@ -151,6 +176,8 @@ class TestJoinNumeral:
             return replace_element(get_account(), settings.illegible_numeral)
 
         def test_with_illegible_account(self, illegible_account):
-            " confirm Entry marks an illegible Account as such"
+            " confirm Entry.build_result marks an illegible Account as such"
             entry = entry_from_account(illegible_account)
-            assert Entry(entry).problem == settings.illegible_flag
+            expected = account + ' ' + settings.illegible_flag
+            found = Entry.build_result(illegible_account)
+            assert expected == found
