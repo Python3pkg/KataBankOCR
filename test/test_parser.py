@@ -82,11 +82,11 @@ class TestParser:
         def test_correctly_parses_file(self, path_and_accounts):
             " confirm Parser finds Accounts within path's file "
             path, accounts = path_and_accounts
-#            assert Parser(path).accounts == accounts
+            assert Parser(path).accounts == accounts
 
         def test_main_parses_from_std_in(self, path_and_accounts):
             " confirm Parser.main identifies accounts via std-in "
             path, accounts = path_and_accounts
-#            with path.open() as input_file:
-#                output = subprocess.check_output('parser/parser.py', stdin=input_file)
-#            assert output[:-1] == str(accounts)
+            with path.open() as input_file:
+                output = subprocess.check_output('parser/parser.py', stdin=input_file)
+            assert output[:-1] == str(accounts)

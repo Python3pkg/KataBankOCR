@@ -32,16 +32,16 @@ class Parser():
 
     def _accounts_from_lines(self, lines):
         " parse lines into entries and return their accounts "
+        lines = self._trim_line_feeds_from_lines_as_necessary(lines)
         entry_start_indexes = range(0, len(lines), settings.lines_per_entry)
         accounts = []
         for index in entry_start_indexes:
             entry = lines[index:index + settings.lines_per_entry]
-            entry = self._trim_line_feeds_from_lines_as_necessary(lines)
             Entry.check(entry)
             figures = Entry.figures_from_entry(entry)
             for figure in figures:
                 Figure.check(figure)
-            numerals = map(Figure.get_numeral, figures)
+            numerals = map(Figure.numeral_from_figure, figures)
             account = Entry.account_from_numerals(numerals)
             accounts.append(account)
         return accounts
