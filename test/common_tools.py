@@ -5,45 +5,43 @@ import pytest
 import random
 import settings
 
-def get_unknown_figure_string():
-    " return string of good length & charset, not matching an account character "
+def get_unknown_figure():
+    " return Figure of valid length & Strokes, but no matching Numeral "
     for i in range(100):
         figure_characters = list(random.choice(settings.figures.keys()))
         random.shuffle(figure_characters)
-        figure_string = ''.join(figure_characters)
+        figure = ''.join(figure_characters)
         if settings.last_line_empty:
-            figure_string = figure_string[:-settings.figure_width]
-            figure_string = figure_string + ' ' * settings.figure_width
-        if figure_string not in settings.figures.keys():
-            return figure_string
+            figure = figure[:-settings.strokes_per_substring]
+            figure = figure + ' ' * settings.strokes_per_substring
+        if figure not in settings.figures.keys():
+            return figure
     raise ValueError('Failed to generate an unknown figure string')
 
-def figure_string_from_account_character(account_character):
-    " return the figure string that represents the given account character "
+def figure_from_numeral(numeral):
+    " return the Figure that represents the given Numeral "
     for figure in settings.figures:
-        if settings.figures[figure] == account_character:
+        if settings.figures[figure] == numeral:
             return figure
-    return get_unknown_figure_string()
+    return get_unknown_figure()
 
-def entry_list_from_account_string(account_string):
-    " return the list of lines that represents the given account string "
-    figure_strings = map(figure_string_from_account_character, account_string)
+def entry_from_account(account):
+    " return the Entry (list of lines) that represents the given Account "
+    figures = map(figure_from_numeral, account)
     figure_indexes = range(settings.figures_per_entry)
-    slice_indexes = lambda line_index: (line_index * settings.figure_width,
-                                        (line_index + 1)  * settings.figure_width)
-    substring = lambda fi, li: figure_strings[fi][slice(*slice_indexes(li))]
+    slice_indexes = lambda line_index: (line_index * settings.strokes_per_substring,
+                                        (line_index + 1)  * settings.strokes_per_substring)
+    substring = lambda fi, li: figures[fi][slice(*slice_indexes(li))]
     line_substrings = lambda li: [substring(fi, li) for fi in figure_indexes]
     return map(''.join, map(line_substrings, range(settings.lines_per_entry)))
 
-def file_path_from_entry_lists(tmpdir, entry_lists):
-    " return path to a file containing the given entry lists "
-    # flatten all lines from entry_lists to one list of lines
-    lines = [line for entry_list in entry_lists for line in entry_list]
+def file_path_from_entries(tmpdir, entries):
+    " return path to a file containing the given Entry "
+    lines = [line for entry in entries for line in entry]
     path = tmpdir.join('input_file.txt')
-    F = path.open('w')
-    for line in lines:
-        print(line, file=F)
-    F.close()
+    with path.open('w') as F:
+        for line in lines:
+            print(line, file=F)
     return path
 
 def invalid_lengths(valid_length, multiplier=4):
@@ -52,14 +50,14 @@ def invalid_lengths(valid_length, multiplier=4):
     lengths = range(maximum_length_to_test + 1)
     return [L for L in lengths if L != valid_length]
 
-def fit_string_to_length(string, length):
-    " return duplicated & abbreviated string such that len(string) == length "
-    if len(string) == length:
-        return string
-    elif len(string) > length:
-        return string[:length]
+def fit_to_length(value, length):
+    " return duplicated & abbreviated version such that len(value) == length "
+    if len(value) == length:
+        return value
+    elif len(value) > length:
+        return value[:length]
     # Still too short. Double it and recurse.
-    return fit_string_to_length(string+string, length)
+    return fit_to_length(value+value, length)
 
 def adulterate_string(string, adulterant):
     " return a string with a random character replaced by adulterant "

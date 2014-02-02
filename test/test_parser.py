@@ -1,42 +1,48 @@
 import pytest
+import mock
 import subprocess
 
 import settings
 from parser.errors import InputError
 from parser.parser import Parser
 
-from common_tools import file_path_from_entry_lists
-from common_tools import entry_list_from_account_string
+from common_tools import file_path_from_entries
+from common_tools import entry_from_account
 
 class TestParser:
     " test the Parser class "
 
     @pytest.fixture
-    def path_and_account_strings(self, tmpdir, get_account_string):
-        " return path and list represented account strings in that file "
+    def path_and_accounts(self, tmpdir, get_account):
+        """ Create a temp file containing Entries. Return both its
+        path and the list of Accounts represented by those Entries. """
         entry_count = settings.approximate_entries_per_file
-        account_strings = [get_account_string() for i in range(entry_count)]
-        entry_lists = map(entry_list_from_account_string, account_strings)
-        path = file_path_from_entry_lists(tmpdir, entry_lists)
-        return path, account_strings
+        accounts = [get_account() for i in range(entry_count)]
+        entries = map(entry_from_account, accounts)
+        path = file_path_from_entries(tmpdir, entries)
+        return path, accounts
 
     @pytest.fixture
-    def path(self, path_and_account_strings):
+    def path(self, path_and_accounts):
         " return a path to a valid input file "
-        return path_and_account_strings[0]
+        return path_and_accounts[0]
 
     class TestInit:
         " test Parser initialization "
+
+        #TODO test init with no arg
 
         @pytest.mark.parametrize('arg_count', range(2, 20))
         def test_with_multiple_arguments(self, arg_count):
             " confirm Entry requires fewer than 2 arguments "
             pytest.raises(TypeError, Parser, *range(arg_count))
 
-        def test_with_valid_path(self, path):
+        def test_instantiation_with_invalid_path(self, path='blsdfasf'):
             " confirm Parser instantiates when given a valid path "
-            p = Parser(path)
-            assert isinstance(p, Parser)
+            with mock.patch.object(Parser, '_get_lines'):
+                with mock.patch.object(Parser, '_validate_line_count'):
+                    with mock.patch.object(Parser, '_lines_from_accounts'):
+                        assert isinstance(Parser(path), Parser)
 
     class TestInputValidation:
         " confirm Parser validates its input "
@@ -63,7 +69,7 @@ class TestParser:
         @pytest.fixture
         def path_to_empty_file(self, tmpdir):
             " return path to an empty file "
-            return  file_path_from_entry_lists(tmpdir, [])
+            return file_path_from_entries(tmpdir, [])
 
         def test_with_empty_file(self, path_to_empty_file):
             " confirm Parser recognizes an empty file "
@@ -71,18 +77,17 @@ class TestParser:
             assert e.value.message == 'nothing to parse'
 
     class TestFunctionality:
-        " confirm Parser resolves file to list of correct account strings "
+        " confirm Parser resolves file to list of correct Accounts "
 
-        def test_correctly_parses_file(self, path_and_account_strings):
-            " confirm Parser identifies account strings from path "
-            path, account_strings = path_and_account_strings
-            assert Parser(path).account_strings == account_strings
+        def test_correctly_parses_file(self, path_and_accounts):
+            " confirm Parser finds Accounts within path's file "
+            path, accounts = path_and_accounts
+            assert Parser(path).accounts == accounts
 
-        def test_main_parses_from_std_in(self, path_and_account_strings):
+        def test_main_parses_from_std_in(self, path_and_accounts):
             " confirm Parser.main identifies accounts via std-in "
-            path, account_strings = path_and_account_strings
+            path, accounts = path_and_accounts
             with path.open() as input_file:
                 output = subprocess.check_output('parser/parser.py', 
                                                  stdin=input_file)
-            assert output[:-1] == str(account_strings)
-
+            assert output[:-1] == str(accounts)

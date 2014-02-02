@@ -1,33 +1,38 @@
 " Static values that restate the problem description "
 
-# An Entry consists of a list of lines (as strings)
-# An Entry has a defined number of lines
+# All Input Files consist of _approximately_ the same number of Entries
+approximate_entries_per_file = 500
+# An Entry consists of a defined number of Lines
 lines_per_entry = 4
-# An Entry has only whitespace in its final line
+# An Entry has only whitespace in its final Line
 last_line_empty = True
-# An Entry represents an Account String composed of Account Characters
-# The four lines in this example Entry represent the Account String '123456789'
-# an_example_entry_list = ['    _  _     _  _  _  _  _ ',
-#                          '  | _| _||_||_ |_   ||_||_|',
-#                          '  ||_  _|  | _||_|  ||_| _|',
-#                          '                           ',]
-# A Figure consist of one string that represents one Account Character
-# A Figure results by joining veritcally adjacent Substrings across all Lines
+# An Entry represents an Account composed of Numerals
+# The four Lines in this example Entry represent the Account '123456789'
+# an_example_entry = ['    _  _     _  _  _  _  _ ',
+#                     '  | _| _||_||_ |_   ||_||_|',
+#                     '  ||_  _|  | _||_|  ||_| _|',
+#                     '                           ',]
+# All Entries contain the same number of Figures
+figures_per_entry = 9
+# A Figure consist of Strokes that represents a Numeral
+# A Figure results from the joining of vertically adjacent Substrings within an Entry
 # All Substrings have a known length
-figure_width = 3
+strokes_per_substring = 3
+# All Lines have a known length
+strokes_per_line = strokes_per_substring * figures_per_entry
 # All Figures have a known length
-figure_length = figure_width * lines_per_entry  # 12
-# The single string in this example Figure represents the Account Character '5'
-# an_example_figure_string =\
+strokes_per_figure = strokes_per_substring * lines_per_entry
+# Every Figure is composed only of valid Strokes
+valid_strokes = tuple('_ |')
+# The Figure in this example represents the Numeral '5'
+# an_example_figure =\
 #    ' _ '+\
 #    '|_ '+\
 #    ' _|'+\
 #    '   '
-# Every Figure is composed only of spaces, underscores, and pipes
-valid_figure_characters = tuple('_ |')
-# Every Account Character consists of a single digit string
-valid_account_characters = tuple('0123456789')
-# Every Figure uniquely represents a unique Account Character
+# Every Numeral consists of a single digit string
+valid_numerals = tuple('0123456789')
+# Every Figure uniquely represents a unique Numeral
 figures = {' _ '+
            '| |'+
            '|_|'+
@@ -68,29 +73,27 @@ figures = {' _ '+
            '|_|'+
            ' _|'+
            '   ':'9'}
-# All other figures yield the illegible account character
-illegible_account_character = '?'
-# A Entry with an illegible Account acharacter displays an additional marker
-illegible_account_marker = ' ILL'
-# All Entries contain the same number of Figures
-figures_per_entry = 9
-# All Lines have a known length
-line_length = figure_width * figures_per_entry  # 27
+# All other figures yield the illegible numeral
+illegible_numeral = '?'
+# A Entry including an illegible Numeral displays an additional flag
+illegible_flag = ' ILL'
 
-# All Input Files contain _approximately_ the same number of entries
-approximate_entries_per_file = 500
-
-# The Checksum differentiates between 'valid' and 'invalid' Account strings
-def checksum(account_string):
-    " return True for valid ccount_string and False for invalid account string "
-    value = lambda index: int(account_string[index]) * (9 - index)
-    return sum(map(value, range(figures_per_entry))).__mod__(11) == 0
-# The Checksum will return True for each of these strings
-some_known_valid_account_strings = ('123456789', '490867715', '899999999',
-                                    '000000051', '686666666', '559555555')
-# The Checksum will return False for each of these strings
-some_known_invalid_account_strings = ('490067715', '888888888', '555555555',
-                                      '333333333', '111111111', '777777777')
-# An Entry with an invalid Account string will display an additional marker
-invalid_account_marker = ' ERR'
-
+# The Checksum function differentiates between a 'valid' and an 'invalid' Account
+# The Checksum function divides by a constant
+checksum_divisor = 11
+def checksum(account):
+    """ return True for a valid Acount and False for an invalid Account 
+    account number:  3  4  5  8  8  2  8  6  5
+    position names:  d9 d8 d7 d6 d5 d4 d3 d2 d1
+    checksum calculation: (d1+2*d2+3*d3 +..+9*d9) mod 11 = 0 """
+    value = lambda index: int(account[index]) * (9 - index)
+    values = map(value, range(figures_per_entry))
+    return sum(values).__mod__(checksum_divisor) == 0
+# The Checksum will return True for each of these Accounts
+some_known_valid_accounts = ('123456789', '490867715', '899999999',
+                             '000000051', '686666666', '559555555')
+# The Checksum will return False for each of these Accounts
+some_known_invalid_accounts = ('490067715', '888888888', '555555555',
+                               '333333333', '111111111', '777777777')
+# An Entry with an invalid Account will display an additional flag
+invalid_flag = ' ERR'
