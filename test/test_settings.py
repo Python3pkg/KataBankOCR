@@ -28,7 +28,7 @@ class TestSettings:
                                   ('illegible_flag',str),
                                   ('invalid_flag',str),
                                   ('checksum',FunctionType),
-                                  ('last_line_empty',bool),)
+                                  )
 
         @pytest.fixture(params=expected_setting_types)
         def setting_name_and_type(self, request):

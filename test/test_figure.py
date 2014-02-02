@@ -69,18 +69,18 @@ class TestCheck:
                 'Figure "%s" ' % adulterated_figure +\
                 "contains non-Stroke element(s): %s" % sorted_invalid_strokes
 
-class TestGetNumeral:
-    " test the Figure.get_numeral method "
+class TestNumeralFromFigure:
+    " test the Figure.numeral_from_figure method "
 
     def test_parses_known_figure_to_numeral(self, figure):
         expected = settings.figures[figure]
-        found = Figure.get_numeral(figure)
+        found = Figure.numeral_from_figure(figure)
         assert expected == found
 
     def test_with_unknown_input(self):
         " confirm Figure identifies an unknown string as illegible "
         bad_figure = get_unknown_figure()
-        found = Figure.get_numeral(bad_figure)
+        found = Figure.numeral_from_figure(bad_figure)
         expected = settings.illegible_numeral
         assert expected == found
         

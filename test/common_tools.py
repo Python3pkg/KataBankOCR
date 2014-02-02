@@ -12,9 +12,6 @@ def get_unknown_figure():
         figure_characters = list(random.choice(settings.figures.keys()))
         random.shuffle(figure_characters)
         figure = ''.join(figure_characters)
-        if settings.last_line_empty:
-            figure = figure[:-settings.strokes_per_substring]
-            figure = figure + ' ' * settings.strokes_per_substring
         if figure not in settings.figures.keys():
             return figure
     raise ValueError('Failed to generate an unknown figure string')

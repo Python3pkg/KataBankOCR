@@ -68,59 +68,35 @@ class TestCheck:
             entry = replace_element(entry, line_of_invalid_length)
             pytest.raises(InputLengthError, Entry.check, entry)
 
-    class TestLastLineEmpty:
-        " confirm Entry.check ensures last line contains only whitespace "
-
-        @pytest.fixture
-        def non_whitespace_line(self,):
-            " return a line containing at least one non-whitespace stroke "
-            assert not ''.join(settings.valid_strokes).isspace()
-            get_stroke = lambda x: random.choice(settings.valid_strokes)
-            stroke_indexes = range(settings.strokes_per_line)
-            arbitrary_maximum_attempt_count = 5
-            for i in range(arbitrary_maximum_attempt_count):
-                line = ''.join(map(get_stroke, stroke_indexes))
-                if not line.isspace():
-                    return line
-            raise ValueError('Failed to generate a non-whitespace line')
-
-        def test_with_entry_containing_a_non_empty_last_line(self, entry, non_whitespace_line):
-            " confirm Entry.check verifies last line as empty "
-            if settings.last_line_empty:
-                index_of_last_line = -1
-                entry = replace_element(entry, non_whitespace_line, index_of_last_line)
-                e = pytest.raises(InputError, Entry.check, entry)
-                assert e.value.message == 'Last line not empty'
-
 class TestGetFigures:
-    " test the Entry.get_figures method "
+    " test the Entry.figures_from_entry method "
 
     def test_correctly_parses_entry_to_figures(self, get_account):
-        " confirm Entry.get_figures splits an Entry into its Figures "
+        " confirm Entry.figures_from_entry splits an Entry into its Figures "
         account = get_account()
         numerals = list(account)
         figures = map(figure_from_numeral, numerals)
         expected = figures
         entry = entry_from_account(account)
-        found = Entry.get_figures(entry)
+        found = Entry.figures_from_entry(entry)
         assert expected == found
 
-class TestJoinNumeral:
-    " test the Entry.join_numerals "
+class TestAccountFromNumerals:
+    " test the Entry.account_from_numerals method "
 
     def test_correctly_joins_numerals(self, get_account):
-        " confirm Entry.join_numerals correctly joins numerals "
+        " confirm Entry.account_from_numerals correctly joins numerals "
         account = get_account()
         expected = account
         numerals = list(account)
-        found = Entry.join_numerals(numerals)
+        found = Entry.account_from_numerals(numerals)
         assert expected == found
 
-class TestBuildResult:
-    " test the Entry.build_result "
+class TestResultFromNumerals:
+    " test the Entry.result_from_numerals "
 
     class TestInvalid:
-        " test Entry.build_result with an invalid account "
+        " test Entry.result_from_numerals with an invalid account "
 
         @pytest.fixture
         def invalid_account(self, get_account):
@@ -138,14 +114,14 @@ class TestBuildResult:
             return 1
 
         def test_with_invalid_account(self, invalid_account):
-            " confirm Entry.build_result marks an invalid Account as such"
+            " confirm Entry.result_from_numerals marks an invalid Account as such"
             entry = entry_from_account(invalid_account)
-            expected = account + ' ' + settings.invalid_flag
-            found = Entry.build_result(invalid_account)
+            expected = account + settings.invalid_flag
+            found = Entry.result_from_numerals(invalid_account)
             assert expected == found
 
     class TestInvalid:
-        " test Entry.build_result with an valid account "
+        " test Entry.result_from_numerals with an valid account "
 
         @pytest.fixture
         def valid_account(self, get_account):
@@ -162,13 +138,13 @@ class TestBuildResult:
             return account.zfill(settings.figures_per_entry)
 
         def test_with_valid_account(self, valid_account):
-            " confirm Entry.build_result leaves a valid account unmarked "
+            " confirm Entry.result_from_numerals leaves a valid account unmarked "
             expected = valid_account
-            found = Entry.build_result(valid_account)
+            found = Entry.result_from_numerals(valid_account)
             assert expected == found
 
     class TestInvalid:
-        " test Entry.build_result with an illegible account "
+        " test Entry.result_from_numerals with an illegible account "
 
         @pytest.fixture
         def illegible_account(self, get_account):
@@ -176,8 +152,8 @@ class TestBuildResult:
             return replace_element(get_account(), settings.illegible_numeral)
 
         def test_with_illegible_account(self, illegible_account):
-            " confirm Entry.build_result marks an illegible Account as such"
+            " confirm Entry.result_from_numerals marks an illegible Account as such"
             entry = entry_from_account(illegible_account)
-            expected = account + ' ' + settings.illegible_flag
-            found = Entry.build_result(illegible_account)
+            expected = illegible_account + settings.illegible_flag
+            found = Entry.result_from_numerals(illegible_account)
             assert expected == found

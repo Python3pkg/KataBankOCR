@@ -4,8 +4,6 @@
 approximate_entries_per_file = 500
 # An Entry consists of a defined number of Lines
 lines_per_entry = 4
-# An Entry has only whitespace in its final Line
-last_line_empty = True
 # An Entry represents an Account composed of Numerals
 # The four Lines in this example Entry represent the Account '123456789'
 # an_example_entry = ['    _  _     _  _  _  _  _ ',

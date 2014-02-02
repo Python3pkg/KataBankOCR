@@ -23,9 +23,9 @@ class Figure():
         _validate_strokes(string)
 
     @staticmethod
-    def get_numeral(string):
-        " find figure in settings dict or raise InputError "
-        if string in settings.figures:
-            return settings.figures[string]
+    def numeral_from_figure(figure):
+        " return Numeral represented by Figure "
+        if figure in settings.figures:
+            return settings.figures[figure]
         return settings.illegible_numeral
 
