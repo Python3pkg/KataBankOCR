@@ -29,7 +29,7 @@ class TestCheck:
             " return an arbitrary non-list value "
             return request.param
 
-        def test_wit_non_list(self, non_list):
+        def test_with_non_list(self, non_list):
             " confirm Entry.check detects a non_list "
             pytest.raises(InputTypeError, Entry.check, non_list)
 
@@ -68,10 +68,10 @@ class TestCheck:
             entry = replace_element(entry, line_of_invalid_length)
             pytest.raises(InputLengthError, Entry.check, entry)
 
-class TestGetFigures:
+class TestFiguresFromEntry:
     " test the Entry.figures_from_entry method "
 
-    def test_correctly_parses_entry_to_figures(self, get_account):
+    def test_correctly_parses_figures_from_entry(self, get_account):
         " confirm Entry.figures_from_entry splits an Entry into its Figures "
         account = get_account()
         numerals = list(account)
