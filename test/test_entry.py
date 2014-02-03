@@ -1,8 +1,6 @@
 " Test the Entry module "
 
 import pytest
-import mock
-import random
 
 import settings
 from parser.errors import InputError, InputTypeError, InputLengthError
@@ -10,8 +8,6 @@ from parser.entry import Entry
 
 from common_tools import figure_from_numeral, entry_from_account
 from common_tools import invalid_lengths, fit_to_length, replace_element
-
-
 
 @pytest.fixture
 def entry(get_account):

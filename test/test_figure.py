@@ -16,7 +16,7 @@ def all_figures(request):
     return request.param
 
 @pytest.fixture
-def a_figure(request):
+def a_figure():
     " Return a valid Figure "
     return random.choice(settings.figures.keys())
 
