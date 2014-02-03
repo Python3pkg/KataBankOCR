@@ -4,9 +4,10 @@ import subprocess
 
 import settings
 from parser.parser import Parser
-
-from common_tools import file_path_from_entries
-from common_tools import entry_from_account
+from parser.stream import Stream
+from parser.lines import Lines
+from parser.entry import Entry
+from parser.figure import Figure
 
 path_to_basic_input = "test/input_files/basic.txt"
 accounts_in_basic_input = ['000000000', '111111111', '222222222', '333333333',
@@ -26,24 +27,36 @@ class TestStoryOne:
 
     def test_story_one_with_basic_input(self):
         " confirm Parser finds Accounts within basic input file "
+        numeral_from_figure = Parser(Figure.check, None, None, Figure.numeral_from_figure)
+        account_from_entry = Parser(Entry.check, Entry.figures_from_entry, 
+                                    numeral_from_figure, account_from_numerals)
+        accounts_from_lines = Parser(Lines.check, Lines.entries_from_lines, 
+                                     account_from_entry, None)
+        accounts_from_stream = Parser(Stream.check, Stream.timmed_lines_from_stream,
+                                      accounts_from_lines, None)
         path = path_to_basic_input
         expected = accounts_in_basic_input
-        found = Parser(path).accounts
-        assert expected == found
+        with io.open(path) as stream:
+            found = accounts_from_stream.parser(stream)
+            assert expected == found
 
 class TestStoryTwo:
     " confirm parser recognizes [in]valididity of Accounts in a File "
 
-    def test_story_two_with_basic_input(self):
-        " confirm Parser finds Accounts within basic in file "
+    def test_story_one_with_basic_input(self):
+        " confirm Parser finds Accounts within basic input file "
+        numeral_from_figure = Parser(Figure.check, None, None, Figure.numeral_from_figure)
+        account_from_entry = Parser(Entry.check, Entry.figures_from_entry, 
+                                    numeral_from_figure, account_from_numerals)
+        accounts_from_lines = Parser(Lines.check, Lines.entries_from_lines, 
+                                     account_from_entry, None)
+        accounts_from_stream = Parser(Stream.check, Stream.timmed_lines_from_stream,
+                                      accounts_from_lines, None)
         path = path_to_basic_input
-        accounts = Parser(path).accounts
-        for account in accounts:
-            valid = settings.checksum(account)
-            if valid:
-                assert account in valid_accounts_in_basic_input
-            else:
-                assert account in invalid_accounts_in_basic_input
+        expected = accounts_in_basic_input
+        with io.open(path) as stream:
+            found = accounts_from_stream.parser(stream)
+            assert expected == found
 
 """
     def test_main_parses_from_std_in(self, path_and_accounts):

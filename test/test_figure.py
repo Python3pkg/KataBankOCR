@@ -46,7 +46,7 @@ class TestCheck:
             invalid_length_figure = fit_to_length(figure, invalid_figure_length)
             pytest.raises(InputLengthError, Figure.check, invalid_length_figure)
 
-    class TestStrokes:
+    class TestComposition:
         " confirm Figure only accepts valid Strokes as input "
 
         some_non_strokes = ('\t', '-', 'I', 'l', '/', '\\', '\r')
