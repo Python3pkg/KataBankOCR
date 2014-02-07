@@ -13,8 +13,9 @@ def get_account():
     " return function that returns a valid-length string of Numerals "
     def account():
         length = settings.figures_per_entry
-        get_char = lambda x: random.choice(settings.figures.values())
-        return ''.join(map(get_char, range(length)))
+        valid_numerals = settings.figures.values()
+        get_numeral = lambda x: random.choice(valid_numerals)
+        return ''.join(map(get_numeral, range(length)))
     return account
 
 @pytest.fixture(params =(0, 1, -10, False, True, [], (), {}, set(), 3.14159))

@@ -4,27 +4,25 @@ import pytest
 
 import settings
 from parser.errors import InputTypeError, InputLengthError
-
-"""
-from parser.lines import File
+from parser.file import File
 
 class TestLineSourceFromPath:
-    " test the File.line_source_from_path method "
+    " test the File.lines_from_path method "
 
     @pytest.mark.parametrize('path, line_count',(("test/input_files/basic.txt", 44),
                                                  ("test/input_files/advanced.txt", 32),))
     def test_line_count_with_path(self, path, line_count):
-        " confirm File.line_source_from_path reads expected # of lines from path "
+        " confirm File.lines_from_path reads expected # of lines from path "
         expected = line_count
-        line_source = File.line_source_from_path(path)
-        found = len(list(line_source))
+        source = File.lines_from_path(path)
+        found = len(list(source))
         assert expected == found
 
     @pytest.mark.parametrize('path, line_length',(("test/input_files/basic.txt", 27),
                                                  ("test/input_files/advanced.txt", 27),))
     def test_line_length_with_path(self, path, line_length):
-        " confirm File.line_source_from_path trims line-feeds "
-        lines = File.line_source_from_path(path)
+        " confirm File.lines_from_path trims line-feeds "
+        lines = File.lines_from_path(path)
         expected = line_length
         for line in lines:
             found = len(line)
@@ -48,12 +46,14 @@ class TestEntriesFromLines:
 
     @pytest.mark.parametrize('lines, entries',(
             (['a', 'b', 'c', 'd'], [['a', 'b', 'c', 'd'],]),
-            (['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'], 
-             [['a', 'b', 'c', 'd'],['e', 'f', 'g', 'h'],]),
+            (['1', '2', '3', '4', '5', '6', '7', '8'], 
+             [['1', '2', '3', '4'], ['5', '6', '7', '8'],]),
+            (['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p'], 
+             [['a', 'b', 'c', 'd'], ['e', 'f', 'g', 'h'],
+              ['i', 'j', 'k', 'l'], ['m', 'n', 'o', 'p'],]),
             ))
-    def test_correctly_splits(self, lines, entries):
-        " confirm File.entries_from_line_source splits lines into Entries "
+    def test_correctly_groups(self, lines, entries):
+        " confirm File.entries_from_lines groups lines into Entries "
         expected = entries
-        found = File.entries_from_line_source(lines)
+        found = File.entries_from_lines(lines)
         assert expected == list(found)
-"""

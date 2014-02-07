@@ -6,7 +6,7 @@ class Figure():
     " Strokes (stored as a string) that represent a single Numeral "
 
     @classmethod
-    def check(cls, strokes):
+    def validate_input(cls, strokes):
         " confirm type, length, and composition or raise InputError "
         Validate.type(str, strokes, 'Figure input')
         Validate.length(settings.strokes_per_figure, strokes, 'Figure')

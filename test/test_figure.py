@@ -23,18 +23,18 @@ def a_figure():
 figure = a_figure      # Run each test with a random valid Figure
 #figure = all_figures  # Run each test with every valid Figure
 
-class TestCheck:
-    " test the Figure.check method "
+class TestValidateInput:
+    " test the Figure.validate_input method "
 
     class TestType:
-        " confirm Figure.check validates type "
+        " confirm Figure.validate_input validates type "
 
         def test_with_non_string(self, non_string):
             " confirm Figure requires a string as its argument "
-            pytest.raises(InputTypeError, Figure.check, non_string)
+            pytest.raises(InputTypeError, Figure.validate_input, non_string)
 
     class TestLength:
-        " confirm Figure.check validates length "
+        " confirm Figure.validate_input validates length "
 
         @pytest.fixture(params=invalid_lengths(settings.strokes_per_figure))
         def invalid_figure_length(self, request):
@@ -44,7 +44,7 @@ class TestCheck:
         def test_with_invalid_length_string(self, figure, invalid_figure_length):
             " confirm Figure detects an invalid length input string "
             invalid_length_figure = fit_to_length(figure, invalid_figure_length)
-            pytest.raises(InputLengthError, Figure.check, invalid_length_figure)
+            pytest.raises(InputLengthError, Figure.validate_input, invalid_length_figure)
 
     class TestComposition:
         " confirm Figure only accepts valid Strokes as input "
@@ -64,9 +64,8 @@ class TestCheck:
             found_strokes = set(adulterated_figure)
             invalid_strokes = found_strokes - set(settings.valid_strokes)
             sorted_invalid_strokes = ''.join(sorted(list(invalid_strokes)))
-            e = pytest.raises(InputError, Figure.check, adulterated_figure)
-            assert e.value.message == \
-                'Figure "%s" ' % adulterated_figure +\
+            e = pytest.raises(InputError, Figure.validate_input, adulterated_figure)
+            assert e.value.message == 'Figure "%s" ' % adulterated_figure +\
                 "contains non-Stroke element(s): %s" % sorted_invalid_strokes
 
 class TestNumeralFromFigure:

@@ -9,12 +9,13 @@ import settings
 def get_unknown_figure():
     " return Figure of valid length & Strokes, but no matching Numeral "
     for i in range(100):
-        figure_characters = list(random.choice(settings.figures.keys()))
-        random.shuffle(figure_characters)
-        figure = ''.join(figure_characters)
-        if figure not in settings.figures.keys():
+        valid_figures = settings.figures.keys()
+        strokes = list(random.choice(valid_figures))
+        random.shuffle(strokes)
+        figure = ''.join(strokes)
+        if figure not in valid_figures:
             return figure
-    raise ValueError('Failed to generate an unknown figure string')
+    raise ValueError('Failed to generate an unknown figure')
 
 def figure_from_numeral(numeral):
     " return the Figure that represents the given Numeral "
@@ -61,7 +62,7 @@ def replace_element(target, new_element, target_index=None):
     " Return string or list after replacing a [random] element "
     assert type(target) in (str, list)
     if target_index is None:
-        target_index = random.choice(range(len(target)))
+        target_index = random.randrange(0, len(target))
     if isinstance(target, str):
         return replace_character_in_string(target, target_index, new_element)
     elif isinstance(target, list):
