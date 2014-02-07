@@ -6,8 +6,9 @@ from validators import Validate
 class File():
     " Methods related to checking, reading, and grouping lines to Entries "
 
+    path_to_stdin = '-'
     @classmethod
-    def lines_from_path(cls, path='-'):
+    def lines_from_path(cls, path=path_to_stdin):
         " yield lines from file at path or (default of) StdIn "
         for line in fileinput.input(path):
             yield str(line).rstrip('\n')
