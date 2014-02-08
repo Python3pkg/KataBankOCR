@@ -16,8 +16,8 @@ expected_setting_types = (
     ('checksum_divisor',int),
     ('some_known_valid_accounts',tuple),
     ('some_known_invalid_accounts',tuple),
-    ('valid_strokes',tuple),
-    ('valid_numerals',tuple),
+    ('valid_strokes',set),
+    ('valid_numerals',set),
     ('figures',dict),
     ('illegible_numeral',str),
     ('illegible_status',str),
@@ -171,11 +171,16 @@ class TestIllegibleNumeral:
 class TestIntegerValues:
     " confirm integer settings have reasonable values "
 
-    integer_settings = (k for k, v in expected_setting_types if v is int)
-    @pytest.mark.parametrize('setting_name', integer_settings)
-    def test_integer_not_negative(self, setting_name):
-        " confirm each integer setting has value of at least zero "
-        assert settings.__dict__[setting_name] >= 0
+    integer_setting_names = (k for k, v in expected_setting_types if v is int)
+    @pytest.fixture(params=integer_setting_names)
+    def integer_setting(self, request):
+        " return an integer setting "
+        setting_name = request.param
+        return settings.__dict__[setting_name]
+
+    def test_integer_not_negative(self, integer_setting):
+        " confirm integer setting has value of at least zero "
+        assert integer_setting >= 0
 
     @pytest.mark.parametrize('setting_name, arbitrary_maximum',(
             ('approximate_entries_per_file', 100000),

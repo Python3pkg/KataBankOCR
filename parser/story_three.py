@@ -1,24 +1,28 @@
 #!/usr/bin/env python
+" parse input into output per User Story 3 in kata.txt and settings.py "
 
-import settings
-from parser import Parser
-from figure import Figure
-from entry import Entry
-from file import File
+from lines import lines_from_path
+from entries import entries_from_lines
+from figures import figures_from_entries
+from numerals import numerals_from_figures
+from accounts import accounts_from_numerals
+from results import results_from_accounts
 
+# Awaiting Story 4
+#from superpositions import superpositions_from_figures
+#from results import results_from_superpositions
 
-def main():
-    " Parse input from standard in to a list of Accounts " 
-
-    numeral_from_figure = Parser(Figure.validate_input, None, None, Figure.numeral_from_figure)
-    result_from_entry = Parser(Entry.validate_input, Entry.figures_from_entry, 
-                               numeral_from_figure, Entry.result_from_numerals)
-    results_from_lines = Parser(File.validate_iterator, File.entries_from_lines, 
-                                result_from_entry, None)
-
-    lines = File.lines_from_path()
-    results = results_from_lines(lines)
-    print results
-
+def parse(path):
+    " return Results from Lines within File at Path "
+    lines = lines_from_path(path)
+    entries = entries_from_lines(lines)
+    figures = figures_from_entries(entries)
+    numerals = numerals_from_figures(figures)
+    accounts = accounts_from_numerals(numerals)
+    results = results_from_accounts(accounts)
+    for result in results:
+        print(result)
+        
 if __name__ == "__main__":
-    main()
+    path = '-'  # TODO: take input and output paths from docopt
+    parse(path)

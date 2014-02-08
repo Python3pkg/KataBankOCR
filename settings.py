@@ -21,7 +21,7 @@ strokes_per_line = strokes_per_substring * figures_per_entry
 # All Figures have a known length
 strokes_per_figure = strokes_per_substring * lines_per_entry
 # Every Figure is composed only of valid Strokes
-valid_strokes = tuple('_ |')
+valid_strokes = set('_ |')
 # The Figure in this example represents the Numeral '5'
 # an_example_figure =\
 #    ' _ '+\
@@ -29,7 +29,7 @@ valid_strokes = tuple('_ |')
 #    ' _|'+\
 #    '   '
 # Every Numeral consists of a single digit string
-valid_numerals = tuple('0123456789')
+valid_numerals = set('0123456789')
 # Every Figure uniquely represents a unique Numeral
 figures = {' _ '+
            '| |'+

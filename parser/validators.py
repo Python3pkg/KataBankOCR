@@ -1,47 +1,49 @@
-from errors import InputLengthError, InputTypeError
-
 class Validate():
     " methods that raise errors on invalid input "
 
     @classmethod
-    def iterable(cls, lines):
-        " confirm we can iterate over value "
-        try:
-            iterator = iter(lines)
-        except TypeError:
-            message = '"%s" not an interator' % str(lines)
-            raise(InputTypeError(message))
-
-    @classmethod
-    def type(cls, expected_type, value, name='Input'):
-        " confirm value of expected type or raise InputTypeError "
+    def type(cls, expected_type, value, name):
+        " confirm value of expected type or raise TypeError "
         if not isinstance(value, expected_type):
-            message = _build_message('type', expected_type, type(value), name)
-            raise(InputTypeError(message))
+            message = _build_message(name, value, 'type', expected_type, type(value))
+            raise(TypeError(message))
 
     @classmethod
-    def length(cls, expected_length, value, name='Input'):
-        " confirm value has expected length or raise InputLengthError "
+    def length(cls, expected_length, value, name):
+        " confirm value has expected length or raise ValueError "
         length = len(value)
         if len(value) != expected_length:
-            message = _build_message('length', expected_length, len(value), name)
-            raise(InputLengthError(message))
+            message = _build_message(name, value, 'length', expected_length, len(value))
+            raise(ValueError(message))
 
     @classmethod
-    def element_types(cls, expected_type, value, name='Input Element'):
-        " validate type of each element "
+    def composition(cls, allowed_components, value, name):
+        " validate value composed only of allowed components "
         for index, element in enumerate(value):
-            element_name = name + ' ' + str(index)
-            cls.type(expected_type, element, element_name)
+            if element not in allowed_components:
+                msg = '%s "%s" contains unexpected element "%s" at index %d'
+                msg = msg % (name, value, element, index)
+                raise(TypeError(msg))
 
     @classmethod
-    def element_lengths(cls, expected_length, value, name='Input Element'):
-        " validate length of each element "
+    def elements(cls, validator_name, expectation, value, name):
+        " validate each element "
+        validator = getattr(cls, validator_name)
         for index, element in enumerate(value):
             element_name = name + ' ' + str(index)
-            cls.length(expected_length, element, element_name)
+            validator(expectation, element, element_name)
 
-def _build_message(error, expected, value, name):
-    msg = '%s of unexpected %s. Expected:%s. Found:%s.'
-    return msg % (name, error, str(expected), str(value))
+    @classmethod
+    def iterable(cls, value):
+        " confirm we can iterate over value "
+        try:
+            iterator = iter(value)
+        except TypeError:
+            message = '"%s" not iterable' % str(value)
+            raise(TypeError(message))
+
+def _build_message(name, value, error, expected, found):
+    msg = '%s "%s" of unexpected %s. Expected:%s. Found:%s.'
+    return msg % (name, value, error, str(expected), str(found))
+
 

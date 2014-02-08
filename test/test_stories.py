@@ -34,27 +34,43 @@ class TestStoryTwo:
 
 class TestStoryThree:
 
-    def test_story_three_with_basic_input(tmpdir):
-        " confirm story three parses Results from basic input file "
-        results_in_basic_input = ['000000000', '111111111 ERR', '222222222 ERR', 
-                                  '333333333 ERR', '444444444 ERR', '555555555 ERR',
-                                  '666666666 ERR', '777777777 ERR', '888888888 ERR',
-                                  '999999999 ERR', '123456789']
-        expected = str(results_in_basic_input) + '\n'
+    def test_parser_with_basic_input(tmpdir):
+        " confirm Results from basic input file "
+        expected_results = [
+            '000000000',
+            '111111111 ERR',
+            '222222222 ERR', 
+            '333333333 ERR',
+            '444444444 ERR',
+            '555555555 ERR',
+            '666666666 ERR',
+            '777777777 ERR',
+            '888888888 ERR',
+            '999999999 ERR',
+            '123456789'
+            ]
+        expected = '\n'.join(expected_results) + '\n'
         with open(path_to_basic_input) as input_file:
             found = subprocess.check_output('parser/story_three.py', stdin=input_file)
         assert expected == found
 
-    def test_story_three_with_advanced_input(tmpdir):
-        " confirm story three parses Results from advanced input file "
-        results_in_advanced_input = ['000000051', '49006771? ILL', '1234?678? ILL',
-                                     '200000000 ERR', '490067715 ERR', '?23456789 ILL',
-                                     '0?0000051 ILL', '49086771? ILL',]
-        expected = str(results_in_advanced_input) + '\n'
+    def test_parser_with_advanced_input(tmpdir):
+        " confirm Results from advanced input file "
+        expected_results = [
+            '000000051', 
+            '49006771? ILL',
+            '1234?678? ILL',
+            '200000000 ERR',
+            '490067715 ERR',
+            '?23456789 ILL',
+            '0?0000051 ILL',
+            '49086771? ILL',
+            ]
+        expected = '\n'.join(expected_results) + '\n'
         with open(path_to_advanced_input) as input_file:
             found = subprocess.check_output('parser/story_three.py', stdin=input_file)
         assert expected == found
-
+"""
 
 class TestStoryFour:
     # TODO: Implement
@@ -68,10 +84,9 @@ class TestStoryFour:
         expected = str(results_in_basic_input) + '\n'
         with open(path_to_basic_input) as input_file:
             found = subprocess.check_output('parser/parser.py', stdin=input_file)
-#        assert expected == found
+        assert expected == found
 
         results_in_advanced_input = ['000000051', '490067715 AMB', '1234?678?', '200000000',
                                      '490067715 AMB', '123456789', '000000051', '490867715',]
-
-    
+"""    
 

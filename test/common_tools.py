@@ -3,6 +3,7 @@
 from __future__ import print_function
 import pytest
 import random
+from itertools import chain
 
 import settings
 
@@ -23,6 +24,10 @@ def figure_from_numeral(numeral):
         if settings.figures[figure] == numeral:
             return figure
     return get_unknown_figure()
+
+def figures_from_account(account):
+    " return the Figures that represent the given Account "
+    return map(figure_from_numeral, list(account))
 
 def entry_from_account(account):
     " return the Entry (list of lines) that represents the given Account "
@@ -60,10 +65,10 @@ def fit_to_length(value, length):
 
 def replace_element(target, new_element, target_index=None):
     " Return string or list after replacing a [random] element "
-    assert type(target) in (str, list)
+    assert isinstance(target, basestring) or isinstance(target, list)
     if target_index is None:
         target_index = random.randrange(0, len(target))
-    if isinstance(target, str):
+    if isinstance(target, basestring):
         return replace_character_in_string(target, target_index, new_element)
     elif isinstance(target, list):
         target[target_index] = new_element
@@ -79,3 +84,8 @@ def replace_character_in_string(string, index, new_character):
 def replace_element_in_list(target_list, index, new_element):
     " Return list after replacing an element "
     return target_list[:index] + [new_element,] + target_list[index + 1:]
+
+def flatten(iterable_of_iterables):
+    " flatten one level of nested iterables "
+    return chain.from_iterable(iterable_of_iterables)
+
