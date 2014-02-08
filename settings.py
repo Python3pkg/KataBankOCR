@@ -1,4 +1,4 @@
-" Static values that restate the problem description "
+" Static values that restate kata.txt "
 
 # All Input Files consist of _approximately_ the same number of Entries
 approximate_entries_per_file = 500
@@ -73,19 +73,17 @@ figures = {' _ '+
            '   ':'9'}
 # All other Figures yield the illegible Numeral
 illegible_numeral = '?'
-# An Entry with an illegible Numeral receives the illegible status
-illegible_status = ' ILL'
 
 # The Checksum function differentiates between a 'valid' and an 'invalid' Account
 # The Checksum function divides by a constant
 checksum_divisor = 11
+# The Checksum function takes an Account and returns True or False
 def checksum(account):
     """ return True for a valid Acount and False for an invalid Account 
     account number:  3  4  5  8  8  2  8  6  5
     position names:  d9 d8 d7 d6 d5 d4 d3 d2 d1
     checksum calculation: (d1+2*d2+3*d3 +..+9*d9) mod 11 = 0 """
-    value = lambda index: int(account[index]) * (9 - index)
-    values = map(value, range(figures_per_entry))
+    values = [int(numeral) * (9 - index) for index, numeral in enumerate(account)]
     return sum(values).__mod__(checksum_divisor) == 0
 # The Checksum will return True for each of these Accounts
 some_known_valid_accounts = ('123456789', '490867715', '899999999',
@@ -93,5 +91,10 @@ some_known_valid_accounts = ('123456789', '490867715', '899999999',
 # The Checksum will return False for each of these Accounts
 some_known_invalid_accounts = ('490067715', '888888888', '555555555',
                                '333333333', '111111111', '777777777')
-# An Entry with an invalid Account receives the invalid status
+
+# A Result includes an Account and, if appropriate, a status
+# The Result for an Entry with an illegible Figure will include the illegible status
+illegible_status = ' ILL'
+# The Result for an Entry representing with an invalid Account will include the invalid status
 invalid_status = ' ERR'
+
