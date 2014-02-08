@@ -92,9 +92,9 @@ some_known_valid_accounts = ('123456789', '490867715', '899999999',
 some_known_invalid_accounts = ('490067715', '888888888', '555555555',
                                '333333333', '111111111', '777777777')
 
-# A Result includes an Account and, if appropriate, a status
-# The Result for an Entry with an illegible Figure will include the illegible status
+# A Result includes an Account and, if appropriate, a Status
+# The Result for an Entry with an illegible Figure will include the Illegible Status
 illegible_status = ' ILL'
-# The Result for an Entry representing with an invalid Account will include the invalid status
+# The Result for an Entry representing with an invalid Account will include the Invalid Status
 invalid_status = ' ERR'
 
