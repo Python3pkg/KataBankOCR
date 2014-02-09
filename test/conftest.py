@@ -8,7 +8,7 @@ import settings
 def pytest_report_header(config):
     return "Bank OCR Kata Tests"
 
-@pytest.fixture(params =(0, 1, -10, False, True, [], (), {}, set(), 3.14159))
+@pytest.fixture(params=(0, 1, -10, False, True, [], (), {}, set(), 3.14159))
 def non_string(request):
     "Return an arbitrary non-string value"
     return request.param
@@ -48,4 +48,3 @@ def get_accounts(get_account):
     "return function that returns a File's worth of random Accounts"
     count = settings.approximate_entries_per_file
     return lambda: [get_account() for _ in range(count)]
-

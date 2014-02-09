@@ -21,7 +21,7 @@ class TestNumeralsFromFigures:
 
         def test_with_non_string(self, non_string):
             "confirm error raised on iterable that yields a non_string"
-            figures = [non_string,]
+            figures = [non_string]
             entries = numerals_from_figures(figures)
             pytest.raises(TypeError, list, entries)
 
@@ -33,7 +33,7 @@ class TestNumeralsFromFigures:
         def test_with_figure_of_invalid_length(self, get_figure, invalid_figure_length):
             "confirm error raised for figure of invalid length"
             invalid_length_figure = fit_to_length(get_figure(), invalid_figure_length)
-            entries = numerals_from_figures([invalid_length_figure,])
+            entries = numerals_from_figures([invalid_length_figure])
             pytest.raises(ValueError, list, entries)
 
         some_non_strokes = {'\t', '-', 'I', 'l', '/', '\\', '\r'}
@@ -45,7 +45,7 @@ class TestNumeralsFromFigures:
         def test_with_figure_containing_invalid_stroke(self, get_figure, non_stroke):
             "confirm error raised for figure containing an invalid stroke"
             adulterated_figure = replace_element(get_figure(), non_stroke)
-            entries = numerals_from_figures([adulterated_figure,])
+            entries = numerals_from_figures([adulterated_figure])
             e = pytest.raises(TypeError, list, entries)
             message = 'Figure "%s" contains unexpected element "%s" at index'
             message = message % (adulterated_figure, non_stroke)
@@ -60,5 +60,3 @@ class TestNumeralsFromFigures:
             expected = numerals
             found = tuple(numerals_from_figures(figures))
             assert expected == found
-
-

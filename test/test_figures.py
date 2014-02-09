@@ -24,13 +24,13 @@ class TestFiguresFromEntries:
         def test_with_non_list(self, entry, non_string):
             "confirm figures_from_entries detects a non-string"
             entry = replace_element(entry, non_string)
-            figures = figures_from_entries([entry,])
+            figures = figures_from_entries([entry])
             pytest.raises(TypeError, list, figures)
 
         def test_with_list_containing_a_non_string(self, entry, non_string):
             "confirm detection of a non-string within an entry"
             entry = replace_element(entry, non_string)
-            figures = figures_from_entries([entry,])
+            figures = figures_from_entries([entry])
             pytest.raises(TypeError, list, figures)
 
         @pytest.fixture(params=invalid_lengths(settings.strokes_per_line))
@@ -43,7 +43,7 @@ class TestFiguresFromEntries:
             first_line = entry[0]
             line_of_invalid_length = fit_to_length(first_line, invalid_stroke_count)
             entry = replace_element(entry, line_of_invalid_length)
-            figures = figures_from_entries([entry,])
+            figures = figures_from_entries([entry])
             pytest.raises(ValueError, list, figures)
 
     class TestOutput:
@@ -58,4 +58,3 @@ class TestFiguresFromEntries:
             entries = map(entry_from_account, accounts)
             found = figures_from_entries(entries)
             assert list(expected) == list(found)
-

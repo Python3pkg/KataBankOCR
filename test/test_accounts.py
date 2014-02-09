@@ -21,14 +21,14 @@ class TestAccountsFromNumerals:
 
         def test_with_non_string(self, non_string):
             "confirm error raised on iterable that yields a non_string"
-            numerals = [non_string,]
+            numerals = [non_string]
             accounts = accounts_from_numerals(numerals)
             pytest.raises(TypeError, list, accounts)
 
         def test_with_numeral_of_invalid_length(self, get_numeral):
             "confirm error raised for Numeral of invalid length"
             doublewide_numeral = get_numeral() + get_numeral()
-            accounts = accounts_from_numerals([doublewide_numeral,])
+            accounts = accounts_from_numerals([doublewide_numeral])
             pytest.raises(ValueError, list, accounts)
 
         def test_with_non_numeral(self, get_account, non_numeral):
@@ -50,4 +50,3 @@ class TestAccountsFromNumerals:
             numerals = flatten(accounts)
             found = list(accounts_from_numerals(numerals))
             assert expected == found
-

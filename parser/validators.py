@@ -45,5 +45,3 @@ class Validate():
 def _build_message(name, value, error, expected, found):
     message = '%s "%s" of unexpected %s. Expected:%s. Found:%s.'
     return message % (name, value, error, str(expected), str(found))
-
-

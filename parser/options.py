@@ -19,8 +19,7 @@ def in_path_and_out_path():
     arguments = docopt(__doc__, version='Bank OCR Kata Parser 0.7')
     if arguments['<input_file>'] is None:
         input_path = '-'
-    else: 
+    else:
         input_path = arguments['<input_file>']
     output_path = arguments['<output_file>']
     return (input_path, output_path)
-

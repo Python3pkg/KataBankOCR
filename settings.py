@@ -31,46 +31,46 @@ valid_strokes = set('_ |')
 # Every Numeral consists of a single digit string
 valid_numerals = set('0123456789')
 # Every Figure uniquely represents a unique Numeral
-figures = {' _ '+
-           '| |'+
-           '|_|'+
-           '   ':'0',
-           '   '+
-           '  |'+
-           '  |'+
-           '   ':'1',
-           ' _ '+
-           ' _|'+
-           '|_ '+
-           '   ':'2',
-           ' _ '+
-           ' _|'+
-           ' _|'+
-           '   ':'3',
-           '   '+
-           '|_|'+
-           '  |'+
-           '   ':'4',
-           ' _ '+
-           '|_ '+
-           ' _|'+
-           '   ':'5',
-           ' _ '+
-           '|_ '+
-           '|_|'+
-           '   ':'6',
-           ' _ '+
-           '  |'+
-           '  |'+
-           '   ':'7',
-           ' _ '+
-           '|_|'+
-           '|_|'+
-           '   ':'8',
-           ' _ '+
-           '|_|'+
-           ' _|'+
-           '   ':'9'}
+figures = {' _ ' +
+           '| |' +
+           '|_|' +
+           '   ': '0',
+           '   ' +
+           '  |' +
+           '  |' +
+           '   ': '1',
+           ' _ ' +
+           ' _|' +
+           '|_ ' +
+           '   ': '2',
+           ' _ ' +
+           ' _|' +
+           ' _|' +
+           '   ': '3',
+           '   ' +
+           '|_|' +
+           '  |' +
+           '   ': '4',
+           ' _ ' +
+           '|_ ' +
+           ' _|' +
+           '   ': '5',
+           ' _ ' +
+           '|_ ' +
+           '|_|' +
+           '   ': '6',
+           ' _ ' +
+           '  |' +
+           '  |' +
+           '   ': '7',
+           ' _ ' +
+           '|_|' +
+           '|_|' +
+           '   ': '8',
+           ' _ ' +
+           '|_|' +
+           ' _|' +
+           '   ': '9'}
 # All other Figures yield the illegible Numeral
 illegible_numeral = '?'
 
@@ -79,7 +79,7 @@ illegible_numeral = '?'
 checksum_divisor = 11
 # The Checksum function takes an Account and returns True or False
 def checksum(account):
-    """ return True for a valid Acount and False for an invalid Account 
+    """ return True for a valid Acount and False for an invalid Account
     account number:  3  4  5  8  8  2  8  6  5
     position names:  d9 d8 d7 d6 d5 d4 d3 d2 d1
     checksum calculation: (d1+2*d2+3*d3 +..+9*d9) mod 11 = 0 """
@@ -97,4 +97,3 @@ some_known_invalid_accounts = ('490067715', '888888888', '555555555',
 illegible_status = ' ILL'
 # The Result for an Entry representing with an invalid Account will include the Invalid Status
 invalid_status = ' ERR'
-

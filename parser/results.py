@@ -25,4 +25,3 @@ def _status_from_account(account):
     elif not settings.checksum(account):
         return settings.invalid_status
     return ''  # Valid Account
-

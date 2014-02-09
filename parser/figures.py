@@ -38,5 +38,3 @@ def _figure_substring_from_line(figure_index, line):
     start_index = figure_index * settings.strokes_per_substring
     end_index = start_index + settings.strokes_per_substring
     return line[start_index:end_index]
-
-

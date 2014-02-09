@@ -51,4 +51,3 @@ def test_stdin_and_out_path(tmpdir, expectations_and_source):
     with open(output_path) as parsed_results:
         found_results = parsed_results.read()
     assert expected_results == found_results
-

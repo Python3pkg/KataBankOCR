@@ -5,24 +5,22 @@ from types import FunctionType
 
 import settings
 
-expected_setting_types = (
-    ('lines_per_entry',int),
-    ('figures_per_entry',int),
-    ('strokes_per_substring',int),
-    ('strokes_per_figure',int),
-    ('strokes_per_line',int),
-    ('approximate_entries_per_file',int),
-    ('checksum_divisor',int),
-    ('some_known_valid_accounts',tuple),
-    ('some_known_invalid_accounts',tuple),
-    ('valid_strokes',set),
-    ('valid_numerals',set),
-    ('figures',dict),
-    ('illegible_numeral',str),
-    ('illegible_status',str),
-    ('invalid_status',str),
-    ('checksum',FunctionType),
-    )
+expected_setting_types = (('lines_per_entry', int),
+                          ('figures_per_entry', int),
+                          ('strokes_per_substring', int),
+                          ('strokes_per_figure', int),
+                          ('strokes_per_line', int),
+                          ('approximate_entries_per_file', int),
+                          ('checksum_divisor', int),
+                          ('some_known_valid_accounts', tuple),
+                          ('some_known_invalid_accounts', tuple),
+                          ('valid_strokes', set),
+                          ('valid_numerals', set),
+                          ('figures', dict),
+                          ('illegible_numeral', str),
+                          ('illegible_status', str),
+                          ('invalid_status', str),
+                          ('checksum', FunctionType),)
 
 class TestDefinition:
     "confirm expected settings defined and of correct type"
@@ -34,7 +32,8 @@ class TestDefinition:
 
     def test_setting_defined(self, setting_name_and_type):
         "confirm setting got defined"
-        assert settings.__dict__.has_key(setting_name_and_type[0])
+        setting_name = setting_name_and_type[0]
+        assert setting_name in settings.__dict__
 
     def test_setting_of_correct_type(self, setting_name_and_type):
         "confirm setting has expected type"
@@ -51,9 +50,9 @@ class TestDefinition:
 
 class TestUniqueness:
     "confirm no duplicate Figures, Numerals, or Strokes"
-    
-    @pytest.mark.parametrize('collection',(settings.figures.keys(), settings.valid_numerals,
-                                           settings.figures.values(), settings.valid_strokes,))
+
+    @pytest.mark.parametrize('collection', (settings.figures.keys(), settings.valid_numerals,
+                                            settings.figures.values(), settings.valid_strokes,))
     def test_uniqueness_of_collection(self, collection):
         "confirm no duplicates"
         assert len(collection) == len(set(collection))
@@ -136,12 +135,12 @@ class TestChecksumFunctionality:
     @pytest.mark.parametrize('valid_account', settings.some_known_valid_accounts)
     def test_with_known_good_account(self, valid_account):
         "confirm checksum reports a known good Account as valid"
-        assert settings.checksum(valid_account) == True
+        assert settings.checksum(valid_account)
 
     @pytest.mark.parametrize('invalid_account', settings.some_known_invalid_accounts)
     def test_with_known_bad_account(self, invalid_account):
         "confirm checksum reports a known bad Account as invalid"
-        assert settings.checksum(invalid_account) ==  False
+        assert not settings.checksum(invalid_account)
 
 class TestIllegibleNumeral:
     "confirm illegible_numeral's characteristics"
@@ -157,7 +156,7 @@ class TestIllegibleNumeral:
 class TestIntegerValues:
     "confirm integer settings have reasonable values"
 
-    @pytest.mark.parametrize('setting_name, arbitrary_maximum',(
+    @pytest.mark.parametrize('setting_name, arbitrary_maximum', (
             ('approximate_entries_per_file', 100000),
             ('lines_per_entry', 50),
             ('figures_per_entry', 50),
@@ -180,4 +179,3 @@ class TestIntegerValues:
     def test_integer_not_negative(self, integer_setting):
         "confirm integer setting has value of at least zero"
         assert integer_setting >= 0
-

@@ -20,4 +20,3 @@ def _numeral_from_figure(figure):
     if figure in settings.figures:
         return settings.figures[figure]
     return settings.illegible_numeral
-

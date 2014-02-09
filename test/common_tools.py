@@ -21,7 +21,7 @@ def entry_from_account(account):
     figures = figures_from_account(account)
     figure_indexes = range(settings.figures_per_entry)
     slice_indexes = lambda line_index: (line_index * settings.strokes_per_substring,
-                                        (line_index + 1)  * settings.strokes_per_substring)
+                                        (line_index + 1) * settings.strokes_per_substring)
     substring = lambda fi, li: figures[fi][slice(*slice_indexes(li))]
     line_substrings = lambda li: [substring(fi, li) for fi in figure_indexes]
     return map(''.join, map(line_substrings, range(settings.lines_per_entry)))
@@ -55,4 +55,3 @@ def replace_element(target, new_element, target_index=None):
 def flatten(iterable_of_iterables):
     "flatten one level of nested iterables"
     return chain.from_iterable(iterable_of_iterables)
-

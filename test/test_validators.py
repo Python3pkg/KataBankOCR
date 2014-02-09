@@ -33,7 +33,7 @@ class TestType():
 class TestLength():
     "exercise the Validate.length classmethod"
 
-    matched_length_value_pairs = ((0, ''), (0, []),  (0, ()), (1, 'A'), 
+    matched_length_value_pairs = ((0, ''), (0, []), (0, ()), (1, 'A'),
                                   (2, 'ab'), (2, [1, 2]), (3, (1, 2, 3)))
     @pytest.mark.parametrize("length, value", matched_length_value_pairs)
     def test_with_valid_length(self, length, value, name):
@@ -53,23 +53,19 @@ class TestLength():
 class TestComposition():
     "exercise the Validate.composition classmethod"
 
-    matched_components_value_pairs = (
-        (['a','b','c'], 'baabccab'),
-        (['ab','XY','zz'], ('XY','ab','ab')),
-        ((10,20,30), [20,10,10,]),
-        ([0,1,2,3], (1,2,2,1,0)),
-        ([1,2,3], ()),
-        )
+    matched_components_value_pairs = ((['a', 'b', 'c'], 'baabccab'),
+                                      (['ab', 'XY', 'zz'], ('XY', 'ab', 'ab')),
+                                      ((10, 20, 30), [20, 10, 10]),
+                                      ([0, 1, 2, 3], (1, 2, 2, 1, 0)),
+                                      ([1, 2, 3], ()),)
     @pytest.mark.parametrize("allowed_components, value", matched_components_value_pairs)
     def test_with_valid_composition(self, allowed_components, value, name):
         "confirm passes silently on value with allowed components"
         assert None == Validate.composition(allowed_components, value, name)
 
-    mismatched_components_value_index_triads = (
-        (['a','b','c'], 'abcd', 3),
-        ((10,20,30), [1,2], 0),
-        ([0,1,2,3], (2,4,6), 1),
-        )
+    mismatched_components_value_index_triads = ((['a', 'b', 'c'], 'abcd', 3),
+                                                ((10, 20, 30), [1, 2], 0),
+                                                ([0, 1, 2, 3], (2, 4, 6), 1),)
     @pytest.mark.parametrize("allowed_components, value, bad_index",
                              mismatched_components_value_index_triads)
     def test_with_invalid_composition(self, allowed_components, value, bad_index, name):
@@ -84,40 +80,40 @@ class TestComposition():
 class TestElements():
     "exercise the Validate.elements classmethod"
 
-    lists = (['foo',], [], [1,2,], ['a',''])
-    tuples = ((), ('foo',), (1,2,), ('a',''))
+    lists = (['foo'], [], [1, 2], ['a', ''])
+    tuples = ((), ('foo',), (1, 2), ('a', ''))
     length_zero = ('', (), [], {})
-    length_one = ('a', ('',), [3,], ('b',), '1')
-    composed_of_a_b_or_c = ('abc', 'ba', ['b',], ('c', 'a'), (), [])
-    composed_of_1_2_or_3 = ((1,2), (1,), [2,3], (), [1], [])
+    length_one = ('a', [''], [3], ('b',), '1')
+    composed_of_a_b_or_c = ('abc', 'ba', ['b'], ('c', 'a'), (), [])
+    composed_of_1_2_or_3 = ((1, 2), (1,), [2, 3], (), [1], [])
     @pytest.mark.parametrize("validator_name, expectation, iterable", (
             ('type', list, lists),
             ('type', tuple, tuples),
             ('length', 0, length_zero),
             ('length', 1, length_one),
             ('composition', 'abc', composed_of_a_b_or_c),
-            ('composition', (1,2,3), composed_of_1_2_or_3),
+            ('composition', (1, 2, 3), composed_of_1_2_or_3),
             ))
     def test_good_iterable(self, validator_name, expectation, iterable, name):
         "confirm passes silently on iterable with valid elements"
         arguments = (validator_name, expectation, iterable, name)
         assert None == Validate.elements(*arguments)
 
-    nearly_all_lists = (['foo',], [], [1,2,], 'not_a_list', ['a',''])
-    nearly_all_tuples = ((), ('foo',), ['non_tuple',], (1,2,), ('a',''))
+    nearly_all_lists = (['foo'], [], [1, 2], 'not_a_list', ['a', ''])
+    nearly_all_tuples = ((), ('foo',), ['non_tuple'], (1, 2,), ('a', ''))
     nearly_all_length_zero = ('', (), [], {}, 'x')
-    nearly_all_length_one = ('a', '', [3,], ('b',), '1')
-    nearly_all_composed_of_a_b_or_c = ('abc', 'bad', ['b',], ('c', 'a'), (), [])
-    nearly_all_composed_of_1_2_or_3 = ((1,2), (1,), [2,3], (), [4], [])
+    nearly_all_length_one = ('a', '', [3], ('b',), '1')
+    nearly_all_composed_of_a_b_or_c = ('abc', 'bad', ['b'], ('c', 'a'), (), [])
+    nearly_all_composed_of_1_2_or_3 = ((1, 2), (1,), [2, 3], (), [4], [])
     @pytest.mark.parametrize("validator_name, error, expectation, iterable, bad_index", (
             ('type', TypeError, list, nearly_all_lists, 3),
             ('type', TypeError, tuple, nearly_all_tuples, 2),
             ('length', ValueError, 0, nearly_all_length_zero, 4),
             ('length', ValueError, 1, nearly_all_length_one, 1),
             ('composition', TypeError, 'abc', nearly_all_composed_of_a_b_or_c, 1),
-            ('composition', TypeError, (1,2,3), nearly_all_composed_of_1_2_or_3, 4),
+            ('composition', TypeError, (1, 2, 3), nearly_all_composed_of_1_2_or_3, 4),
             ))
-    def test_iterable_with_faulty_element(self, validator_name, error, 
+    def test_iterable_with_faulty_element(self, validator_name, error,
                                           expectation, iterable, bad_index, name):
         "confirm raises error correctly on iterable containing faulty element"
         arguments = (validator_name, expectation, iterable, name)
@@ -128,7 +124,7 @@ class TestElements():
 class TestIterable():
     "exercise the Validate.iterable classmethod"
 
-    some_iterables = ('', (), [], {}, 'abcde', (1,2,3), [1,2,3], {1,2,3})
+    some_iterables = ('', (), [], {}, 'abcde', (1, 2, 3), [1, 2, 3], {1, 2, 3})
     @pytest.mark.parametrize("iterable", some_iterables)
     def test_with_iterable(self, iterable):
         "confirm passes silently on iterable value"
@@ -139,4 +135,3 @@ class TestIterable():
         e = pytest.raises(TypeError, Validate.iterable, non_iterable)
         message = '"%s" not iterable' % str(non_iterable)
         assert message == e.value.message
-

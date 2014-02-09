@@ -20,5 +20,3 @@ def _validate_numeral(numeral):
     Validate.length(1, numeral, 'Numeral')
     expected_numerals = settings.valid_numerals | set(settings.illegible_numeral)
     Validate.composition(expected_numerals, numeral, 'Numeral')
-
-

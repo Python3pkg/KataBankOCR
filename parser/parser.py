@@ -41,4 +41,3 @@ def output(results, path):
 
 if __name__ == '__main__':
     parse(*in_path_and_out_path())
-

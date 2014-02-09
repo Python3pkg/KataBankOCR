@@ -49,10 +49,8 @@ class TestEntriesFromLines:
                                       ['i', 'j', 'k', 'l'],
                                       ['m', 'n', 'o', 'p']]),
                 ))
-
         def test_groupings(self, iterable, groups):
             "confirm iterable elements correctly grouped"
             expected = groups
             found = entries_from_lines(iterable)
             assert expected == list(found)
-
