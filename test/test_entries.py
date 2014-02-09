@@ -35,22 +35,24 @@ class TestEntriesFromLines:
                 lines = lines[:-1]
                 entries = entries_from_lines(lines)
                 e = pytest.raises(ValueError, list, entries)
-                assert 'File ended mid-Entry.' in e.value.message 
+                assert 'File ended mid-Entry.' in e.value.message
 
     class TestOutput:
         "confirm valid input results in valid output"
 
-        @pytest.mark.parametrize('source_lines, entries',(
-                (['a', 'b', 'c', 'd'], [['a', 'b', 'c', 'd'],]),
-                (['1', '2', '3', '4', '5', '6', '7', '8'], 
-                 [['1', '2', '3', '4'], ['5', '6', '7', '8'],]),
-                (['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p'], 
-                 [['a', 'b', 'c', 'd'], ['e', 'f', 'g', 'h'],
-                  ['i', 'j', 'k', 'l'], ['m', 'n', 'o', 'p'],]),
+        @pytest.mark.parametrize('iterable, groups', (
+                ('abcd', [['a', 'b', 'c', 'd']]),
+                (['a', 'b', 'c', 'd'], [['a', 'b', 'c', 'd']]),
+                ('12345678', [['1', '2', '3', '4'], ['5', '6', '7', '8']]),
+                ('abcdefghijklmnop', [['a', 'b', 'c', 'd'],
+                                      ['e', 'f', 'g', 'h'],
+                                      ['i', 'j', 'k', 'l'],
+                                      ['m', 'n', 'o', 'p']]),
                 ))
-        def test_groupings(self, source_lines, entries):
+
+        def test_groupings(self, iterable, groups):
             "confirm iterable elements correctly grouped"
-            expected = entries
-            found = entries_from_lines(source_lines)
+            expected = groups
+            found = entries_from_lines(iterable)
             assert expected == list(found)
 
