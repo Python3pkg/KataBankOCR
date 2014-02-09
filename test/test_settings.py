@@ -3,7 +3,7 @@
 import pytest
 from types import FunctionType
 
-import settings
+from parser import settings
 
 expected_setting_types = (('lines_per_entry', int),
                           ('figures_per_entry', int),

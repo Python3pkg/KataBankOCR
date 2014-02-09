@@ -4,10 +4,9 @@
 
 import pytest
 
-
 def main():
     print 'Testing settings...'
-    exit_status = pytest.main(['-k', 'settings.py'])
+    exit_status = pytest.main(['-k', 'parser/settings.py'])
     exited_cleanly = 0
     if exit_status == exited_cleanly:
         print 'Settings look fine. Will now test everything.'

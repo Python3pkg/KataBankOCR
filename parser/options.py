@@ -14,12 +14,20 @@ Options:
 
 from docopt import docopt
 
+from _version import __version__
+
 def in_path_and_out_path():
     "return input_path and output_path from arguments"
-    arguments = docopt(__doc__, version='Bank OCR Kata Parser 0.7')
+    arguments = docopt(__doc__, version=version_name())
     if arguments['<input_file>'] is None:
         input_path = '-'
     else:
         input_path = arguments['<input_file>']
     output_path = arguments['<output_file>']
     return (input_path, output_path)
+
+def version_name():
+    "return input_path and output_path from arguments"
+    parser_name = 'Bank OCR Parser (Kata)'
+    return ' '.join((parser_name, 'version', __version__))
+

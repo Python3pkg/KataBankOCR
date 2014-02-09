@@ -3,7 +3,7 @@
 import pytest
 import fileinput
 
-import settings
+from parser import settings
 from parser.entries import entries_from_lines
 from parser.validators import Validate
 

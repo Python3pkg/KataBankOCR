@@ -2,7 +2,7 @@
 
 import pytest
 
-import settings
+from parser import settings
 from parser.lines import lines_from_path
 
 path_to_basic = 'test/input_files/basic.txt'

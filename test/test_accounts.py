@@ -3,7 +3,7 @@
 import pytest
 import random
 
-import settings
+from parser import settings
 from parser.accounts import accounts_from_numerals
 
 from common_tools import flatten, replace_element

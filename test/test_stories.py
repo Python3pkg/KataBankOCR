@@ -2,7 +2,7 @@
 
 import pytest
 
-import settings
+from parser import settings
 from parser.lines import lines_from_path
 from parser.entries import entries_from_lines
 from parser.figures import figures_from_entries

@@ -2,7 +2,7 @@
 
 import pytest
 
-import settings
+from parser import settings
 from parser.figures import figures_from_entries
 from parser.validators import Validate
 

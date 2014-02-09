@@ -2,7 +2,7 @@
 
 import pytest
 
-import settings
+from parser import settings
 from parser.results import results_from_accounts
 
 from common_tools import invalid_lengths, fit_to_length, replace_element

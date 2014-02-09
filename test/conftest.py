@@ -3,7 +3,7 @@
 import pytest
 import random
 
-import settings
+from parser import settings
 
 def pytest_report_header(config):
     return "Bank OCR Kata Tests"
