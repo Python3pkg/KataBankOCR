@@ -46,17 +46,7 @@ class TestResultsFromAccounts:
             assert msg in e.value.message
 
     class TestOutput:
-        "confirm valid input results in valid output"
-
-        def test_returns_iterable(self, get_accounts):
-            "confirm iterable"
-            results = results_from_accounts(get_accounts())
-            Validate.iterable(results)
-
-        def test_element_types(self, get_accounts):
-            "confirm iterable yields strings"
-            results = results_from_accounts(get_accounts())
-            Validate.elements('type', basestring, results, 'Result')
+        "confirm valid input yields valid output"
 
         @pytest.mark.parametrize('account, result', (
             ('000000000', '000000000',),
