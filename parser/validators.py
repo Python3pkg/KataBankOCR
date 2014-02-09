@@ -1,16 +1,16 @@
 class Validate():
-    " methods that raise errors on invalid input "
+    "methods that raise errors on invalid input"
 
     @classmethod
     def type(cls, expected_type, value, name):
-        " confirm value of expected type or raise TypeError "
+        "confirm value of expected type or raise TypeError"
         if not isinstance(value, expected_type):
             message = _build_message(name, value, 'type', expected_type, type(value))
             raise(TypeError(message))
 
     @classmethod
     def length(cls, expected_length, value, name):
-        " confirm value has expected length or raise ValueError "
+        "confirm value has expected length or raise ValueError"
         length = len(value)
         if len(value) != expected_length:
             message = _build_message(name, value, 'length', expected_length, len(value))
@@ -18,16 +18,16 @@ class Validate():
 
     @classmethod
     def composition(cls, allowed_components, value, name):
-        " validate value composed only of allowed components "
+        "validate value composed only of allowed components"
         for index, element in enumerate(value):
             if element not in allowed_components:
-                msg = '%s "%s" contains unexpected element "%s" at index %d'
-                msg = msg % (name, value, element, index)
-                raise(TypeError(msg))
+                message = '%s "%s" contains unexpected element "%s" at index %d'
+                message = message % (name, value, element, index)
+                raise(TypeError(message))
 
     @classmethod
     def elements(cls, validator_name, expectation, value, name):
-        " validate each element "
+        "validate each element"
         validator = getattr(cls, validator_name)
         for index, element in enumerate(value):
             element_name = name + ' ' + str(index)
@@ -35,7 +35,7 @@ class Validate():
 
     @classmethod
     def iterable(cls, value):
-        " confirm we can iterate over value "
+        "confirm we can iterate over value"
         try:
             iterator = iter(value)
         except TypeError:
@@ -43,7 +43,7 @@ class Validate():
             raise(TypeError(message))
 
 def _build_message(name, value, error, expected, found):
-    msg = '%s "%s" of unexpected %s. Expected:%s. Found:%s.'
-    return msg % (name, value, error, str(expected), str(found))
+    message = '%s "%s" of unexpected %s. Expected:%s. Found:%s.'
+    return message % (name, value, error, str(expected), str(found))
 
 

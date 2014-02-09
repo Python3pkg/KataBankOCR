@@ -1,10 +1,10 @@
-" generator that yields Results and the functions that support it "
+"generator that yields Results and the functions that support it"
 
 import settings
 from validators import Validate
 
 def results_from_accounts(accounts):
-    " generator that consumes Accounts and yields Results "
+    "generator that consumes Accounts and yields Results"
     for account in accounts:
         _validate_account(account)
         status = _status_from_account(account)
@@ -12,16 +12,17 @@ def results_from_accounts(accounts):
         yield result
 
 def _validate_account(account):
-    " confirm account type, length, and composition or raise ValueError "
+    "confirm account type, length, and composition or raise ValueError"
     Validate.type(basestring, account, 'Account')
     Validate.length(settings.figures_per_entry, account, 'Account')
     expected_numerals = settings.valid_numerals | set(settings.illegible_numeral)
     Validate.composition(expected_numerals, account, 'Account')
 
 def _status_from_account(account):
-    " return appropriate status for the Account "
+    "return appropriate status for the Account"
     if settings.illegible_numeral in account:
         return settings.illegible_status
     elif not settings.checksum(account):
         return settings.invalid_status
     return ''  # Valid Account
+

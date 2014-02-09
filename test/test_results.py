@@ -40,9 +40,9 @@ class TestResultsFromAccounts:
             adulterated_account = replace_element(get_account(), non_numeral)
             results = results_from_accounts([adulterated_account,])
             e = pytest.raises(TypeError, list, results)
-            msg = 'Account "%s" contains unexpected element "%s" at index'
-            msg = msg % (adulterated_account, non_numeral)
-            assert msg in e.value.message
+            message = 'Account "%s" contains unexpected element "%s" at index'
+            message = message % (adulterated_account, non_numeral)
+            assert message in e.value.message
 
     class TestOutput:
         "confirm valid input yields valid output"

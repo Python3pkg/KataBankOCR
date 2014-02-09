@@ -47,9 +47,9 @@ class TestNumeralsFromFigures:
             adulterated_figure = replace_element(get_figure(), non_stroke)
             entries = numerals_from_figures([adulterated_figure,])
             e = pytest.raises(TypeError, list, entries)
-            msg = 'Figure "%s" contains unexpected element "%s" at index'
-            msg = msg % (adulterated_figure, non_stroke)
-            assert msg in e.value.message
+            message = 'Figure "%s" contains unexpected element "%s" at index'
+            message = message % (adulterated_figure, non_stroke)
+            assert message in e.value.message
 
     class TestOutput:
         "confirm valid input results in valid output"
