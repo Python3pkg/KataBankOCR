@@ -1,7 +1,6 @@
 "test user stories (from kata.txt)"
 
 import pytest
-import subprocess
 
 from test_parser import expected_matches_parsed_path
 

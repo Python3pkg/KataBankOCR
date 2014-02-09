@@ -72,10 +72,10 @@ class TestFiguresFromEntries:
             allowed_components = settings.valid_strokes
             Validate.elements('composition', allowed_components, figures, 'Figure')
 
-        def test_figures_match(self, get_account):
+        def test_figures_match(self, get_accounts):
             " confirm figures_from_entries correctly identifies figures "
             number_of_accounts_to_test = settings.approximate_entries_per_file
-            accounts = [get_account() for i in range(number_of_accounts_to_test)]
+            accounts = get_accounts()
             figures = map(figures_from_account, accounts)
             expected = flatten(figures)
             entries = map(entry_from_account, accounts)
