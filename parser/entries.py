@@ -1,11 +1,11 @@
-" generator that yields Entries "
+"generator that yields Entries"
 
 from itertools import islice
 
 import settings
 
 def entries_from_lines(lines):
-    " generator that reads Lines and yields an Entry "
+    "generator that reads Lines and yields an Entry"
     entry = []
     for line in lines:
         entry.append(line)

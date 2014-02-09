@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-" parse input into output as described by kata.txt and settings.py "
+"parse input into output as described by kata.txt and settings.py"
 
 from lines import lines_from_path
 from entries import entries_from_lines
@@ -13,7 +13,7 @@ from results import results_from_accounts
 #from results import results_from_superpositions
 
 def parse(path):
-    " return Results from Lines within File at Path "
+    "return Results from Lines within File at Path"
     pass
 
     lines = lines_from_path(path)

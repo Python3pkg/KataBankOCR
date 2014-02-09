@@ -1,5 +1,6 @@
 #!/usr/bin/env python
-" parse input into output per User Story 3 in kata.txt and settings.py "
+
+"parse input into output per User Story 3 in kata.txt and settings.py"
 
 from lines import lines_from_path
 from entries import entries_from_lines
@@ -8,12 +9,8 @@ from numerals import numerals_from_figures
 from accounts import accounts_from_numerals
 from results import results_from_accounts
 
-# Awaiting Story 4
-#from superpositions import superpositions_from_figures
-#from results import results_from_superpositions
-
 def parse(path):
-    " return Results from Lines within File at Path "
+    "return Results from input file at Path"
     lines = lines_from_path(path)
     entries = entries_from_lines(lines)
     figures = figures_from_entries(entries)
