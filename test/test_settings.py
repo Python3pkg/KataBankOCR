@@ -33,11 +33,11 @@ class TestDefinition:
         return request.param
 
     def test_setting_defined(self, setting_name_and_type):
-        """confirm setting got defined"""
+        "confirm setting got defined"
         assert settings.__dict__.has_key(setting_name_and_type[0])
 
     def test_setting_of_correct_type(self, setting_name_and_type):
-        """confirm setting has expected type"""
+        "confirm setting has expected type"
         n, t = setting_name_and_type
         value = settings.__dict__[n]
         assert isinstance(value, t)
