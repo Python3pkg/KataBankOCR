@@ -5,7 +5,6 @@ import random
 
 import settings
 from parser.numerals import numerals_from_figures
-from parser.validators import Validate
 
 from common_tools import invalid_lengths, fit_to_length, replace_element
 
@@ -54,22 +53,6 @@ class TestNumeralsFromFigures:
 
     class TestOutput:
         "confirm valid input results in valid output"
-
-        def test_returns_iterable(self, get_figures):
-            "confirm iterable"
-            numerals = numerals_from_figures(get_figures())
-            Validate.iterable(numerals)
-
-        def test_element_types(self, get_figures):
-            "confirm iterable yields strings"
-            numerals = numerals_from_figures(get_figures())
-            Validate.elements('type', basestring, numerals, 'Numeral')
-
-        def test_element_lengths(self, get_figures):
-            "confirm iterable yields elements of correct length"
-            numerals = numerals_from_figures(get_figures())
-            expected_length = 1
-            Validate.elements('length', expected_length, numerals, 'Numeral')
 
         def test_parses_known_figures_to_numerals(self):
             "confirm known figures recognized correctly"
