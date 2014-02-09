@@ -4,7 +4,6 @@ import pytest
 
 import settings
 from parser.results import results_from_accounts
-from parser.validators import Validate
 
 from common_tools import invalid_lengths, fit_to_length, replace_element
 
