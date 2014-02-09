@@ -37,7 +37,7 @@ class PyTest(TestCommand):
 
 setup(
     name='KataBankOCR',
-    version=_version.__version__,
+    version=open('version.txt').read().strip(),
     url='https://github.com/gJigsaw/KataBankOCR',
     license='GNU General Public License',
     author='Jason Green',
