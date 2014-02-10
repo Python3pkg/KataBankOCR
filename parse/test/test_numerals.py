@@ -12,7 +12,7 @@ class TestNumeralsFromFigures:
     "exercise the numerals_from_figures function"
 
     class TestInput:
-        "confirm invalid input raises appropriate error"
+        "confirm expected error raised by invalid input"
 
         def test_with_non_iterable(self, non_iterable):
             "confirm error raised on non-iterable input"
@@ -52,11 +52,29 @@ class TestNumeralsFromFigures:
             assert message in e.value.message
 
     class TestOutput:
-        "confirm valid input results in valid output"
+        "confirm expected output from known valid input"
 
         def test_parses_known_figures_to_numerals(self):
             "confirm known figures recognized correctly"
             figures, numerals = zip(*settings.figures.items())
             expected = numerals
             found = tuple(numerals_from_figures(figures))
+            assert expected == found
+
+        @pytest.fixture
+        def unknown_figure(self):
+            " return Figure of valid length & Strokes, but no matching Numeral "
+            for i in range(100):
+                valid_figures = settings.figures.keys()
+                strokes = list(random.choice(valid_figures))
+                random.shuffle(strokes)
+                figure = ''.join(strokes)
+                if figure not in valid_figures:
+                    return figure
+            raise ValueError('Failed to generate an unknown figure')
+
+        def test_parses_unknown_figures_to_illegible_numeral(self, unknown_figure):
+            "confirm unknown figure yields illegible numeral"
+            expected = [settings.illegible_numeral]
+            found = list(numerals_from_figures([unknown_figure]))
             assert expected == found
