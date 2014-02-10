@@ -41,7 +41,7 @@ setup(
     license='GNU General Public License',
     author='Jason Green',
     tests_require=['pytest', 'docopt'],
-    install_requires=['docopt>=0.6.1',],
+    install_requires=['docopt>=0.6.1'],
     cmdclass={'test': PyTest},
     author_email='KataBankOCR@JasonGreen.Name',
     description='Programming kata to parse output from fictitious OCR machine',
@@ -50,7 +50,7 @@ setup(
     include_package_data=True,
     platforms='any',
     test_suite='test',
-    classifiers = [
+    classifiers=[
         'Programming Language :: Python',
         'Development Status :: 4 - Beta',
         'Natural Language :: English',
@@ -61,6 +61,6 @@ setup(
         'Topic :: Software Development :: Libraries :: Python Modules',
         'Topic :: Utilities',
         ],
-    extras_require={'testing': ['pytest'],},
-    scripts = ['parse/parse'],
+    extras_require={'testing': ['pytest']},
+    scripts=['parse/parse'],
 )

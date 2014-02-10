@@ -54,4 +54,3 @@ class TestEntriesFromLines:
             expected = groups
             found = entries_from_lines(iterable)
             assert expected == list(found)
-

@@ -35,4 +35,3 @@ def test_version_info_element_count():
 def test_version_matches_version_info():
     "confirm version composed of version_info in 3-dot notation"
     assert '.'.join(map(str, parse.__version_info__)) == parse.__version__
-
