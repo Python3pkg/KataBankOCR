@@ -3,7 +3,7 @@
 import pytest
 import random
 
-from parser.validators import Validate
+from parse.validators import Validate
 
 @pytest.fixture
 def name():

@@ -2,8 +2,8 @@
 
 import pytest
 
-from parser import settings
-from parser.lines import lines_from_path
+from parse import settings
+from parse.lines import lines_from_path
 
 from test_input import Basic, Advanced
 

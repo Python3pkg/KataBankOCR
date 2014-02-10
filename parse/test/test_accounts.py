@@ -3,8 +3,8 @@
 import pytest
 import random
 
-from parser import settings
-from parser.accounts import accounts_from_numerals
+from parse import settings
+from parse.accounts import accounts_from_numerals
 
 from common_tools import flatten, replace_element
 

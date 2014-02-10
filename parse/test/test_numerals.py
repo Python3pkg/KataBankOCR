@@ -3,8 +3,8 @@
 import pytest
 import random
 
-from parser import settings
-from parser.numerals import numerals_from_figures
+from parse import settings
+from parse.numerals import numerals_from_figures
 
 from common_tools import invalid_lengths, fit_to_length, replace_element
 

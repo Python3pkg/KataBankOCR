@@ -4,7 +4,7 @@ import pytest
 import random
 from itertools import chain
 
-from parser import settings
+from parse import settings
 
 def figure_from_numeral(numeral):
     "return the Figure that represents the given Numeral"

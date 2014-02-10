@@ -2,5 +2,5 @@ include *.rst
 include *.py
 include *.txt
 include LICENSE
-recursive-include test *.py
-recursive-include test *.txt
+recursive-include parse *.py
+recursive-include parse *.txt

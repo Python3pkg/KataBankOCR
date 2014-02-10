@@ -1,11 +1,11 @@
 """
-Bank OCR Kata Parser
+Kata Bank OCR Parser
 
 Usage:
-  parser.py ( - | <input_file> ) [<output_file>]
-  parser.py [ - | <input_file> ]
-  parser.py [options]
-  parser.py
+  parse ( - | <input_file> ) [<output_file>]
+  parse [ - | <input_file> ]
+  parse [options]
+  parse
 
 Options:
   -h --help               Show this screen.
@@ -14,7 +14,7 @@ Options:
 
 from docopt import docopt
 
-__version__ = open('parser/version.txt').read().strip()
+__version__ = open('parse/version.txt').read().strip()
 
 def in_path_and_out_path():
     "return input_path and output_path from arguments"
@@ -28,5 +28,5 @@ def in_path_and_out_path():
 
 def version_name():
     "return input_path and output_path from arguments"
-    parser_name = 'Bank OCR Parser (Kata)'
+    parser_name = 'Kata Bank OCR Parser'
     return ' '.join((parser_name, 'version', __version__))

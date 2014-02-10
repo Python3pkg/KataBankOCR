@@ -3,7 +3,7 @@
 class Basic:
     "details regarding the Basic input file"
 
-    path = 'parser/test/input_files/basic.txt'
+    path = 'parse/test/input_files/basic.txt'
     line_count = 44
     accounts = ['000000000', '111111111', '222222222', '333333333', '444444444', '555555555',
                 '666666666', '777777777', '888888888', '999999999', '123456789']
@@ -20,7 +20,7 @@ class Basic:
 class Advanced:
     "details regarding the Advanced input file"
 
-    path = 'parser/test/input_files/advanced.txt'
+    path = 'parse/test/input_files/advanced.txt'
     line_count = 32
     story_three_results = ['000000051', '49006771? ILL', '1234?678? ILL', '200000000 ERR',
                            '490067715 ERR', '?23456789 ILL', '0?0000051 ILL', '49086771? ILL']

@@ -3,9 +3,9 @@
 import pytest
 import fileinput
 
-from parser import settings
-from parser.entries import entries_from_lines
-from parser.validators import Validate
+from parse import settings
+from parse.entries import entries_from_lines
+from parse.validators import Validate
 
 import test_input
 

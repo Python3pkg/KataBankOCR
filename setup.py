@@ -18,7 +18,7 @@ def read(*filenames, **kwargs):
     return sep.join(buf)
 
 long_description = read('README.rst',)
-version = read('version.txt')
+version = read('parse/version.txt')
 
 class PyTest(TestCommand):
     def finalize_options(self):
@@ -28,7 +28,7 @@ class PyTest(TestCommand):
 
     def run_tests(self):
         import pytest
-        error_code = pytest.main(['-k', 'parser/settings.py'])
+        error_code = pytest.main(['-k', 'parse/settings.py'])
         if error_code:
             sys.exit(errcode)
         errcode = pytest.main(self.test_args)
@@ -46,7 +46,7 @@ setup(
     author_email='KataBankOCR@JasonGreen.Name',
     description='Programming kata to parse output from fictitious OCR machine',
     long_description=long_description,
-    packages=find_packages(exclude=['test']),
+    packages=find_packages(exclude=['test_*']),
     include_package_data=True,
     platforms='any',
     test_suite='test',
@@ -62,5 +62,5 @@ setup(
         'Topic :: Utilities',
         ],
     extras_require={'testing': ['pytest'],},
-    scripts = ['parser/parser.py'],
+    scripts = ['parse/parse'],
 )

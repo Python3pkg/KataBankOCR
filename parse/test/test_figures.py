@@ -2,9 +2,9 @@
 
 import pytest
 
-from parser import settings
-from parser.figures import figures_from_entries
-from parser.validators import Validate
+from parse import settings
+from parse.figures import figures_from_entries
+from parse.validators import Validate
 
 from common_tools import figures_from_account, entry_from_account
 from common_tools import flatten

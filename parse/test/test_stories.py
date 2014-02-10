@@ -2,13 +2,13 @@
 
 import pytest
 
-from parser import settings
-from parser.lines import lines_from_path
-from parser.entries import entries_from_lines
-from parser.figures import figures_from_entries
-from parser.numerals import numerals_from_figures
-from parser.accounts import accounts_from_numerals
-from parser.results import results_from_accounts
+from parse import settings
+from parse.lines import lines_from_path
+from parse.entries import entries_from_lines
+from parse.figures import figures_from_entries
+from parse.numerals import numerals_from_figures
+from parse.accounts import accounts_from_numerals
+from parse.results import results_from_accounts
 
 from test_input import Basic, Advanced
 
