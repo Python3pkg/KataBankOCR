@@ -14,7 +14,7 @@ Options:
 
 from docopt import docopt
 
-__version__ = open('parse/version.txt').read().strip()
+from version import __version__
 
 def in_path_and_out_path():
     "return input_path and output_path from arguments"

@@ -18,7 +18,7 @@ def read(*filenames, **kwargs):
     return sep.join(buf)
 
 long_description = read('README.rst',)
-version = read('parse/version.txt')
+execfile('parse/version.py')
 
 class PyTest(TestCommand):
     def finalize_options(self):
@@ -36,7 +36,7 @@ class PyTest(TestCommand):
 
 setup(
     name='KataBankOCR',
-    version=version,
+    version=__version__,
     url='https://github.com/gJigsaw/KataBankOCR',
     license='GNU General Public License',
     author='Jason Green',
