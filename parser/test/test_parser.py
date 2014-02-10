@@ -3,15 +3,10 @@
 import pytest
 import subprocess
 
-path_to_basic_input = "test/input_files/basic.txt"
-path_to_advanced_input = "test/input_files/advanced.txt"
-basic_results = ('000000000', '111111111 ERR', '222222222 ERR', '333333333 ERR',
-                 '444444444 ERR', '555555555 ERR', '666666666 ERR', '777777777 ERR',
-                 '888888888 ERR', '999999999 ERR', '123456789',)
-advanced_results = ('000000051', '49006771? ILL', '1234?678? ILL', '200000000 ERR',
-                    '490067715 ERR', '?23456789 ILL', '0?0000051 ILL', '49086771? ILL')
-@pytest.fixture(params=((basic_results, path_to_basic_input),
-                        (advanced_results, path_to_advanced_input),))
+from test_input import Basic, Advanced
+
+@pytest.fixture(params=((Basic.story_three_results, Basic.path),
+                        (Advanced.story_three_results, Advanced.path),))
 def expectations_and_source(request):
     "return expected results and input path from which to find them"
     expected, path = request.param

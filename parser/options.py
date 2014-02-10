@@ -14,7 +14,7 @@ Options:
 
 from docopt import docopt
 
-__version__ = open('version.txt').read().strip()
+__version__ = open('parser/version.txt').read().strip()
 
 def in_path_and_out_path():
     "return input_path and output_path from arguments"
@@ -30,4 +30,3 @@ def version_name():
     "return input_path and output_path from arguments"
     parser_name = 'Bank OCR Parser (Kata)'
     return ' '.join((parser_name, 'version', __version__))
-

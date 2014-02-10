@@ -7,12 +7,12 @@ from parser import settings
 from parser.entries import entries_from_lines
 from parser.validators import Validate
 
+import test_input
+
 class TestEntriesFromLines:
     "exercise the entries_from_lines function"
 
-    path_to_basic = 'test/input_files/basic.txt'
-    path_to_advanced = 'test/input_files/advanced.txt'
-    @pytest.fixture(params=(path_to_basic, path_to_advanced,))
+    @pytest.fixture(params=(test_input.Basic.path, test_input.Advanced.path))
     def lines(self, request):
         "return a list of lines for testing"
         path = request.param
@@ -54,3 +54,4 @@ class TestEntriesFromLines:
             expected = groups
             found = entries_from_lines(iterable)
             assert expected == list(found)
+

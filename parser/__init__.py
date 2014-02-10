@@ -1,1 +1,1 @@
-__version__ = open('version.txt').read().strip()
+__version__ = open('parser/version.txt').read().strip()
