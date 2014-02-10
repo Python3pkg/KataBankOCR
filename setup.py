@@ -28,7 +28,7 @@ class PyTest(TestCommand):
 
     def run_tests(self):
         import pytest
-        error_code = pytest.main(['-k', 'parse/settings.py'])
+        error_code = pytest.main(['-k', 'parse/test/test_settings.py'])
         if error_code:
             sys.exit(errcode)
         errcode = pytest.main(self.test_args)
