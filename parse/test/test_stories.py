@@ -10,7 +10,7 @@ from parse.numerals import numerals_from_figures
 from parse.accounts import accounts_from_numerals
 from parse.results import results_from_accounts
 
-from test_input import Basic, Advanced
+from input_files import Basic, Advanced
 
 def accounts_from_path(path):
     "return Accounts from input file at Path"

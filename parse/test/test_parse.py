@@ -4,10 +4,10 @@ import pytest
 import subprocess
 from functools import partial
 
-from test_input import Basic, Advanced
+import input_files
 
-@pytest.fixture(params=((Basic.story_three_results, Basic.path),
-                        (Advanced.story_three_results, Advanced.path),))
+@pytest.fixture(params=((input_files.Basic.story_three_results, input_files.Basic.path),
+                        (input_files.Advanced.story_three_results, input_files.Advanced.path),))
 def expectations_and_source(request):
     "return expected results and input path from which to find them"
     expected, path = request.param

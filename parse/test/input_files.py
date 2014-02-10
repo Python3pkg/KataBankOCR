@@ -1,4 +1,4 @@
-"data about input_files used for testing"
+"data about input files used for testing"
 
 class Basic:
     "details regarding the Basic input file"

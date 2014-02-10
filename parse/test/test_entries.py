@@ -7,12 +7,12 @@ from parse import settings
 from parse.entries import entries_from_lines
 from parse.validators import Validate
 
-import test_input
+import input_files
 
 class TestEntriesFromLines:
     "exercise the entries_from_lines function"
 
-    @pytest.fixture(params=(test_input.Basic.path, test_input.Advanced.path))
+    @pytest.fixture(params=(input_files.Basic.path, input_files.Advanced.path))
     def lines(self, request):
         "return a list of lines for testing"
         path = request.param
