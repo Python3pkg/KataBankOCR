@@ -97,7 +97,7 @@ class TestSuperpositionsFromFigures:
 
         def test_parses_known_figures_to_superpositions(self):
             "confirm known figures recognized correctly"
-            figures, superpositions = zip(*settings.figures.items())
+            figures, superpositions = zip(*self.figures.items())
             expected = superpositions
             found = tuple(superpositions_from_figures(figures))
             assert expected == found
