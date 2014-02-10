@@ -2,14 +2,11 @@
 Kata Bank OCR Parser
 
 Usage:
-  parse ( - | <input_file> ) [<output_file>]
-  parse [ - | <input_file> ]
-  parse [options]
-  parse
+  parse ( <input_file> | - ) [ <output_file> ]
 
 Options:
   -h --help               Show this screen.
-  --version               Show version.
+  -v --version            Show version.
 """
 
 from docopt import docopt

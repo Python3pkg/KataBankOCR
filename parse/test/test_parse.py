@@ -17,7 +17,7 @@ def test_stdin_and_stdout(expectations_and_source):
     "confirm Results parsed correctly from StdIn to StdOut"
     expected_results, input_path = expectations_and_source
     with open(input_path) as input_file:
-        found_results = subprocess.check_output('parse/parse', stdin=input_file)
+        found_results = subprocess.check_output(['parse/parse', '-'], stdin=input_file)
     assert expected_results == found_results
 
 def test_in_path_and_stdout(tmpdir, expectations_and_source):
