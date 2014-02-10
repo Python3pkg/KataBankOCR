@@ -6,8 +6,6 @@ import codecs
 import os
 import sys
 
-import parser
-
 here = os.path.abspath(os.path.dirname(__file__))
 
 def read(*filenames, **kwargs):
@@ -19,7 +17,7 @@ def read(*filenames, **kwargs):
             buf.append(f.read())
     return sep.join(buf)
 
-long_description = read('README.md',)
+long_description = read('README.rst',)
 version = read('version.txt')
 
 class PyTest(TestCommand):
@@ -48,7 +46,7 @@ setup(
     author_email='KataBankOCR@JasonGreen.Name',
     description='Programming kata to parse output from fictitious OCR machine',
     long_description=long_description,
-    packages=['parser'],
+    packages=find_packages(exclude=['test']),
     include_package_data=True,
     platforms='any',
     test_suite='test',
