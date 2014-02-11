@@ -7,19 +7,20 @@ from parse import settings
 from parse.accounts import accounts_from_numerals
 
 from common_tools import flatten, replace_element
-from test_input import GeneratorRaises
+import check_function
+
+func = accounts_from_numerals
+valid_numeral = random.choice(list(settings.valid_numerals))
+
+test_iterability = check_function.raises_on_non_iterable(func)
+test_non_string = check_function.raises_on_bad_element_type(func, valid_numeral)
+test_element_length = check_function.raises_on_bad_element_length(func, valid_numeral)
 
 class TestAccountsFromNumerals:
     "exercise the accounts_from_numerals function"
 
     class TestInput:
         "confirm invalid input raises appropriate error"
-
-        test_non_iterable = GeneratorRaises.on_non_iterable(accounts_from_numerals)
-        test_non_string = GeneratorRaises.on_non_string(accounts_from_numerals)
-        valid_numeral = random.choice(list(settings.valid_numerals))
-        test_numeral_if_invalid_length = GeneratorRaises.on_element_of_unexpected_length(
-            accounts_from_numerals, valid_numeral)
 
         def test_with_non_numeral(self, get_account, non_numeral):
             "confirm error raised for non_numeral"
