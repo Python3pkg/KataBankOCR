@@ -12,6 +12,4 @@ def entries_from_lines(lines):
         if len(entry) == settings.lines_per_entry:
             yield entry
             entry = []
-    if entry:
-        message = 'File ended mid-Entry. Partial Entry:%s' % str(entry)
-        raise(ValueError(message))
+

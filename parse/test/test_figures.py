@@ -4,11 +4,21 @@ import pytest
 
 from parse import settings
 from parse.figures import figures_from_entries
-from parse.validators import Validate
 
-from common_tools import figures_from_account, entry_from_account
-from common_tools import flatten
+from common_tools import figures_from_account, entry_from_account, flatten
 from common_tools import invalid_lengths, fit_to_length, replace_element
+import check_function
+
+function = figures_from_entries
+semi_valid_entry = ['', '', '', '']   # 'semi' because not checking line length here
+adulterants = [[], (), 1, False, True, 1.0]
+
+test_iterability = check_function.raises_on_non_iterable(function)
+test_element_type = check_function.raises_on_bad_element_type(function, semi_valid_entry)
+test_element_length = check_function.raises_on_bad_element_length(function, semi_valid_entry)
+test_element_composition = check_function.raises_on_bad_element_composition(function, 
+                                                                            semi_valid_entry,
+                                                                            adulterants)
 
 class TestFiguresFromEntries:
     "exercise the figures_from_entries function"
@@ -20,18 +30,6 @@ class TestFiguresFromEntries:
 
     class TestInput:
         "confirm invalid input raises appropriate error"
-
-        def test_with_non_list(self, entry, non_string):
-            "confirm figures_from_entries detects a non-string"
-            entry = replace_element(entry, non_string)
-            figures = figures_from_entries([entry])
-            pytest.raises(TypeError, list, figures)
-
-        def test_with_list_containing_a_non_string(self, entry, non_string):
-            "confirm detection of a non-string within an entry"
-            entry = replace_element(entry, non_string)
-            figures = figures_from_entries([entry])
-            pytest.raises(TypeError, list, figures)
 
         @pytest.fixture(params=invalid_lengths(settings.strokes_per_line))
         def invalid_stroke_count(self, request):
