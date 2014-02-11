@@ -7,6 +7,7 @@ from parse import settings
 from parse.accounts import accounts_from_numerals
 
 from common_tools import flatten, replace_element
+from test_input import GeneratorRaises
 
 class TestAccountsFromNumerals:
     "exercise the accounts_from_numerals function"
@@ -14,22 +15,11 @@ class TestAccountsFromNumerals:
     class TestInput:
         "confirm invalid input raises appropriate error"
 
-        def test_with_non_iterable(self, non_iterable):
-            "confirm error raised on non-iterable input"
-            accounts = accounts_from_numerals(non_iterable)
-            pytest.raises(TypeError, list, accounts)
-
-        def test_with_non_string(self, non_string):
-            "confirm error raised on iterable that yields a non_string"
-            numerals = [non_string]
-            accounts = accounts_from_numerals(numerals)
-            pytest.raises(TypeError, list, accounts)
-
-        def test_with_numeral_of_invalid_length(self, get_numeral):
-            "confirm error raised for Numeral of invalid length"
-            doublewide_numeral = get_numeral() + get_numeral()
-            accounts = accounts_from_numerals([doublewide_numeral])
-            pytest.raises(ValueError, list, accounts)
+        test_non_iterable = GeneratorRaises.on_non_iterable(accounts_from_numerals)
+        test_non_string = GeneratorRaises.on_non_string(accounts_from_numerals)
+        valid_numeral = random.choice(list(settings.valid_numerals))
+        test_numeral_if_invalid_length = GeneratorRaises.on_element_of_unexpected_length(
+            accounts_from_numerals, valid_numeral)
 
         def test_with_non_numeral(self, get_account, non_numeral):
             "confirm error raised for non_numeral"
