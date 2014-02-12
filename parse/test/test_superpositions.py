@@ -19,56 +19,51 @@ test_element_composition = check_function.raises_on_bad_element_composition(func
                                                                             valid_figure,
                                                                             adulterants)
 
-figure_partial_superpositions = {
+figure_superpositions = {
     ' _ ' +
     '| |' +
     '|_|' +
-    '   ': {0: {'0'}, 1: {'8'}, 2: {'6', '9'}},
+    '   ': {0: {'0'}, 1: {'8'}, 2: {'6', '9'}, 3: {'2', '3', '5', '7'}, 4:{'1', '4'}},
     '   ' +
     '  |' +
     '  |' +
-    '   ': {0: {'1'}, 1: {'7'}, 2: {'4'}},
+    '   ': {0: {'1'}, 1: {'7'}, 2: {'4'}, 3: {'3'}, 4: {'0', '9'}, 5: {'2', '5', '8'}, 6: {'6'}},
     ' _ ' +
     ' _|' +
     '|_ ' +
-    '   ': {0: {'2'}, 2: {'3', '8'}},
+    '   ': {0: {'2'}, 2: {'3', '8'}, 3: {'0', '6', '9'}, 4: {'5', '7'}, 5: {'1', '4'}},
     ' _ ' +
     ' _|' +
     ' _|' +
-    '   ': {0: {'3'}, 1: {'9'}, 2: {'2', '5', '7', '8'}},
+    '   ': {0: {'3'}, 1: {'9'}, 2: {'2', '5', '7', '8'}, 3: {'0', '1', '4', '6'}},
     '   ' +
     '|_|' +
     '  |' +
-    '   ': {0: {'4'}, 2: {'1', '9'}},
+    '   ': {0: {'4'}, 2: {'1', '9'}, 3: {'3', '5', '7', '8'}, 4: {'0', '6'}, 5: {'2'}},
     ' _ ' +
     '|_ ' +
     ' _|' +
-    '   ': {0: {'5'}, 1: {'6', '9'}, 2: {'3', '8'}},
+    '   ': {0: {'5'}, 1: {'6', '9'}, 2: {'3', '8'}, 3: {'0', '4'}, 4: {'2', '7'}, 5: {'1'}},
     ' _ ' +
     '|_ ' +
     '|_|' +
-    '   ': {0: {'6'}, 1: {'5', '8'}, 2: {'0', '9'}},
+    '   ': {0: {'6'}, 1: {'5', '8'}, 2: {'0', '9'}, 3: {'2', '3'}, 4: {'4'}, 5: {'7'}, 6: {'1'}},
     ' _ ' +
     '  |' +
     '  |' +
-    '   ': {0: {'7'}, 1: {'1'}, 2: {'3'}},
+    '   ': {0: {'7'}, 1: {'1'}, 2: {'3'}, 3: {'0', '4', '9'}, 4: {'2', '5', '8'}, 5: {'6'}},
     ' _ ' +
     '|_|' +
     '|_|' +
-    '   ': {0: {'8'}, 1: {'0', '6', '9'}, 2: {'2', '3', '5'}},
+    '   ': {0: {'8'}, 1: {'0', '6', '9'}, 2: {'2', '3', '5'}, 3: {'4'}, 4: {'7'}, 5: {'1'}},
     ' _ ' +
     '|_|' +
     ' _|' +
-    '   ': {0: {'9'}, 1: {'3', '5', '8'}, 2: {'0', '4', '6'}},}
+    '   ': {0: {'9'}, 1: {'3', '5', '8'}, 2: {'0', '4', '6'}, 3: {'2', '7'}, 4: {'1'}},}
 
 def test_parses_known_figures_to_superpositions():
     "confirm known figures yield expected superpositions"
-    dict_items = figure_partial_superpositions.items()
-    figures, partial_superpositions_expected = zip(*dict_items)
+    dict_items = figure_superpositions.items()
+    figures, superpositions_expected = zip(*dict_items)
     superpositions_found = superpositions_from_figures(figures)
-    parial_superpositions_found = map(_partial_superposition, superpositions_found)
-    assert list(partial_superpositions_expected) == list(parial_superpositions_found)
-
-def _partial_superposition(superposition):
-    "return superposition limited to 2 or fewer stroke differences"
-    return dict([(k, v) for (k, v) in superposition.items() if k <= 2])
+    assert list(superpositions_expected) == list(superpositions_found)
