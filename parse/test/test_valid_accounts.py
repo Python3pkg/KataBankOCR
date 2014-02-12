@@ -29,8 +29,8 @@ test_element_type = check_function.raises_on_bad_element_type(function, dict())
 def test_parses_known_accounts_to_expected_valid_accounts(account, expected_valid_accounts):
     "confirm known accounts yield expected valid account lists"
     superpositions = _superpositions_from_account(account)
-    found_accounts = valid_accounts_from_superpositions(superpositions)
-    assert expected_valid_accounts == found_accounts
+    found_accounts = valid_accounts_from_superpositions([superpositions])
+    assert [expected_valid_accounts] == list(found_accounts)
 
 def _superpositions_from_account(account):
     "return Superpositions from Figures in Account's Numerals"
@@ -68,5 +68,5 @@ superpositions_c = _superpositions_from_account('49086771') + [superposition_c]
 def test_parses_known_superpositions_to_expected_valid_accounts(superpositions, 
                                                                 expected_valid_accounts):
     "confirm known superpositions yield expected valid accounts"
-    found_accounts = valid_accounts_from_superpositions(superpositions)
-    assert expected_valid_accounts == found_accounts
+    found_accounts = valid_accounts_from_superpositions([superpositions])
+    assert [expected_valid_accounts] == list(found_accounts)
