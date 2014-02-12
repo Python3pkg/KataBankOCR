@@ -1,4 +1,13 @@
-"generator that yields SuperPositions and the functions that support it"
+"""generator that yields Superpositions and the functions that support it
+
+A Superposition tracks the relationship between a given Figure and all
+the valid Numerals. It does this by counting the differences between
+the provided Figure and actual Figure for each valid Numeral.
+The generator yields this relationship as a dictionary:
+  superposition[difference_count] = numeral_set
+  {difference_count: set of valid numerals with that many differences}
+See test_superpositions.py for examples or valid_accounts for consumer.
+"""
 from itertools import repeat
 
 import settings
@@ -28,4 +37,3 @@ def _count_differences(figure_a, figure_b):
     "return count of differing strokes between two figures"
     stroke_from_each_figure = zip(figure_a, figure_b)
     return len(['' for (a, b) in stroke_from_each_figure if a != b])
-

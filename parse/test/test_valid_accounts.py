@@ -29,7 +29,7 @@ test_element_type = check_function.raises_on_bad_element_type(function, dict())
 def test_parses_known_accounts_to_expected_valid_accounts(account, expected_valid_accounts):
     "confirm known accounts yield expected valid account lists"
     superpositions = _superpositions_from_account(account)
-    found_accounts = valid_accounts_from_superpositions([superpositions])
+    found_accounts = valid_accounts_from_superpositions(superpositions)
     assert [expected_valid_accounts] == list(found_accounts)
 
 def _superpositions_from_account(account):
@@ -61,12 +61,12 @@ superpositions_b = (_superpositions_from_account('0')
 superpositions_c = _superpositions_from_account('49086771') + [superposition_c]
 
 @pytest.mark.parametrize('superpositions, expected_valid_accounts', (
-        (superposition_a, {'123456789'}),
-        (superposition_a, {'000000051'}),
-        (superposition_c, {'490867715'}),
+        (superpositions_a, {'123456789'}),
+        (superpositions_b, {'000000051'}),
+        (superpositions_c, {'490867715'}),
         ))
 def test_parses_known_superpositions_to_expected_valid_accounts(superpositions, 
                                                                 expected_valid_accounts):
     "confirm known superpositions yield expected valid accounts"
-    found_accounts = valid_accounts_from_superpositions([superpositions])
+    found_accounts = valid_accounts_from_superpositions(superpositions)
     assert [expected_valid_accounts] == list(found_accounts)
