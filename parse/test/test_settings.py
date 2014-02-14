@@ -11,15 +11,13 @@ expected_setting_types = (('lines_per_entry', int),
                           ('strokes_per_figure', int),
                           ('strokes_per_line', int),
                           ('approximate_entries_per_file', int),
-                          ('checksum_divisor', int),
                           ('some_known_valid_accounts', tuple),
                           ('some_known_invalid_accounts', tuple),
                           ('valid_strokes', set),
                           ('valid_numerals', set),
                           ('figures', dict),
                           ('illegible_numeral', str),
-                          ('illegible_status', str),
-                          ('invalid_status', str),
+                          ('ambiguous_status', str),
                           ('checksum', FunctionType),)
 
 class TestDefinition:
