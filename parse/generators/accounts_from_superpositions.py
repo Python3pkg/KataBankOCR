@@ -25,7 +25,6 @@ def _account_from_superpositions(superpositions):
 def _invalid_or_illegible_account_from_superpositions(superpositions):
     "return the invalid or illegible Account represented by superpositions"
     numerals = [_numeral_from_superposition(s) for s in superpositions]
-    assert 0
     return ''.join(numerals)
 
 def _numeral_from_superposition(superposition):
