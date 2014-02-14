@@ -2,8 +2,8 @@
 
 from functools import partial
 
-import settings
-from validators import Validate
+from parse import settings
+from parse.validators import Validate
 
 def figures_from_entries(entries):
     "generator that consumes Entries and yields figures"

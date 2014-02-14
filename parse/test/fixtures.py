@@ -47,11 +47,9 @@ class Figures:
 
     @staticmethod
     def get_random(count=None):
-        "return a random valid Figure"
-        get_one = lambda: random.choice(settings.figures.keys())
-        if count is None:
-            return get_one()
-        return [get_one() for _ in range(count)]
+        "return random valid Figure[s]"
+        getter = lambda: random.choice(settings.figures.keys())
+        return get_one_or_more(getter, count)
 
     @staticmethod
     def from_numeral(numeral):
@@ -83,6 +81,12 @@ class Figures:
 
 class Entries:
     "objects that provide Entries for testing"
+
+    @classmethod
+    def get_random(cls, count=None):
+        "return one or more random Entries"
+        getter = lambda: cls.from_account(Accounts.get_random())
+        return get_one_or_more(getter, count)
 
     @staticmethod
     def from_account(account):
