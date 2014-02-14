@@ -30,16 +30,8 @@ class Accounts:
         return get_one_or_more(getter, count)
 
     @staticmethod
-    def from_example_accounts():
-        "return Accounts from example Accounts"
-        return [t[0] for t in _example_accounts()]
-
-class AccountSets:
-    "functions that provide sets of Accounts for testing"
-
-    @staticmethod
-    def from_example_accounts():
-        "return sets of Accounts from example Accounts"
+    def of_example_accounts():
+        "return Accounts from superpositions of example Accounts"
         return [t[1] for t in _example_accounts()]
 
 class Figures:
@@ -136,7 +128,7 @@ class Superpositions:
         ]
 
     @classmethod
-    def from_example_accounts(cls):
+    def of_example_accounts(cls):
         "return Superpositions made from example accounts"
         example_accounts = [t[0] for t in _example_accounts()]
         return map(cls.from_account, example_accounts)
@@ -150,7 +142,7 @@ class Results:
     "functions that provide Results for testing"
     
     @staticmethod
-    def from_example_accounts():
+    def of_example_accounts():
         "return Results from example accounts"
         return [t[2] for t in _example_accounts()]
 
@@ -204,6 +196,21 @@ def _example_accounts():
         ('888888888', {'888886888', '888888880', '888888988'}, '888888888 AMB'),
         ('999999999', {'899999999', '993999999', '999959999'}, '999999999 AMB'),
         ('490067715', {'490067115', '490067719', '490867715'}, '490067715 AMB'),
+        ]
+
+def _example_accounts():
+    "return list of 3-tuples (account, account_from_superpositions, result)"
+    return [
+        ('123456789', '123456789', '123456789'),
+        ('111111111', '711111111', '711111111'),
+        ('777777777', '777777177', '777777177'),
+        ('200000000', '200800000', '200800000'),
+        ('333333333', '333393333', '333393333'),
+        ('555555555', '555555555', '555555555 AMB'),
+        ('666666666', '666666666', '666666666 AMB'),
+        ('888888888', '888888888', '888888888 AMB'),
+        ('999999999', '999999999', '999999999 AMB'),
+        ('490067715', '490067715', '490067715 AMB'),
         ]
 
 def _flawed_figures():
