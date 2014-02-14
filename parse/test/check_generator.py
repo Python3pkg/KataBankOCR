@@ -1,51 +1,43 @@
-"functions that return tests showing other funcs validate their input"
+"functions that return tests showing that generator functions validate their input"
 
 import pytest
 from common_tools import replace_element
+import fixtures
 
-def raises_on_non_iterable(function):
+def raises_on_non_iterable(generator):
     "return test of error raised on non-iterable input"
-    some_non_iterables=(0, 1, -10, False, True, 3.14159)
     def non_iterable_test():
-        for value in some_non_iterables:
-            iterator = function(value)
+        for non_iterable_value in fixtures.ArbitraryValues.non_iterable():
+            iterator = generator(non_iterable_value)
             pytest.raises(TypeError, list, iterator)
     return non_iterable_test
 
-def raises_on_bad_element_type(function, valid_element):
+def raises_on_bad_element_type(generator, value_or_type):
     "return test of error raised on element of unexpected type"
     def element_type_test():
-        for bad_element in _get_values_of_different_type(valid_element):
-            iterator = function([bad_element])
+        for bad_element in fixtures.ArbitraryValues.of_different_type(value_or_type):
+            iterator = generator([bad_element])
             pytest.raises(TypeError, list, iterator)
     return element_type_test
 
-def raises_on_bad_element_length(function, valid_element):
+def raises_on_bad_element_length(generator, valid_element):
     "return test of error raised on element of unexpected length"
     valid_length = len(valid_element)
     def element_length_test():
         for invalid_length in _get_invalid_lengths(valid_length):
             invalid_length_element = _fit_to_length(valid_element, invalid_length)
-            iterator = function([invalid_length_element])
+            iterator = generator([invalid_length_element])
             pytest.raises(ValueError, list, iterator)
     return element_length_test
 
-def raises_on_bad_element_composition(function, valid_element, adulterants):
+def raises_on_bad_element_composition(generator, valid_element, adulterants):
     "return test of error raised when element contains invalid element"
     def element_composition_test():
         for adulterant in adulterants:
             adulterated_element = replace_element(valid_element, adulterant)
-            iterator = function([adulterated_element])
+            iterator = generator([adulterated_element])
             pytest.raises(TypeError, list, iterator)
     return element_composition_test
-
-def _get_values_of_different_type(obj):
-    "Return an arbitrary non-string value"
-    some_arbitrary_values = (0, 1, -10, False, True, [], (), {}, 3.14159, None,
-                             'abc', [1,2,3], '', {1:2}, {0}, -1.1, object)
-    avoided_type = type(obj)
-    different_type = lambda value: not isinstance(value, avoided_type)
-    return filter(different_type, some_arbitrary_values)
 
 def _get_invalid_lengths(valid_length, multiplier=4):
     "return ints 0 to (valid_length * multiplier) excluding valid_length"
@@ -61,3 +53,4 @@ def _fit_to_length(value, length):
         return value[:length]
     # Still too short. Double it and recurse.
     return _fit_to_length(value + value, length)
+

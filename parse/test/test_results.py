@@ -1,24 +1,21 @@
 "test the results module"
 
 import pytest
-import random
 
-from parse import settings
-from parse.results import results_from_accounts
+from parse.results import results_from_accounts as generator
 
-import check_function
+from fixtures import Accounts
+import check_generator
 
-function = results_from_accounts
-a_numeral = lambda _: random.choice(list(settings.valid_numerals))
-an_account = ''.join(map(a_numeral, range(settings.figures_per_entry)))
+account = Accounts.get_random()
 adulterants = ['\t', '-', 'I', 'l', '/', '\\', '\r']
 
-test_iterability = check_function.raises_on_non_iterable(function)
-test_element_type = check_function.raises_on_bad_element_type(function, an_account)
-test_element_length = check_function.raises_on_bad_element_length(function, an_account)
-test_element_composition = check_function.raises_on_bad_element_composition(function, 
-                                                                            an_account,
-                                                                            adulterants)
+test_iterability = check_generator.raises_on_non_iterable(generator)
+test_element_type = check_generator.raises_on_bad_element_type(generator, account)
+test_element_length = check_generator.raises_on_bad_element_length(generator, account)
+test_element_composition = check_generator.raises_on_bad_element_composition(generator, 
+                                                                             account,
+                                                                             adulterants)
 
 @pytest.mark.parametrize('account, result', (
         ('000000000', '000000000',),
@@ -36,5 +33,5 @@ test_element_composition = check_function.raises_on_bad_element_composition(func
 def test_parses_known_accounts_to_results(account, result):
     "confirm known accounts recognized correctly"
     expected = [result]
-    found = list(results_from_accounts([account]))
+    found = list(generator([account]))
     assert expected == found

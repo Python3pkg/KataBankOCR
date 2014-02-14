@@ -24,7 +24,7 @@ def test_version_info_type():
     assert isinstance(parse.__version_info__, tuple)
 
 def test_version_info_element_type():
-    "confirm version_info tuple composed of ints"
+    "confirm version_info composed of ints"
     for element in parse.__version_info__:
         assert isinstance(element, int)
 

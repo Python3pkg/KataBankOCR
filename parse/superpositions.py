@@ -8,6 +8,7 @@ The generator yields this relationship as a dictionary:
   {difference_count: set of valid numerals with that many differences}
 See test_superpositions.py for examples or valid_accounts for consumer.
 """
+
 from itertools import repeat
 
 import settings

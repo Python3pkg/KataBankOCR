@@ -4,42 +4,29 @@ import pytest
 import random
 
 from parse import settings
-from parse.numerals import numerals_from_figures
+from parse.numerals import numerals_from_figures as generator
 
-import check_function
- 
-function = numerals_from_figures
-valid_figure = random.choice(settings.figures.keys())
+from fixtures import Figures, Numerals
+import check_generator
+
+figure = Figures.get_random()
 adulterants = ['\t', '-', 'I', 'l', '/', '\\', '\r']
 
-test_iterability = check_function.raises_on_non_iterable(function)
-test_element_type = check_function.raises_on_bad_element_type(function, valid_figure)
-test_element_length = check_function.raises_on_bad_element_length(function, valid_figure)
-test_element_composition = check_function.raises_on_bad_element_composition(function, 
-                                                                            valid_figure,
+test_iterability = check_generator.raises_on_non_iterable(generator)
+test_element_type = check_generator.raises_on_bad_element_type(generator, figure)
+test_element_length = check_generator.raises_on_bad_element_length(generator, figure)
+test_element_composition = check_generator.raises_on_bad_element_composition(generator, 
+                                                                            figure,
                                                                             adulterants)
 
-def test_parses_known_figures_to_numerals():
-    "confirm known figures recognized correctly"
-    figures, numerals = zip(*settings.figures.items())
-    expected = numerals
-    found = tuple(numerals_from_figures(figures))
+def test_valid_figures_yield_valid_numerals():
+    "confirm valid figures recognized correctly"
+    expected = Numerals.valid()
+    found = list(generator(Figures.valid()))
     assert expected == found
 
-@pytest.fixture
-def unknown_figure():
-    " return Figure of valid length & Strokes, but no matching Numeral "
-    for i in range(100):
-        valid_figures = settings.figures.keys()
-        strokes = list(random.choice(valid_figures))
-        random.shuffle(strokes)
-        figure = ''.join(strokes)
-        if figure not in valid_figures:
-            return figure
-    raise ValueError('Failed to generate an unknown figure')
-
-def test_parses_unknown_figures_to_illegible_numeral(unknown_figure):
-    "confirm unknown figure yields illegible numeral"
-    expected = [settings.illegible_numeral]
-    found = list(numerals_from_figures([unknown_figure]))
+def test_flawed_figures_yield_illegible_numerals():
+    "confirm flawed figures yield illegible numerals"
+    expected = [settings.illegible_numeral] * len(Figures.flawed())
+    found = list(generator(Figures.flawed()))
     assert expected == found

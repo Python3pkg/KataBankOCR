@@ -6,26 +6,6 @@ from itertools import chain
 
 from parse import settings
 
-def figure_from_numeral(numeral):
-    "return the Figure that represents the given Numeral"
-    for figure in settings.figures:
-        if settings.figures[figure] == numeral:
-            return figure
-
-def figures_from_account(account):
-    "return the Figures that represent the given Account"
-    return map(figure_from_numeral, list(account))
-
-def entry_from_account(account):
-    "return the Entry (list of lines) that represents the given Account"
-    figures = figures_from_account(account)
-    figure_indexes = range(settings.figures_per_entry)
-    slice_indexes = lambda line_index: (line_index * settings.strokes_per_substring,
-                                        (line_index + 1) * settings.strokes_per_substring)
-    substring = lambda fi, li: figures[fi][slice(*slice_indexes(li))]
-    line_substrings = lambda li: [substring(fi, li) for fi in figure_indexes]
-    return map(''.join, map(line_substrings, range(settings.lines_per_entry)))
-
 def invalid_lengths(valid_length, multiplier=4):
     "the list of ints 0 to (valid_length * multiplier) excluding valid_length"
     maximum_length_to_test = valid_length * multiplier
@@ -55,3 +35,9 @@ def replace_element(target, new_element, target_index=None):
 def flatten(iterable_of_iterables):
     "flatten one level of nested iterables"
     return chain.from_iterable(iterable_of_iterables)
+
+def get_one_or_more(getter, count=None):
+    "return one or a list of results from calling getter"
+    if count is None:
+        return getter()
+    return [getter() for _ in range(count)]

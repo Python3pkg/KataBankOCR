@@ -1,4 +1,4 @@
-"generator that yields lists of valid Accounts"
+"generator that yields lists of Accounts"
 
 from itertools import product, chain
 
@@ -6,20 +6,20 @@ import settings
 from validators import Validate
 
 def accounts_from_superpositions(superpositions):
-    "generator that consumes Superpositions and yields valid Account sets"
+    "generator that consumes Superpositions and yields valid Accounts"
     account_worth_of_superpositions = []
     for superposition in superpositions:
         Validate.type(dict, superposition, 'Superposition')
         account_worth_of_superpositions.append(superposition)
         if len(account_worth_of_superpositions) == settings.figures_per_entry:
-            accounts = _valid_accounts_from_superpositions(account_worth_of_superpositions)
+            accounts = _accounts_from_superpositions(account_worth_of_superpositions)
             yield accounts
             account_worth_of_superpositions = []
 
-def _valid_accounts_from_superpositions(superpositions):
+def _accounts_from_superpositions(superpositions):
     "returns valid Accounts with fewest differences from their Entries"
     numeral_sets = _initial_numeral_sets(superpositions)
-    accounts = _valid_accounts_from_numeral_sets(numeral_sets, superpositions)
+    accounts = _accounts_from_numeral_sets(numeral_sets, superpositions)
     if accounts:
         lowest_difference_count = min(accounts.keys())
         best_accounts = accounts[lowest_difference_count]
@@ -30,7 +30,7 @@ def _valid_accounts_from_superpositions(superpositions):
             numeral_set = _numerals_within_difference_count(superposition,
                                                             allowed_differences_per_numeral)
             numeral_sets[index].update(numeral_set)
-        accounts = _valid_accounts_from_numeral_sets(numeral_sets, superpositions)
+        accounts = _accounts_from_numeral_sets(numeral_sets, superpositions)
         if accounts:
             lowest_difference_count = min(accounts.keys())
             best_accounts = accounts[lowest_difference_count]
@@ -46,7 +46,7 @@ def _initial_numeral_sets(superpositions):
         numeral_sets.append(numeral_set.copy())
     return numeral_sets
 
-def _valid_accounts_from_numeral_sets(numeral_sets, superpositions):
+def _accounts_from_numeral_sets(numeral_sets, superpositions):
     "return all possible valid accounts assemblable from numeral sets"
     accounts = map(''.join, product(*numeral_sets))
     valid_accounts = set(filter(settings.checksum, accounts))
