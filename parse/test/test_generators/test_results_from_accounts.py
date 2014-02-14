@@ -22,4 +22,6 @@ test_element_composition = \
 
 def test_parses_known_accounts_to_results():
     "confirm known account recognized correctly"
-    # TODO: Re-Implement
+    expected = fixtures.Results.of_example_accounts()
+    found = list(results_from_accounts(fixtures.Accounts.of_example_accounts()))
+    assert expected == found
