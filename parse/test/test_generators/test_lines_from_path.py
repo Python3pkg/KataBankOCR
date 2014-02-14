@@ -4,7 +4,7 @@ import pytest
 
 from parse.generators.lines_from_path import lines_from_path
 
-from fixtures import Files
+import input_files
 
 def test_with_bad_path():
     "confirm a bad path raises an expected error"
@@ -12,11 +12,12 @@ def test_with_bad_path():
     pytest.raises((OSError, IOError,), list, lines)
 
 @pytest.mark.parametrize('file_path, line_count', (
-        (Files.Basic.path, Files.Basic.line_count),
-        (Files.Advanced.path, Files.Advanced.line_count),))
+        (input_files.Basic.path, input_files.Basic.line_count),
+        (input_files.Advanced.path, input_files.Advanced.line_count),
+        ))
 def test_line_count(file_path, line_count):
-    "confirm all lines read"
+    "confirm all Lines read"
     expected = line_count
-    lines = lines_from_path(file_path)
-    found = len(list(lines))
+    lines = list(lines_from_path(file_path))
+    found = len(lines)
     assert expected == found
