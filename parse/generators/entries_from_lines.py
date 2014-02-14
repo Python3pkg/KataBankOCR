@@ -2,7 +2,7 @@
 
 from itertools import islice
 
-import settings
+from parse import settings
 
 def entries_from_lines(lines):
     "generator that reads Lines and yields an Entry"

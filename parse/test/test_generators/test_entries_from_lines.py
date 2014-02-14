@@ -1,13 +1,13 @@
-"Test the Entries module"
+"Test the entries_from_lines generator"
 
 import pytest
 
 from parse import settings
-from parse.entries import entries_from_lines as generator
+from parse.generators.entries_from_lines import entries_from_lines
 
 import check_generator
  
-test_iterability = check_generator.raises_on_non_iterable(generator)
+test_iterability = check_generator.raises_on_non_iterable(generator=entries_from_lines)
 
 @pytest.mark.parametrize('iterable, groups', (
         ('abcd', [['a', 'b', 'c', 'd']]),
@@ -21,7 +21,7 @@ test_iterability = check_generator.raises_on_non_iterable(generator)
 def test_groupings(iterable, groups):
     "confirm iterable elements correctly grouped"
     expected = groups
-    found = generator(iterable)
+    found = entries_from_lines(iterable)
     assert expected == list(found)
 
 # TODO: grab lines from fixtures and use those

@@ -1,9 +1,9 @@
-"generator that yields lists of Accounts"
+"generator that yields sets of valid Accounts"
 
 from itertools import product, chain
 
-import settings
-from validators import Validate
+from parse import settings
+from parse.validators import Validate
 
 def accounts_from_superpositions(superpositions):
     "generator that consumes Superpositions and yields valid Accounts"

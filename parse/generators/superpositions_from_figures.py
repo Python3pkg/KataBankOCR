@@ -11,8 +11,8 @@ See test_superpositions.py for examples or valid_accounts for consumer.
 
 from itertools import repeat
 
-import settings
-from validators import Validate
+from parse import settings
+from parse.validators import Validate
 
 def superpositions_from_figures(figures):
     "generator that consumes Figures and yields SuperPositions"

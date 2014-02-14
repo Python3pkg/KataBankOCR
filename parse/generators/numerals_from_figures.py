@@ -1,7 +1,7 @@
 "generator that yields Numerals and the functions that support it"
 
-import settings
-from validators import Validate
+from parse import settings
+from parse.validators import Validate
 
 def numerals_from_figures(figures):
     "generator that consumes Figures and yields Numerals"

@@ -1,7 +1,7 @@
 "generator that yields Results and the functions that support it"
 
-import settings
-from validators import Validate
+from parse import settings
+from parse.validators import Validate
 
 def results_from_accounts(accounts):
     "generator that consumes Accounts and yields Results"

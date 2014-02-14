@@ -3,27 +3,22 @@
 import pytest
 
 from parse import settings
-from parse.generators.figures_from_entries import figures_from_entries as generator
+from parse.generators.figures_from_entries import figures_from_entries
 
 from common_tools import flatten, invalid_lengths, fit_to_length, replace_element
 import check_generator
 import fixtures
 
-
-semi_valid_entry = ['', '', '', '']   # 'semi' because generator doesn't check line length
+semi_valid_entry = ['', '', '', '']   # 'semi' because not checking line length here
 adulterants = [[], (), 1, False, True, 1.0]
 
+generator = figures_from_entries
 test_iterability = check_generator.raises_on_non_iterable(generator)
 test_element_type = check_generator.raises_on_bad_element_type(generator, semi_valid_entry)
 test_element_length = check_generator.raises_on_bad_element_length(generator, semi_valid_entry)
 test_element_composition = check_generator.raises_on_bad_element_composition(generator, 
                                                                              semi_valid_entry,
                                                                              adulterants)
-
-@pytest.fixture
-def entry(get_account):
-    "Return an Entry that represents a random Account"
-    return fixtures.Entries.from_account(get_account())
 
 class TestInput:
     "confirm invalid input raises appropriate error"
@@ -39,7 +34,7 @@ class TestInput:
         first_line = entry[0]
         line_of_invalid_length = fit_to_length(first_line, invalid_stroke_count)
         entry = replace_element(entry, line_of_invalid_length)
-        pytest.raises(ValueError, list, generator([entry]))
+        pytest.raises(ValueError, list, figures_from_entries([entry]))
 
 class TestOutput:
     "confirm valid input results in valid output"
@@ -49,5 +44,5 @@ class TestOutput:
         accounts = fixtures.Accounts.get_random(settings.approximate_entries_per_file)
         expected = flatten(map(fixtures.Figures.from_account, accounts))
         entries = map(fixtures.Entries.from_account, accounts)
-        found = generator(entries)
+        found = figures_from_entries(entries)
         assert list(expected) == list(found)
