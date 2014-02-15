@@ -5,15 +5,17 @@ from itertools import product, chain
 from parse import settings
 from parse.validators import Validate
 
+_superpositions_per_account = settings.figures_per_entry
+
 def accounts_from_superpositions(superpositions):
     "generator that consumes Superpositions and yields Accounts"
-    account_worth_of_superpositions = []
+    collected_superpositions = []
     for superposition in superpositions:
         Validate.type(dict, superposition, 'Superposition')
-        account_worth_of_superpositions.append(superposition)
-        if len(account_worth_of_superpositions) == settings.figures_per_entry:
-            yield _account_from_superpositions(account_worth_of_superpositions)
-            account_worth_of_superpositions = []
+        collected_superpositions.append(superposition)
+        if len(collected_superpositions) == _superpositions_per_account:
+            yield _account_from_superpositions(collected_superpositions)
+            collected_superpositions = []
 
 def _account_from_superpositions(superpositions):
     "return a single [in]valid Account"
