@@ -2,7 +2,6 @@
 
 import pytest
 
-from parse import settings
 from parse.generators.entries_from_lines import entries_from_lines
 
 import check_generator
@@ -23,5 +22,3 @@ def test_groupings(iterable, groups):
     expected = groups
     found = entries_from_lines(iterable)
     assert expected == list(found)
-
-# TODO: grab lines from fixtures and use those

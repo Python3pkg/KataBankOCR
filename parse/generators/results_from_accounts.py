@@ -20,6 +20,6 @@ def _validate_account(account):
 
 def _status_from_account(account):
     "return appropriate status for the Account"
-    if not settings.checksum(account):
+    if settings.illegible_numeral in account or not settings.checksum(account):
         return settings.ambiguous_status
     return ''  # Valid Account

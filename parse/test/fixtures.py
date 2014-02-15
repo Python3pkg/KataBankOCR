@@ -1,10 +1,11 @@
 "functions that provide values for testing"
 
 import random
+from functools import partial
 
 from parse import settings
 
-from common_tools import get_one_or_more
+from common_tools import get_one_or_more, replace_element
 
 class Numerals:
     "functions that provide Numerals for testing"
@@ -80,19 +81,43 @@ class Entries:
         getter = lambda: cls.from_account(Accounts.get_random())
         return get_one_or_more(getter, count)
 
-    @staticmethod
-    def from_account(account):
+    @classmethod
+    def from_account(cls, account):
         "return the Entry (list of lines) that represents the given Account"
         figures = Figures.from_account(account)
-        figure_indexes = range(settings.figures_per_entry)
-        slice_indexes = lambda line_index: (line_index * settings.strokes_per_substring,
-                                            (line_index + 1) * settings.strokes_per_substring)
-        substring = lambda fi, li: figures[fi][slice(*slice_indexes(li))]
-        line_substrings = lambda li: [substring(fi, li) for fi in figure_indexes]
-        return map(''.join, map(line_substrings, range(settings.lines_per_entry)))
+        return cls.from_figures(figures)
+
+    @classmethod
+    def from_figures(cls, figures):
+        "return the Entry (list of lines) that contains the given Figures"
+        get_line = partial(cls._line_from_figures, figures=figures)
+        return map(get_line, range(settings.lines_per_entry))
+
+    @staticmethod
+    def _line_from_figures(line_index, figures):
+        "return a Line composed of Figures substrings"
+        first_figure_stroke = line_index * settings.strokes_per_substring
+        last_figure_stroke = first_figure_stroke + settings.strokes_per_substring
+        slice_indexes = (first_figure_stroke, last_figure_stroke)
+        figure_substrings = [figure[slice(*slice_indexes)] for figure in figures]
+        line = ''.join(figure_substrings)
+        return line
+
+    @classmethod
+    def get_flawed(cls, count=None):
+        "return one or more random Entries that each contain a flawed Figure"
+        return get_one_or_more(cls._get_one_flawed, count)
+
+    @classmethod
+    def _get_one_flawed(cls):
+        "return one Entry that includes a single flawed Figure"
+        figures = Figures.get_random(settings.figures_per_entry)
+        flawed_figure = random.choice(Figures.flawed())
+        figures = replace_element(figures, flawed_figure)
+        return cls.from_figures(figures)
 
 class Superpositions:
-    "objects that provide Superpositions for testing"
+    "methods that provide Superpositions for testing"
 
     @classmethod
     def from_numeral(cls, numeral):
@@ -182,21 +207,6 @@ class ArbitraryValues:
             return value_or_type
         else:
             return type(value_or_type)
-
-def _example_accounts():
-    "return list of 3-tuples (account, accountset, result)"
-    return [
-        ('123456789', {'123456789'}, '123456789'),
-        ('111111111', {'711111111'}, '711111111'),
-        ('777777777', {'777777177'}, '777777177'),
-        ('200000000', {'200800000'}, '200800000'),
-        ('333333333', {'333393333'}, '333393333'),
-        ('555555555', {'555655555', '559555555'}, '555555555 AMB'),
-        ('666666666', {'666566666', '686666666'}, '666666666 AMB'),
-        ('888888888', {'888886888', '888888880', '888888988'}, '888888888 AMB'),
-        ('999999999', {'899999999', '993999999', '999959999'}, '999999999 AMB'),
-        ('490067715', {'490067115', '490067719', '490867715'}, '490067715 AMB'),
-        ]
 
 def _example_accounts():
     "return list of 3-tuples (account, account_from_superpositions, result)"

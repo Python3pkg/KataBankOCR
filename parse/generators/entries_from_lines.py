@@ -5,7 +5,7 @@ from itertools import islice
 from parse import settings
 
 def entries_from_lines(lines):
-    "generator that reads Lines and yields an Entry"
+    "generator that reads Lines and yields Entries"
     entry = []
     for line in lines:
         entry.append(line)
