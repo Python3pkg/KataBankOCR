@@ -39,7 +39,7 @@ def _numeral_from_superposition(superposition):
 
 def _valid_accounts_from_superpositions(superpositions):
     "return valid Accounts with fewest differences from their Entries"
-    numeral_sets = _initial_numeral_sets(superpositions)
+    numeral_sets = map(_least_different_numerals_in_superposition, superpositions)
     accounts = _accounts_from_numeral_sets(numeral_sets, superpositions)
     if accounts:
         lowest_difference_count = min(accounts.keys())
@@ -58,14 +58,11 @@ def _valid_accounts_from_superpositions(superpositions):
             return best_accounts
         allowed_differences_per_numeral += 1
 
-def _initial_numeral_sets(superpositions):
-    "return list of least-different numeral_sets"
-    numeral_sets = []
-    for superposition in superpositions:
-        lowest_difference_count = min(superposition.keys())
-        numeral_set = superposition[lowest_difference_count]
-        numeral_sets.append(numeral_set.copy())
-    return numeral_sets
+def _least_different_numerals_in_superposition(superposition):
+    "return set of least-different Numerals in Superposition"
+    lowest_difference_count = min(superposition.keys())
+    numerals = superposition[lowest_difference_count]
+    return numerals.copy()
 
 def _accounts_from_numeral_sets(numeral_sets, superpositions):
     "return all possible valid accounts assemblable from numeral sets"
