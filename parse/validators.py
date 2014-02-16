@@ -26,14 +26,6 @@ class Validate():
                 raise(TypeError(message))
 
     @classmethod
-    def elements(cls, validator_name, expectation, value, name):
-        "validate each element"
-        validator = getattr(cls, validator_name)
-        for index, element in enumerate(value):
-            element_name = name + ' ' + str(index)
-            validator(expectation, element, element_name)
-
-    @classmethod
     def iterable(cls, value):
         "confirm we can iterate over value"
         try:

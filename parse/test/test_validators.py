@@ -78,50 +78,6 @@ class TestComposition():
         e = pytest.raises(TypeError, Validate.composition, *arguments)
         assert message == e.value.message
 
-class TestElements():
-    "exercise the Validate.elements classmethod"
-
-    lists = (['foo'], [], [1, 2], ['a', ''])
-    tuples = ((), ('foo',), (1, 2), ('a', ''))
-    length_zero = ('', (), [], {})
-    length_one = ('a', [''], [3], ('b',), '1')
-    composed_of_a_b_or_c = ('abc', 'ba', ['b'], ('c', 'a'), (), [])
-    composed_of_1_2_or_3 = ((1, 2), (1,), [2, 3], (), [1], [])
-    @pytest.mark.parametrize("validator_name, expectation, iterable", (
-            ('type', list, lists),
-            ('type', tuple, tuples),
-            ('length', 0, length_zero),
-            ('length', 1, length_one),
-            ('composition', 'abc', composed_of_a_b_or_c),
-            ('composition', (1, 2, 3), composed_of_1_2_or_3),
-            ))
-    def test_good_iterable(self, validator_name, expectation, iterable, name):
-        "confirm passes silently on iterable with valid elements"
-        arguments = (validator_name, expectation, iterable, name)
-        assert None == Validate.elements(*arguments)
-
-    nearly_all_lists = (['foo'], [], [1, 2], 'not_a_list', ['a', ''])
-    nearly_all_tuples = ((), ('foo',), ['non_tuple'], (1, 2,), ('a', ''))
-    nearly_all_length_zero = ('', (), [], {}, 'x')
-    nearly_all_length_one = ('a', '', [3], ('b',), '1')
-    nearly_all_composed_of_a_b_or_c = ('abc', 'bad', ['b'], ('c', 'a'), (), [])
-    nearly_all_composed_of_1_2_or_3 = ((1, 2), (1,), [2, 3], (), [4], [])
-    @pytest.mark.parametrize("validator_name, error, expectation, iterable, bad_index", (
-            ('type', TypeError, list, nearly_all_lists, 3),
-            ('type', TypeError, tuple, nearly_all_tuples, 2),
-            ('length', ValueError, 0, nearly_all_length_zero, 4),
-            ('length', ValueError, 1, nearly_all_length_one, 1),
-            ('composition', TypeError, 'abc', nearly_all_composed_of_a_b_or_c, 1),
-            ('composition', TypeError, (1, 2, 3), nearly_all_composed_of_1_2_or_3, 4),
-            ))
-    def test_iterable_with_faulty_element(self, validator_name, error,
-                                          expectation, iterable, bad_index, name):
-        "confirm raises error correctly on iterable containing faulty element"
-        arguments = (validator_name, expectation, iterable, name)
-        e = pytest.raises(error, Validate.elements, *arguments)
-        message = '%s %d "%s"' % (name, bad_index, iterable[bad_index])
-        assert message in e.value.message
-
 class TestIterable():
     "exercise the Validate.iterable classmethod"
 
