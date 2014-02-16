@@ -12,10 +12,11 @@ test_element_type = \
 test_element_length = \
     check_generator.raises_on_bad_element_length(generator=superpositions_from_figures,
                                                  valid_element=fixtures.Figures.get_random())
-test_element_composition = \
-    check_generator.raises_on_bad_element_composition(generator=superpositions_from_figures,
-                                                      valid_element=fixtures.Figures.get_random(),
-                                                      adulterants=['\t', '-', 'I', 'l', '/', '\r'])
+#test_element_composition = \
+#    check_generator.raises_on_bad_element_composition(generator=superpositions_from_figures,
+#                                                      valid_element=fixtures.Figures.get_random(),
+#                                                      adulterants=['\t', '-', 'I', 'l', '/', '\r'])
+# TODO: move adulterant to fixtures
 
 def test_parses_valid_figures_to_superpositions():
     "confirm known figures yield expected superpositions"

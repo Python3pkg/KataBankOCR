@@ -24,9 +24,10 @@ def _validate_entry(entry):
     "confirm type, length, and composition of entry and its elements"
     Validate.type(list, entry, 'Entry')
     Validate.length(settings.lines_per_entry, entry, 'Entry')
-    Validate.elements('type', basestring, entry, 'Entry Line')
-    Validate.elements('length', settings.strokes_per_line, entry, 'Entry Line')
-    Validate.elements('composition', settings.valid_strokes, entry, 'Entry Line')
+    for line in entry:
+        Validate.type(basestring, line, 'Entry Line')
+        Validate.length(settings.strokes_per_line, line, 'Entry Line')
+        Validate.composition(settings.valid_strokes, line, 'Entry Line')
 
 def _substrings_in_line(line):
     "return list of Substrings within a single Line"

@@ -10,7 +10,8 @@ def raises_on_non_iterable(generator):
     def non_iterable_test():
         for non_iterable_value in ArbitraryValues.non_iterables():
             iterator = generator(non_iterable_value)
-            pytest.raises(TypeError, list, iterator)
+            error = pytest.raises(TypeError, list, iterator)
+            assert 'not iterable' in error.value.message
     return non_iterable_test
 
 def raises_on_bad_element_type(generator, value_or_type):
@@ -18,7 +19,8 @@ def raises_on_bad_element_type(generator, value_or_type):
     def element_type_test():
         for bad_element in ArbitraryValues.of_different_type(value_or_type):
             iterator = generator([bad_element])
-            pytest.raises(TypeError, list, iterator)
+            error = pytest.raises(TypeError, list, iterator)
+            assert 'unexpected type' in error.value.message
     return element_type_test
 
 def raises_on_bad_element_length(generator, valid_element):
@@ -28,7 +30,8 @@ def raises_on_bad_element_length(generator, valid_element):
         for invalid_length in invalid_lengths(valid_length):
             invalid_length_element = fit_to_length(valid_element, invalid_length)
             iterator = generator([invalid_length_element])
-            pytest.raises(ValueError, list, iterator)
+            error = pytest.raises(ValueError, list, iterator)
+            assert 'unexpected length' in error.value.message
     return element_length_test
 
 def raises_on_bad_element_composition(generator, valid_element, adulterants):
@@ -37,5 +40,6 @@ def raises_on_bad_element_composition(generator, valid_element, adulterants):
         for adulterant in adulterants:
             adulterated_element = adulterate_iterable(valid_element, adulterant)
             iterator = generator([adulterated_element])
-            pytest.raises(TypeError, list, iterator)
+            error = pytest.raises(TypeError, list, iterator)
+            assert 'unexpected element' in error.value.message
     return element_composition_test

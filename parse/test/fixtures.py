@@ -7,7 +7,8 @@ from functools import partial
 
 from parse import settings
 
-from common_tools import get_one_or_more
+from common_tools import get_one_or_more, flatten
+from common_tools import invalid_lengths, fit_to_length, adulterate_iterable
 import fixture_values
 
 class Numerals:
@@ -85,8 +86,23 @@ class Figures:
         figures = [f for f, _ in fixture_values.flawed_figures]
         return sorted(figures)
 
+class Strokes:
+    "methods that provide Strokes for testing"
+
+    @staticmethod
+    def get_random(count=None):
+        "return random valid Stroke[s]"
+        getter = lambda: random.choice(list(settings.valid_strokes))
+        return get_one_or_more(getter, count)
+
+
 class Lines:
     "methods that provide Lines for testing"
+
+    @staticmethod
+    def get_random(count=None):
+        "return random valid Figure[s]"
+        return ''.join(Strokes.get_random(settings.strokes_per_line))
 
     @staticmethod
     def of_basic_input_file():
@@ -96,6 +112,32 @@ class Lines:
             line = str(line).rstrip('\n')
             lines.append(line)
         return lines
+
+    @classmethod
+    def of_invalid_types(cls):
+        "return a non-basestring line"
+        return ArbitraryValues.non_basestrings()
+
+    @classmethod
+    def of_invalid_lengths(cls):
+        "return Lines of invalid length"
+        return map(cls._by_invalid_length, invalid_lengths(settings.strokes_per_line))
+
+    @classmethod
+    def _by_invalid_length(cls, invalid_line_length):
+        "return a Line of invalid length"
+        return fit_to_length(cls.get_random(), invalid_line_length)
+
+    @classmethod
+    def with_invalid_strokes(cls):
+        "return Lines that each include an invalid stroke"
+        invalid_strokes = ArbitraryValues.invalid_strokes()
+        return map(cls._by_invalid_stroke, invalid_strokes)
+
+    @classmethod
+    def _by_invalid_stroke(cls, invalid_stroke):
+        "return a Line that includes an invalid stroke"
+        return adulterate_iterable(cls.get_random(), invalid_stroke)
 
 class Entries:
     "methods that provide Entries for testing"
@@ -108,19 +150,19 @@ class Entries:
 
     @classmethod
     def from_account(cls, account):
-        "return the Entry (list of lines) that represents the given Account"
+        "return the Entry (list of Lines) that represents the given Account"
         figures = Figures.from_account(account)
         return cls.from_figures(figures)
 
     @classmethod
     def from_figures(cls, figures):
-        "return the Entry (list of lines) that contains the given Figures"
+        "return the Entry (list of Lines) that contains the given Figures"
         get_line = partial(cls._line_from_figures, figures=figures)
         return map(get_line, range(settings.lines_per_entry))
 
     @staticmethod
     def _line_from_figures(line_index, figures):
-        "return a Line composed of Figures substrings"
+        "return a Line composed of Figures Substrings"
         first_figure_stroke = line_index * settings.strokes_per_substring
         last_figure_stroke = first_figure_stroke + settings.strokes_per_substring
         slice_indexes = (first_figure_stroke, last_figure_stroke)
@@ -208,7 +250,9 @@ class ArbitraryValues:
 
     _all = [0, 1, -10, -999999999, 123456789, 3.14159, -.00000000001,
             False, True, [], (), {}, '', None, object, int, list, dict, bool,
-            'abc', [1, 2, 3], {1: 2}, {0}, (1, 2, 3), {1: 'a', 2: 'b'}, u'a']
+            [1, 2, 3], {1: 2}, {0}, (1, 2, 3), {1: 'a', 2: 'b'},
+            'abc', '|', '-', '\r', 'foo', u'abc', u'|', u'-', u'\r', u'foo', 
+            ]
 
     @classmethod
     def iterables(cls):
@@ -218,7 +262,7 @@ class ArbitraryValues:
     @classmethod
     def non_iterables(cls):
         "return a list of arbitrary values over which one cannot iterate"
-        not_iterable = lambda v: not cls._iterable(v)
+        not_iterable = lambda value: not cls._iterable(value)
         return filter(not_iterable, cls._all)
 
     @staticmethod
@@ -231,16 +275,29 @@ class ArbitraryValues:
             return False
 
     @classmethod
-    def non_basestring(cls):
-        "return a list of arbitrary values that include no basestrings"
-        not_string = lambda v: not cls._basestring(v)
-        return filter(not_string, cls._all)
-
-    @staticmethod
-    def _basestring(value):
-        "return True if value a basestring"
-        return isinstance(value, basestring)
+    def single_character_basestrings(cls):
+        "return set of arbitrary single character basestrings"
+        litmus = lambda value: len(value) == 1
+        return filter(litmus, cls.basestrings())
  
+    @classmethod
+    def non_basestrings(cls):
+        "return set of arbitrary values that includes no basestrings"
+        litmus = lambda value: not isinstance(value, basestring)
+        return filter(litmus, cls._all)
+
+    @classmethod
+    def basestrings(cls):
+        "return set of arbitrary basestrings"
+        litmus = lambda value: isinstance(value, basestring)
+        return set(filter(litmus, cls._all))
+
+    @classmethod
+    def invalid_strokes(cls):
+        "return a set of arbitrary basestrings that includes no valid strokes"
+        litmus = lambda value: value not in settings.valid_strokes
+        return set(filter(litmus, cls.single_character_basestrings()))
+
     @classmethod
     def of_different_type(cls, value_or_type):
         "Return an arbitrary value not of value_or_type"
