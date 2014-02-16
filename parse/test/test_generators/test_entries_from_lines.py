@@ -6,7 +6,7 @@ from parse.generators.entries_from_lines import entries_from_lines
 
 import check_generator
 import fixtures
- 
+
 test_iterability = check_generator.raises_on_non_iterable(generator=entries_from_lines)
 
 def test_known_lines_grouped_to_known_entries():
