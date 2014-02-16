@@ -1,11 +1,13 @@
-"functions that provide values for testing"
+"methods that provide values for testing and functions to support them"
 
 import random
+import fileinput
 from functools import partial
 
 from parse import settings
 
 from common_tools import get_one_or_more, replace_element
+import input_files
 
 class Numerals:
     "functions that provide Numerals for testing"
@@ -35,8 +37,13 @@ class Accounts:
         "return Accounts from superpositions of example Accounts"
         return [t[1] for t in _example_accounts()]
 
+    @staticmethod
+    def of_basic_input_file():
+        "return Accounts from basic input file"
+        return input_files.Basic.accounts
+
 class Figures:
-    "objects that provide Figures for testing"
+    "methods that provide Figures for testing"
 
     @staticmethod
     def get_random(count=None):
@@ -72,8 +79,20 @@ class Figures:
         figures = [f for f, _ in _flawed_figures()]
         return sorted(figures)
 
+class Lines:
+    "methods that provide Lines for testing"
+
+    @classmethod
+    def of_basic_input_file(cls):
+        "return Lines from basic input file"
+        lines = []
+        for line in fileinput.input(input_files.Basic.path):
+            line = str(line).rstrip('\n')
+            lines.append(line)
+        return lines
+
 class Entries:
-    "objects that provide Entries for testing"
+    "methods that provide Entries for testing"
 
     @classmethod
     def get_random(cls, count=None):
@@ -115,6 +134,11 @@ class Entries:
         flawed_figure = random.choice(Figures.flawed())
         figures = replace_element(figures, flawed_figure)
         return cls.from_figures(figures)
+
+    @classmethod
+    def of_basic_input_file(cls):
+        "return Entries from basic input file"
+        return map(cls.from_account, Accounts.of_basic_input_file())
 
 class Superpositions:
     "methods that provide Superpositions for testing"
