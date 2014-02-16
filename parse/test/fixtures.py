@@ -231,6 +231,17 @@ class ArbitraryValues:
             return False
 
     @classmethod
+    def non_basestring(cls):
+        "return a list of arbitrary values that include no basestrings"
+        not_string = lambda v: not cls._basestring(v)
+        return filter(not_string, cls._all)
+
+    @staticmethod
+    def _basestring(value):
+        "return True if value a basestring"
+        return isinstance(value, basestring)
+ 
+    @classmethod
     def of_different_type(cls, value_or_type):
         "Return an arbitrary value not of value_or_type"
         avoided_type = cls._type(value_or_type)
