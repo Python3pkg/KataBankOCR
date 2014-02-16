@@ -33,7 +33,7 @@ def replace_element(target, new_element, target_index=None):
         return target
 
 def flatten(iterable_of_iterables):
-    "flatten one level of nested iterables"
+    "flatten one level of nested iterables. [[1],[2,3],[4]] >-> [1,2,3,4]"
     return chain.from_iterable(iterable_of_iterables)
 
 def get_one_or_more(getter, count=None):
