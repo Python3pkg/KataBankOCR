@@ -18,5 +18,3 @@ def test_parses_known_superpositions_to_expected_accounts():
         superpositions = fixtures.Superpositions.of_example_accounts()[index]
         found = list(accounts_from_superpositions(superpositions))
         assert expected == found
-
-

@@ -33,7 +33,7 @@ def _invalid_or_illegible_account(superpositions):
 def _numeral(superposition):
     "return Numeral represented by Superposition"
     error_count = 0
-    if superposition.has_key(error_count):
+    if error_count in superposition:
         numeral_set = superposition[error_count]
         numeral = numeral_set.pop()
         return numeral

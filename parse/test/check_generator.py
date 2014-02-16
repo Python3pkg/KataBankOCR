@@ -53,4 +53,3 @@ def _fit_to_length(value, length):
         return value[:length]
     # Still too short. Double it and recurse.
     return _fit_to_length(value + value, length)
-

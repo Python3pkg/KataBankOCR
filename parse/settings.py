@@ -97,6 +97,6 @@ some_known_invalid_accounts = ('490067715', '888888888', '555555555',
 # A collection of Superpositions, one for each Figure in an Entry, represents one or more Accounts.
 
 # When a collection of Superpositions does not represent one account better than all other,
-#   (ie: with fewer missing/additional Strokes required for that Account than all others), 
+#   (ie: with fewer missing/additional Strokes required for that Account than all others),
 #   then the Result for that Entry will include the Ambiguous Status.
 ambiguous_status = ' AMB'

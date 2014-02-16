@@ -2,7 +2,7 @@
 
 import os
 
-directory =  os.path.join(os.path.dirname(__file__), 'input_files')
+directory = os.path.join(os.path.dirname(__file__), 'input_files')
 
 class Basic:
     "details regarding the Basic input file"
@@ -35,7 +35,7 @@ class Basic:
         '999999999 AMB',
         '123456789',
         ]
-    
+
 class Advanced:
     "details regarding the Advanced input file"
 
@@ -51,4 +51,3 @@ class Advanced:
         '000000051',
         '490867715',
         ]
-
