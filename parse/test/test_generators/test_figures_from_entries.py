@@ -9,16 +9,18 @@ from common_tools import flatten, invalid_lengths, fit_to_length, replace_elemen
 import check_generator
 import fixtures
 
-semi_valid_entry = ['', '', '', '']   # 'semi' because not checking line length here
-adulterants = [[], (), 1, False, True, 1.0]
+test_iterability = check_generator.raises_on_non_iterable(generator=figures_from_entries)
 
-generator = figures_from_entries
-test_iterability = check_generator.raises_on_non_iterable(generator)
-test_element_type = check_generator.raises_on_bad_element_type(generator, semi_valid_entry)
-test_element_length = check_generator.raises_on_bad_element_length(generator, semi_valid_entry)
-test_element_composition = check_generator.raises_on_bad_element_composition(generator, 
-                                                                             semi_valid_entry,
-                                                                             adulterants)
+test_element_type = \
+    check_generator.raises_on_bad_element_type(generator=figures_from_entries,
+                                               value_or_type=fixtures.Entries.get_random())
+test_element_length = \
+    check_generator.raises_on_bad_element_length(generator=figures_from_entries,
+                                                 valid_element=fixtures.Entries.get_random())
+test_element_composition = \
+    check_generator.raises_on_bad_element_composition(generator=figures_from_entries,
+                                                      valid_element=fixtures.Entries.get_random(),
+                                                      adulterants=[[], (), 1, False, True, 1.0])
 
 class TestInput:
     "confirm invalid input raises appropriate error"
