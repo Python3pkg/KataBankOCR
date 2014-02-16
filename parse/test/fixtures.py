@@ -7,7 +7,7 @@ from functools import partial
 
 from parse import settings
 
-from common_tools import get_one_or_more, replace_element
+from common_tools import get_one_or_more
 import fixture_values
 
 class Numerals:
@@ -208,7 +208,7 @@ class ArbitraryValues:
 
     _all = [0, 1, -10, -999999999, 123456789, 3.14159, -.00000000001,
             False, True, [], (), {}, '', None, object, int, list, dict, bool,
-            'abc', [1, 2, 3], {1: 2}, {0}, (1, 2, 3), {1: 'a', 2: 'b'}]
+            'abc', [1, 2, 3], {1: 2}, {0}, (1, 2, 3), {1: 'a', 2: 'b'}, u'a']
 
     @classmethod
     def iterables(cls):

@@ -8,7 +8,7 @@ import fixtures
 test_iterability = check_generator.raises_on_non_iterable(generator=superpositions_from_figures)
 test_element_type = \
     check_generator.raises_on_bad_element_type(generator=superpositions_from_figures,
-                                               value_or_type=fixtures.Figures.get_random())
+                                               value_or_type=basestring)
 test_element_length = \
     check_generator.raises_on_bad_element_length(generator=superpositions_from_figures,
                                                  valid_element=fixtures.Figures.get_random())

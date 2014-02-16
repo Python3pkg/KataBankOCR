@@ -11,7 +11,7 @@ test_iterability = check_generator.raises_on_non_iterable(generator=results_from
 
 test_element_type = \
     check_generator.raises_on_bad_element_type(generator=results_from_accounts,
-                                               value_or_type=fixtures.Accounts.get_random())
+                                               value_or_type=basestring)
 test_element_length = \
     check_generator.raises_on_bad_element_length(generator=results_from_accounts,
                                                  valid_element=fixtures.Accounts.get_random())

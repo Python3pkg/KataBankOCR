@@ -22,29 +22,23 @@ test_element_composition = \
                                                       valid_element=fixtures.Entries.get_random(),
                                                       adulterants=[[], (), 1, False, True, 1.0])
 
-class TestInput:
-    "confirm invalid input raises appropriate error"
+@pytest.fixture(params=invalid_lengths(settings.strokes_per_line))
+def invalid_stroke_count(request):
+    "return an invalid length for a line"
+    return request.param
 
-    @pytest.fixture(params=invalid_lengths(settings.strokes_per_line))
-    def invalid_stroke_count(self, request):
-        "return an invalid length for a line"
-        return request.param
+def test_with_entry_containing_line_of_invalid_length(invalid_stroke_count):
+    "confirm detection of an invalid length line within an entry"
+    entry = fixtures.Entries.get_random()
+    first_line = entry[0]
+    line_of_invalid_length = fit_to_length(first_line, invalid_stroke_count)
+    entry = replace_element(entry, line_of_invalid_length)
+    pytest.raises(ValueError, list, figures_from_entries([entry]))
 
-    def test_with_entry_containing_line_of_invalid_length(self, invalid_stroke_count):
-        "confirm detection of an invalid length line within an entry"
-        entry = fixtures.Entries.get_random()
-        first_line = entry[0]
-        line_of_invalid_length = fit_to_length(first_line, invalid_stroke_count)
-        entry = replace_element(entry, line_of_invalid_length)
-        pytest.raises(ValueError, list, figures_from_entries([entry]))
-
-class TestOutput:
-    "confirm valid input results in valid output"
-
-    def test_figures_match(self):
-        "confirm figures_from_entries correctly identifies figures"
-        accounts = fixtures.Accounts.get_random(settings.approximate_entries_per_file)
-        expected = flatten(map(fixtures.Figures.from_account, accounts))
-        entries = map(fixtures.Entries.from_account, accounts)
-        found = figures_from_entries(entries)
-        assert list(expected) == list(found)
+def test_figures_match():
+    "confirm figures_from_entries correctly identifies figures"
+    accounts = fixtures.Accounts.get_random(settings.approximate_entries_per_file)
+    expected = flatten(map(fixtures.Figures.from_account, accounts))
+    entries = map(fixtures.Entries.from_account, accounts)
+    found = figures_from_entries(entries)
+    assert list(expected) == list(found)
