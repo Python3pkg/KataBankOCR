@@ -95,7 +95,6 @@ class Strokes:
         getter = lambda: random.choice(list(settings.valid_strokes))
         return get_one_or_more(getter, count)
 
-
 class Lines:
     "methods that provide Lines for testing"
 
@@ -251,7 +250,8 @@ class ArbitraryValues:
     _all = [0, 1, -10, -999999999, 123456789, 3.14159, -.00000000001,
             False, True, [], (), {}, '', None, object, int, list, dict, bool,
             [1, 2, 3], {1: 2}, {0}, (1, 2, 3), {1: 'a', 2: 'b'},
-            'abc', '|', '-', '\r', 'foo', u'abc', u'|', u'-', u'\r', u'foo', 
+            'abc', '|', '-', '\r', 'foo', '1', '0', 'c', '=', '\t', '\r',
+            u'abc', u'|', u'-', u'\r', u'foo', u'1', u'0', u'c', u'=', u'\t', u'\r',
             ]
 
     @classmethod
@@ -296,6 +296,12 @@ class ArbitraryValues:
     def invalid_strokes(cls):
         "return a set of arbitrary basestrings that includes no valid strokes"
         litmus = lambda value: value not in settings.valid_strokes
+        return set(filter(litmus, cls.single_character_basestrings()))
+
+    @classmethod
+    def invalid_numerals(cls):
+        "return a set of arbitrary basestrings that includes no valid numerals"
+        litmus = lambda value: value not in settings.valid_numerals
         return set(filter(litmus, cls.single_character_basestrings()))
 
     @classmethod
