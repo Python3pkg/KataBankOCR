@@ -39,9 +39,10 @@ test_line_compositions = _raises_on_faulty_line(fault='contains unexpected eleme
                                                 faulty_lines=fixtures.Lines.with_invalid_strokes())
 
 def test_identifies_known_entries_as_expected_figures():
-    "confirm figures_from_entries correctly identifies Figures"
+    "confirm figures_from_entries finds correct Figures in Entries"
     account = fixtures.Accounts.get_random()
     expected_figures = fixtures.Figures.from_account(account)
     entry = fixtures.Entries.from_account(account)
-    found_figures = figures_from_entries([entry])
-    assert list(expected_figures) == list(found_figures)
+    iterator = figures_from_entries([entry])
+    found_figures = list(iterator)
+    assert expected_figures == found_figures
