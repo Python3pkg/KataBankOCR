@@ -32,10 +32,6 @@ def adulterate_iterable(target, new_element, target_index=None):
         target[target_index] = new_element
         return target
 
-def flatten(iterable_of_iterables):
-    "flatten one level of nested iterables. [[1],[2,3],[4]] >-> [1,2,3,4]"
-    return chain.from_iterable(iterable_of_iterables)
-
 def get_one_or_more(getter, count=None):
     "return one or a list of results from calling getter"
     if count is None:

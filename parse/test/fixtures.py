@@ -1,4 +1,4 @@
-"methods that provide values for testing and functions to support them"
+"classes of methods that provide values for testing"
 
 import copy
 import random
@@ -7,7 +7,7 @@ from functools import partial
 
 from parse import settings
 
-from common_tools import get_one_or_more, flatten
+from common_tools import get_one_or_more
 from common_tools import invalid_lengths, fit_to_length, adulterate_iterable
 import fixture_values
 
