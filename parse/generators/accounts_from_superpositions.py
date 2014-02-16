@@ -39,21 +39,26 @@ def _numeral_from_superposition(superposition):
         return numeral_set.pop()
 
 def _valid_accounts_from_superpositions(superpositions):
-    "return valid Accounts with fewest differences from their Entries"
-    accounts = set()
-    for total_errors in range(settings.figures_per_entry * settings.strokes_per_figure):
-        for distribution in _error_distributions(superpositions, total_errors):
-            numeral_sets = _numeral_sets_by_error_distribution(superpositions, distribution)
-            accounts |= _valid_accounts_from_numeral_sets(numeral_sets)
+    "return valid Accounts with fewest errors (omitted/added strokes)"
+    for total_errors in range(settings.strokes_per_figure * settings.figures_per_entry):
+        accounts = _valid_accounts_by_total_errors(superpositions, total_errors)
         if accounts:
             return accounts
 
+def _valid_accounts_by_total_errors(superpositions, total_errors):
+    "return valid Accounts containing exactly total_errors"
+    accounts = set()
+    for distribution in _error_distributions(superpositions, total_errors):
+        numeral_sets = _numeral_sets_by_error_distribution(superpositions, distribution)
+        accounts |= _valid_accounts_from_numeral_sets(numeral_sets)
+    return accounts
+
 def _error_distributions(superpositions, total_errors):
-    "return list of lists of error_counts totaling total_errors"
-    get_error_counts = partial(_numeral_error_counts, max_error_count=total_errors)
-    error_count_lists = map(get_error_counts, superpositions)
+    "return lists of error_counts each list with exactly total_errors"
+    numeral_error_counts = partial(_numeral_error_counts, max_error_count=total_errors)
+    error_count_lists = map(numeral_error_counts, superpositions)
     error_distributions = product(*error_count_lists)
-    return [ed for ed in error_distributions if sum(ed) == total_errors]
+    return [dist for dist in error_distributions if sum(dist) == total_errors]
 
 def _numeral_error_counts(superposition, max_error_count):
     "return list of error counts <= max_error_count"
@@ -61,16 +66,10 @@ def _numeral_error_counts(superposition, max_error_count):
 
 def _numeral_sets_by_error_distribution(superpositions, distribution):
     "return sets of numerals with error counts matching distribution"
-    numeral_sets = []
-    for index in range(settings.figures_per_entry):
-        superposition = superpositions[index]
-        error_count = distribution[index]
-        numeral_set = superposition[error_count]
-        numeral_sets.append(numeral_set)
-    return numeral_sets
+    return [sup[err_count] for sup, err_count in zip(superpositions, distribution)]
 
 def _valid_accounts_from_numeral_sets(numeral_sets):
-    "return all possible valid accounts assemblable from numeral sets"
+    "return valid accounts assemblable from numeral sets"
     accounts = _accounts_from_numeral_sets(numeral_sets)
     return set(filter(settings.checksum, accounts))
 
