@@ -1,8 +1,8 @@
-"constants used for testing and bound to settings"
+"constants used for testing but bound to settings"
 
 import os
 
-valid_figure_superpositions =  [
+valid_figure_superpositions = [
     {0: {'0'}, 1: {'8'}, 2: {'6', '9'}, 3: {'2', '3', '5', '7'}, 4: {'1', '4'}},
     {0: {'1'}, 1: {'7'}, 2: {'4'}, 3: {'3'}, 4: {'0', '9'}, 5: {'2', '5', '8'}, 6: {'6'}},
     {0: {'2'}, 2: {'3', '8'}, 3: {'0', '6', '9'}, 4: {'5', '7'}, 5: {'1', '4'}},
@@ -43,6 +43,14 @@ flawed_figures = [
      ' _ ' +
      ' _|' +
      '   ', {1: {'3', '5'}, 2: {'6', '9'}, 3: {'2', '7', '8'}, 4: {'0', '1', '4'}}),
+    ]
+
+# account_prefix, flawed_figure_index, account_suffix, account, result
+flawed_accounts = [
+    ('', 0, '23456789', '123456789', '123456789'),
+    ('0', 1, '0000051', '000000051', '000000051'),
+    ('49086771', 2, '', '490867715', '490867715'),
+    ('1', 0, '3456789', '1?3456789', '1?3456789 AMB'),
     ]
 
 _path_to_input_files = os.path.join(os.path.dirname(__file__), 'input_files')

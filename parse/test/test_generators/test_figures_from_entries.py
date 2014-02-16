@@ -41,7 +41,7 @@ class TestInput:
 class TestOutput:
     "confirm valid input results in valid output"
 
-    def test_figures_match(self, get_accounts):
+    def test_figures_match(self):
         "confirm figures_from_entries correctly identifies figures"
         accounts = fixtures.Accounts.get_random(settings.approximate_entries_per_file)
         expected = flatten(map(fixtures.Figures.from_account, accounts))

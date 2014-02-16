@@ -25,3 +25,11 @@ def test_parses_known_accounts_to_results():
     expected = fixtures.Results.of_example_accounts()
     found = list(results_from_accounts(fixtures.Accounts.of_example_accounts()))
     assert expected == found
+
+@pytest.mark.parametrize('expected_result, account', (
+        zip(fixtures.Results.of_flawed_accounts(), fixtures.Accounts.of_flawed_accounts())
+        ))
+def test_parses_account_with_errors_to_expected_result(expected_result, account):
+    "confirm superpositions with flawed figures yield expected accounts"
+    found_results = list(results_from_accounts([account]))
+    assert [expected_result] == found_results

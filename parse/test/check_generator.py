@@ -7,7 +7,7 @@ import fixtures
 def raises_on_non_iterable(generator):
     "return test of error raised on non-iterable input"
     def non_iterable_test():
-        for non_iterable_value in fixtures.ArbitraryValues.non_iterable():
+        for non_iterable_value in fixtures.ArbitraryValues.non_iterables():
             iterator = generator(non_iterable_value)
             pytest.raises(TypeError, list, iterator)
     return non_iterable_test

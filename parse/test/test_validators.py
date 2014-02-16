@@ -4,6 +4,7 @@ import pytest
 import random
 
 from parse.validators import Validate
+import fixtures
 
 @pytest.fixture
 def name():
@@ -124,12 +125,12 @@ class TestElements():
 class TestIterable():
     "exercise the Validate.iterable classmethod"
 
-    some_iterables = ('', (), [], {}, 'abcde', (1, 2, 3), [1, 2, 3], {1, 2, 3})
-    @pytest.mark.parametrize("iterable", some_iterables)
+    @pytest.mark.parametrize("iterable", fixtures.ArbitraryValues.iterables())
     def test_with_iterable(self, iterable):
         "confirm passes silently on iterable value"
         assert None == Validate.iterable(iterable)
 
+    @pytest.mark.parametrize("non_iterable", fixtures.ArbitraryValues.non_iterables())
     def test_with_non_iterable(self, non_iterable):
         "confirm raises correctly on non-iterable value"
         e = pytest.raises(TypeError, Validate.iterable, non_iterable)

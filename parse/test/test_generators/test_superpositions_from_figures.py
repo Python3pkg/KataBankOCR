@@ -25,6 +25,6 @@ def test_parses_valid_figures_to_superpositions():
 
 def test_parses_flawed_figures_to_superpositions():
     "confirm known figures yield expected superpositions"
-    expected = fixtures.Superpositions.from_flawed_figures()
+    expected = fixtures.Superpositions.of_flawed_figures()
     found = superpositions_from_figures(fixtures.Figures.flawed())
     assert list(expected) == list(found)

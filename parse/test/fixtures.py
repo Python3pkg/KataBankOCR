@@ -11,7 +11,7 @@ from common_tools import get_one_or_more, replace_element
 import fixture_values
 
 class Numerals:
-    "functions that provide Numerals for testing"
+    "methods that provide Numerals for testing"
 
     @classmethod
     def get_random(cls, count=None):
@@ -25,7 +25,7 @@ class Numerals:
         return sorted(list(settings.valid_numerals))
 
 class Accounts:
-    "functions that provide Accounts for testing"
+    "methods that provide Accounts for testing"
 
     @staticmethod
     def get_random(count=None):
@@ -42,6 +42,11 @@ class Accounts:
     def of_basic_input_file():
         "return Accounts from basic input file"
         return fixture_values.BasicInputFile.accounts
+
+    @staticmethod
+    def of_flawed_accounts():
+        "return [in]valid Accounts from Superpositions with flaws"
+        return [t[3] for t in fixture_values.flawed_accounts]
 
 class Figures:
     "methods that provide Figures for testing"
@@ -124,19 +129,6 @@ class Entries:
         return line
 
     @classmethod
-    def get_flawed(cls, count=None):
-        "return one or more random Entries that each contain a flawed Figure"
-        return get_one_or_more(cls._get_one_flawed, count)
-
-    @classmethod
-    def _get_one_flawed(cls):
-        "return one Entry that includes a single flawed Figure"
-        figures = Figures.get_random(settings.figures_per_entry)
-        flawed_figure = random.choice(Figures.flawed())
-        figures = replace_element(figures, flawed_figure)
-        return cls.from_figures(figures)
-
-    @classmethod
     def of_basic_input_file(cls):
         "return Entries from basic input file"
         return map(cls.from_account, Accounts.of_basic_input_file())
@@ -147,6 +139,7 @@ class Superpositions:
     @classmethod
     def from_numeral(cls, numeral):
         "return Superposition of Figure representing Numeral"
+        # TODO: stop relying on int(numeral) so that a non-int numeral doesn't raise
         superposition = cls.of_valid_figures()[int(numeral)]
         return superposition
 
@@ -154,12 +147,6 @@ class Superpositions:
     def from_account(cls, account):
         "return list of Superpositions from Figures in Account's Numerals"
         return map(cls.from_numeral, account)
-
-    @staticmethod
-    def from_figure(figure):
-        "return Superposition of Figure"
-        d = dict(zip(Figures.figures, Figures.superpositions))
-        return d[figure]
 
     @staticmethod
     def of_valid_figures():
@@ -173,9 +160,25 @@ class Superpositions:
         return map(cls.from_account, example_accounts)
 
     @staticmethod
-    def from_flawed_figures():
+    def of_flawed_figures():
         "return Superpositions of flawed figures"
         return [s for _, s in fixture_values.flawed_figures]
+
+    @classmethod
+    def of_flawed_accounts(cls):
+        "return Superpositions of Accounts including flawed figures"
+        count_of_flawed_accounts = len(fixture_values.flawed_accounts)
+        return [cls.by_flawed_figure_index(i) for i in range(count_of_flawed_accounts)]
+
+    @classmethod
+    def by_flawed_figure_index(cls, flawed_figure_index):
+        "return Superpositions of an Account including a flawed figure"
+        flawed_account = fixture_values.flawed_accounts[flawed_figure_index]
+        account_prefix, flawed_figure_index, account_suffix, _, _ = flawed_account
+        prefix_superpositions = cls.from_account(account_prefix)
+        flawed_figure_superposition = cls.of_flawed_figures()[flawed_figure_index]
+        suffix_superpositions = cls.from_account(account_suffix)
+        return prefix_superpositions + [flawed_figure_superposition] + suffix_superpositions
 
 class Results:
     "methods that provide Results for testing"
@@ -195,15 +198,25 @@ class Results:
         "return Results from the advanced input file"
         return fixture_values.AdvancedInputFile.results
 
+    @staticmethod
+    def of_flawed_accounts():
+        "return Results of Accounts including flawed figures"
+        return [t[4] for t in fixture_values.flawed_accounts]
+
 class ArbitraryValues:
-    "functions that provide arbitrary values for testing"
+    "methods that provide arbitrary values for testing"
 
     _all = [0, 1, -10, -999999999, 123456789, 3.14159, -.00000000001,
             False, True, [], (), {}, '', None, object, int, list, dict, bool,
             'abc', [1, 2, 3], {1: 2}, {0}, (1, 2, 3), {1: 'a', 2: 'b'}]
 
     @classmethod
-    def non_iterable(cls):
+    def iterables(cls):
+        "return a list of arbitrary values over which one can iterate"
+        return filter(cls._iterable, cls._all)
+
+    @classmethod
+    def non_iterables(cls):
         "return a list of arbitrary values over which one cannot iterate"
         not_iterable = lambda v: not cls._iterable(v)
         return filter(not_iterable, cls._all)
