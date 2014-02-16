@@ -21,7 +21,7 @@ def fit_to_length(value, length):
     # Still too short. Double it and recurse.
     return fit_to_length(value + value, length)
 
-def replace_element(target, new_element, target_index=None):
+def adulterate_iterable(target, new_element, target_index=None):
     "Return string or list after replacing a [random] element"
     assert isinstance(target, basestring) or isinstance(target, list)
     if target_index is None:

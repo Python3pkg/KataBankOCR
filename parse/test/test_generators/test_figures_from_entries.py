@@ -5,7 +5,7 @@ import pytest
 from parse import settings
 from parse.generators.figures_from_entries import figures_from_entries
 
-from common_tools import flatten, invalid_lengths, fit_to_length, replace_element
+from common_tools import flatten, invalid_lengths, fit_to_length, adulterate_iterable
 import check_generator
 import fixtures
 
@@ -35,7 +35,7 @@ def test_raises_on_entry_with_line_of_invalid_length(invalid_stroke_count):
     entry = fixtures.Entries.get_random()
     first_line = entry[0]
     line_of_invalid_length = fit_to_length(first_line, invalid_stroke_count)
-    entry = replace_element(entry, line_of_invalid_length)
+    entry = adulterate_iterable(entry, line_of_invalid_length)
     iterator = figures_from_entries([entry])
     error = pytest.raises(ValueError, list, iterator)
     for message in ('Entry Line', 'of unexpected length', 'Expected:', 'Found:'):
