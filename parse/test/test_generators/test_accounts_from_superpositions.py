@@ -25,3 +25,4 @@ superpositions = (
 def test_parses_superpositions_to_expected_accounts(expected_account, superpositions):
     "confirm known superpositions yield expected accounts"
     found_accounts = list(accounts_from_superpositions(superpositions))
+    assert [expected_account] == found_accounts
