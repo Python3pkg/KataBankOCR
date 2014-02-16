@@ -4,8 +4,6 @@ import pytest
 import random
 from itertools import chain
 
-from parse import settings
-
 def invalid_lengths(valid_length, multiplier=4):
     "the list of ints 0 to (valid_length * multiplier) excluding valid_length"
     maximum_length_to_test = valid_length * multiplier
