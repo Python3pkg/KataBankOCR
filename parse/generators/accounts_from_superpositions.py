@@ -1,6 +1,7 @@
 "generator that yields Accounts and the functions that support it"
 
 from itertools import product, chain
+from functools import partial
 
 from parse import settings
 from parse.validators import Validate
@@ -39,58 +40,40 @@ def _numeral_from_superposition(superposition):
 
 def _valid_accounts_from_superpositions(superpositions):
     "return valid Accounts with fewest differences from their Entries"
-    numeral_sets = map(_least_different_numerals_in_superposition, superpositions)
-    accounts = _accounts_from_numeral_sets(numeral_sets, superpositions)
-    if accounts:
-        lowest_difference_count = min(accounts.keys())
-        best_accounts = accounts[lowest_difference_count]
-        return best_accounts
-    allowed_differences_per_numeral = 0
-    while allowed_differences_per_numeral <= settings.figures_per_entry:
-        for index, superposition in enumerate(superpositions):
-            numeral_set = _numerals_within_difference_count(superposition,
-                                                            allowed_differences_per_numeral)
-            numeral_sets[index].update(numeral_set)
-        accounts = _accounts_from_numeral_sets(numeral_sets, superpositions)
+    accounts = set()
+    for total_errors in range(settings.figures_per_entry * settings.strokes_per_figure):
+        for distribution in _error_distributions(superpositions, total_errors):
+            numeral_sets = _numeral_sets_by_error_distribution(superpositions, distribution)
+            accounts |= _valid_accounts_from_numeral_sets(numeral_sets)
         if accounts:
-            lowest_difference_count = min(accounts.keys())
-            best_accounts = accounts[lowest_difference_count]
-            return best_accounts
-        allowed_differences_per_numeral += 1
+            return accounts
 
-def _least_different_numerals_in_superposition(superposition):
-    "return set of least-different Numerals in Superposition"
-    lowest_difference_count = min(superposition.keys())
-    numerals = superposition[lowest_difference_count]
-    return numerals.copy()
+def _error_distributions(superpositions, total_errors):
+    "return list of lists of error_counts totaling total_errors"
+    get_error_counts = partial(_numeral_error_counts, max_error_count=total_errors)
+    error_count_lists = map(get_error_counts, superpositions)
+    error_distributions = product(*error_count_lists)
+    return [ed for ed in error_distributions if sum(ed) == total_errors]
 
-def _accounts_from_numeral_sets(numeral_sets, superpositions):
+def _numeral_error_counts(superposition, max_error_count):
+    "return list of error counts <= max_error_count"
+    return [error_count for error_count in superposition.keys() if error_count <= max_error_count]
+
+def _numeral_sets_by_error_distribution(superpositions, distribution):
+    "return sets of numerals with error counts matching distribution"
+    numeral_sets = []
+    for index in range(settings.figures_per_entry):
+        superposition = superpositions[index]
+        error_count = distribution[index]
+        numeral_set = superposition[error_count]
+        numeral_sets.append(numeral_set)
+    return numeral_sets
+
+def _valid_accounts_from_numeral_sets(numeral_sets):
     "return all possible valid accounts assemblable from numeral sets"
-    accounts = map(''.join, product(*numeral_sets))
-    valid_accounts = set(filter(settings.checksum, accounts))
-    d = {}
-    for account in valid_accounts:
-        difference_count = _account_differences(account, superpositions)
-        d.setdefault(difference_count, set()).add(account)
-    return d
+    accounts = _accounts_from_numeral_sets(numeral_sets)
+    return set(filter(settings.checksum, accounts))
 
-def _account_differences(account, superpositions):
-    "return a count of the differences in an account"
-    differences = 0
-    for index, numeral in enumerate(account):
-        for dif, num in superpositions[index].items():
-            if numeral in num:
-                differences += dif
-    return differences
-
-def _numerals_within_difference_count(superposition, count):
-    "returns set of numerals with <= count of differences from figure"
-    numeral_sets = [nums for difs, nums in superposition.items() if difs <= count]
-    return chain.from_iterable(numeral_sets)
-
-def _numerals_from_superpositon(superposition):
-    "generator that yields 2-tuples of (difference_count, numeral_set)"
-    difference_counts = superposition.keys()
-    for difference_count in sorted(difference_counts):
-        numeral_set = superposition[difference_count]
-        return (difference_count, numeral_set)
+def _accounts_from_numeral_sets(numeral_sets):
+    "return all possible accounts assemblable from numeral sets"
+    return map(''.join, product(*numeral_sets))
