@@ -19,19 +19,19 @@ def fit_to_length(value, length):
     # Still too short. Double it and recurse.
     return fit_to_length(value + value, length)
 
-def adulterate_iterable(target, new_element, target_index=None):
+def adulterate_iterable(target, new_element, index=None):
     "Return string or list after replacing a [random] element"
-    assert isinstance(target, basestring) or isinstance(target, list)
-    if target_index is None:
-        target_index = random.randrange(0, len(target))
+    assert isinstance(target, (list, basestring))
+    if index is None:
+        index = random.randrange(0, len(target))
     if isinstance(target, basestring):
-        return '%s%s%s' % (target[:target_index], new_element, target[target_index + 1:])
+        return ''.join((target[:index], new_element, target[index + 1:]))
     elif isinstance(target, list):
-        target[target_index] = new_element
+        target[index] = new_element
         return target
 
 def get_one_or_more(getter, count=None):
-    "return one or a list of results from calling getter"
+    "return just one or a list of getter's return values"
     if count is None:
         return getter()
     return [getter() for _ in range(count)]
