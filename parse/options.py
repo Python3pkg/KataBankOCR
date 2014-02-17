@@ -5,8 +5,8 @@ Usage:
   parse ( <input_file> | - ) [ <output_file> ]
 
 Options:
-  -h --help               Show this screen.
-  -v --version            Show version.
+  -h --help        Show this screen.
+  --version        Show version.
 """
 
 from docopt import docopt

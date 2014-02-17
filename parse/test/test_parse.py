@@ -3,6 +3,8 @@
 import pytest
 import subprocess
 
+from parse.options import __doc__, __version__
+
 from fixture_methods import Results, Paths
 
 @pytest.fixture(params=(
@@ -46,3 +48,16 @@ def test_in_path_and_out_path(tmpdir, expectations_and_source):
     with open(output_path) as parsed_results:
         found_results = parsed_results.read()
     assert expected_results == found_results
+
+def test_version():
+    "confirm parse displays expected version"
+    expected_version = ' '.join(('Kata Bank OCR Parser', 'version', __version__))
+    found_version = subprocess.check_output(['parse/parse', '--version']).rstrip('\n')
+    assert expected_version == found_version
+
+@pytest.mark.parametrize('argument',('-h','--help'))
+def test_help(argument):
+    "confirm parse --help displays expected docstring"
+    expected_docstring = __doc__
+    found_docstring = subprocess.check_output(['parse/parse', argument])
+    assert expected_docstring.split() == found_docstring.split()
