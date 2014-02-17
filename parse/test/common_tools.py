@@ -1,8 +1,6 @@
 "functions used by multiple test modules"
 
-import pytest
 import random
-from itertools import chain
 
 def invalid_lengths(valid_length, multiplier=4):
     "the list of ints 0 to (valid_length * multiplier) excluding valid_length"
