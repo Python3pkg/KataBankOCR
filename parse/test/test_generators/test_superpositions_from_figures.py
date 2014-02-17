@@ -3,7 +3,7 @@
 from parse.generators.superpositions_from_figures import superpositions_from_figures
 
 import check_generator
-from fixture_methods import Figures, Superpositions, ArbitraryValues
+from fixture_methods import Figures, Superpositions, Strokes
 
 test_iterability = check_generator.raises_on_non_iterable(generator=superpositions_from_figures)
 
@@ -18,7 +18,7 @@ test_element_length = \
 test_element_composition = check_generator.raises_on_bad_element_composition(
     generator=superpositions_from_figures,
     valid_element=Figures.get_random(),
-    adulterants=ArbitraryValues.invalid_strokes()
+    adulterants=Strokes.invalid(),
     )
 
 def test_parses_figures_to_superpositions():

@@ -1,9 +1,8 @@
-"classes of methods that provide values for testing"
+"methods that provide values for testing and an interface to constants"
 
 import copy
 import random
 import fileinput
-from functools import partial
 
 from parse import settings
 
@@ -23,6 +22,12 @@ class Numerals:
     def valid():
         "return ordered list of valid Numerals"
         return sorted(list(settings.valid_numerals))
+
+    @classmethod
+    def invalid(cls):
+        "return list of arbitrary basestrings that includes no valid numerals"
+        litmus = lambda value: value not in cls.valid()
+        return set(filter(litmus, ArbitraryValues.single_character_basestrings()))
 
 class Accounts:
     "methods that provide Accounts for testing"
@@ -69,51 +74,53 @@ class Figures:
         "return the Figures that represent the given Account"
         return map(cls.from_numeral, list(account))
 
-    @staticmethod
-    def valid():
+    @classmethod
+    def valid(cls):
         "return ordered list of figures representing Numerals 0-9"
-        figures = []
-        for i in range(10):
-            for figure, numeral in settings.figures.items():
-                if int(numeral) == i:
-                    figures.append(figure)
-        return figures
+        return map(cls.from_numeral, Numerals.valid())
 
     @staticmethod
     def flawed():
-        "return ordered list of flawed Figures"
-        figures = [f for f, _ in fixture_constants.flawed_figures]
-        return sorted(figures)
+        "return list of flawed Figures from fixture_constants"
+        return [t[0] for t in fixture_constants.flawed_figures]
 
 class Strokes:
     "methods that provide Strokes for testing"
 
-    @staticmethod
-    def get_random(count=None):
+    @classmethod
+    def get_random(cls, count=None):
         "return random valid Stroke[s]"
-        getter = lambda: random.choice(list(settings.valid_strokes))
+        getter = lambda: random.choice(cls.valid())
         return get_one_or_more(getter, count)
+
+    @staticmethod
+    def valid():
+        "return ordered list of valid Strokes"
+        return sorted(list(settings.valid_strokes))
+
+    @classmethod
+    def invalid(cls):
+        "return list of arbitrary single-char basestrings with 0 valid strokes"
+        litmus = lambda value: value not in cls.valid()
+        return filter(litmus, ArbitraryValues.single_character_basestrings())
 
 class Lines:
     "methods that provide Lines for testing"
 
     @staticmethod
     def get_random(count=None):
-        "return random valid Figure[s]"
+        "return random Lines[s] composed of Strokes"
         return ''.join(Strokes.get_random(settings.strokes_per_line))
 
     @staticmethod
     def of_basic_input_file():
         "return Lines from basic input file"
-        lines = []
-        for line in fileinput.input(Paths.basic_input_file()):
-            line = str(line).rstrip('\n')
-            lines.append(line)
-        return lines
+        file = fileinput.input(Paths.basic_input_file())
+        return [line.rstrip('\n') for line in file]
 
-    @classmethod
-    def of_invalid_types(cls):
-        "return a non-basestring line"
+    @staticmethod
+    def of_invalid_types():
+        "return arbitrary values that do not include any basestrings"
         return ArbitraryValues.non_basestrings()
 
     @classmethod
@@ -124,8 +131,7 @@ class Lines:
     @classmethod
     def with_invalid_strokes(cls):
         "return Lines that each include an invalid stroke"
-        invalid_strokes = ArbitraryValues.invalid_strokes()
-        return map(cls._by_invalid_stroke, invalid_strokes)
+        return map(cls._by_invalid_stroke, Strokes.invalid())
 
     @classmethod
     def _by_invalid_stroke(cls, invalid_stroke):
@@ -150,8 +156,8 @@ class Entries:
     @classmethod
     def from_figures(cls, figures):
         "return the Entry (list of Lines) that contains the given Figures"
-        get_line = partial(cls._line_from_figures, figures=figures)
-        return map(get_line, range(settings.lines_per_entry))
+        line_indexes = range(settings.lines_per_entry)
+        return [cls._line_from_figures(line_index, figures) for line_index in line_indexes]
 
     @staticmethod
     def _line_from_figures(line_index, figures):
@@ -174,8 +180,8 @@ class Superpositions:
     @classmethod
     def from_numeral(cls, numeral):
         "return Superposition of Figure representing Numeral"
-        # TODO: stop relying on int(numeral) so that a non-int numeral doesn't raise
-        superposition = cls.of_valid_figures()[int(numeral)]
+        index = Numerals.valid().index(numeral)
+        superposition = cls.of_valid_figures()[index]
         return superposition
 
     @classmethod
@@ -188,30 +194,30 @@ class Superpositions:
         "return list of Superpositions for all un-flawed Figures"
         return copy.deepcopy(fixture_constants.valid_figure_superpositions)
 
-    @classmethod
-    def of_example_accounts(cls):
-        "return Superpositions made from example accounts"
-        example_accounts = [t[0] for t in fixture_constants.example_accounts]
-        return map(cls.from_account, example_accounts)
-
     @staticmethod
     def of_flawed_figures():
         "return Superpositions of flawed figures"
-        return [s for _, s in fixture_constants.flawed_figures]
+        return [t[1] for t in fixture_constants.flawed_figures]
+
+    @classmethod
+    def of_example_accounts(cls):
+        "return Superpositions made from example accounts"
+        accounts = [t[0] for t in fixture_constants.example_accounts]
+        return map(cls.from_account, accounts)
 
     @classmethod
     def of_flawed_accounts(cls):
         "return Superpositions of Accounts including flawed figures"
-        count_of_flawed_accounts = len(fixture_constants.flawed_accounts)
-        return [cls.by_flawed_figure_index(i) for i in range(count_of_flawed_accounts)]
+        count = len(fixture_constants.flawed_accounts)
+        return [cls._by_flawed_figure_index(i) for i in range(count)]
 
     @classmethod
-    def by_flawed_figure_index(cls, flawed_figure_index):
+    def _by_flawed_figure_index(cls, flawed_figure_index):
         "return Superpositions of an Account including a flawed figure"
         flawed_account = fixture_constants.flawed_accounts[flawed_figure_index]
         account_prefix, flawed_figure_index, account_suffix, _, _ = flawed_account
-        prefix_superpositions = cls.from_account(account_prefix)
         flawed_figure_superposition = cls.of_flawed_figures()[flawed_figure_index]
+        prefix_superpositions = cls.from_account(account_prefix)
         suffix_superpositions = cls.from_account(account_suffix)
         return prefix_superpositions + [flawed_figure_superposition] + suffix_superpositions
 
@@ -270,33 +276,21 @@ class ArbitraryValues:
 
     @classmethod
     def single_character_basestrings(cls):
-        "return set of arbitrary single character basestrings"
+        "return list of arbitrary single character basestrings"
         litmus = lambda value: len(value) == 1
         return filter(litmus, cls.basestrings())
  
+    @classmethod
+    def basestrings(cls):
+        "return list of arbitrary basestrings"
+        litmus = lambda value: isinstance(value, basestring)
+        return filter(litmus, cls._all)
+
     @classmethod
     def non_basestrings(cls):
         "return set of arbitrary values that includes no basestrings"
         litmus = lambda value: not isinstance(value, basestring)
         return filter(litmus, cls._all)
-
-    @classmethod
-    def basestrings(cls):
-        "return set of arbitrary basestrings"
-        litmus = lambda value: isinstance(value, basestring)
-        return set(filter(litmus, cls._all))
-
-    @classmethod
-    def invalid_strokes(cls):
-        "return a set of arbitrary basestrings that includes no valid strokes"
-        litmus = lambda value: value not in settings.valid_strokes
-        return set(filter(litmus, cls.single_character_basestrings()))
-
-    @classmethod
-    def invalid_numerals(cls):
-        "return a set of arbitrary basestrings that includes no valid numerals"
-        litmus = lambda value: value not in settings.valid_numerals
-        return set(filter(litmus, cls.single_character_basestrings()))
 
     @classmethod
     def of_different_type(cls, value_or_type):

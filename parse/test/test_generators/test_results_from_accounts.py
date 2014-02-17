@@ -5,7 +5,7 @@ import pytest
 from parse.generators.results_from_accounts import results_from_accounts
 
 import check_generator
-from fixture_methods import Results, Accounts, ArbitraryValues
+from fixture_methods import Results, Accounts, Numerals
 
 test_iterability = check_generator.raises_on_non_iterable(generator=results_from_accounts)
 
@@ -17,11 +17,10 @@ test_element_length = \
     check_generator.raises_on_bad_element_length(generator=results_from_accounts,
                                                  valid_element=Accounts.get_random())
 
-test_element_composition = check_generator.raises_on_bad_element_composition(
-    generator=results_from_accounts,
-    valid_element=Accounts.get_random(),
-    adulterants=ArbitraryValues.invalid_numerals()
-    )
+test_element_composition = \
+    check_generator.raises_on_bad_element_composition(generator=results_from_accounts,
+                                                      valid_element=Accounts.get_random(),
+                                                      adulterants=Numerals.invalid())
 
 @pytest.mark.parametrize('expected_results, accounts', (
         (Results.of_example_accounts(), Accounts.of_example_accounts()),
