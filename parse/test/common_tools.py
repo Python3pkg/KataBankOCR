@@ -3,7 +3,7 @@
 import random
 
 def invalid_lengths(valid_length, multiplier=4):
-    "the list of ints 0 to (valid_length * multiplier) excluding valid_length"
+    "return ints 0 to (valid_length * multiplier) excluding valid_length"
     maximum_length_to_test = valid_length * multiplier
     lengths = range(maximum_length_to_test + 1)
     return [L for L in lengths if L != valid_length]
@@ -18,7 +18,7 @@ def fit_to_length(value, length):
     return fit_to_length(value + value, length)
 
 def adulterate_iterable(target, new_element, index=None):
-    "Return string or list after replacing a [random] element"
+    "return string or list after replacing a [random] element"
     assert isinstance(target, (list, basestring))
     if index is None:
         index = random.randrange(0, len(target))
@@ -28,8 +28,8 @@ def adulterate_iterable(target, new_element, index=None):
         target[index] = new_element
         return target
 
-def get_one_or_more(getter, count=None):
-    "return just one or a list of getter's return values"
+def get_one_or_more(function, count=None):
+    "return just one or a list of function's return values"
     if count is None:
-        return getter()
-    return [getter() for _ in range(count)]
+        return function()
+    return [function() for _ in range(count)]
