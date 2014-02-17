@@ -8,6 +8,7 @@ import check_generator
 from fixtures import Accounts, Superpositions
 
 test_iterability = check_generator.raises_on_non_iterable(generator=accounts_from_superpositions)
+
 test_element_type = \
     check_generator.raises_on_bad_element_type(generator=accounts_from_superpositions,
                                                value_or_type=dict)
@@ -18,5 +19,6 @@ superpositions = Superpositions.of_example_accounts() + Superpositions.of_flawed
 @pytest.mark.parametrize('expected_account, superpositions', (zip(accounts, superpositions)))
 def test_known_superpositions_yield_expected_account(expected_account, superpositions):
     "confirm known superpositions yield expected accounts"
-    found_accounts = list(accounts_from_superpositions(superpositions))
+    iterator = accounts_from_superpositions(superpositions)
+    found_accounts = list(iterator)
     assert [expected_account] == found_accounts
