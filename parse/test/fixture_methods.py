@@ -8,7 +8,7 @@ from functools import partial
 from parse import settings
 
 from common_tools import get_one_or_more, adulterate_iterable, bad_length_duplicator
-import fixture_values
+import fixture_constants
 
 class Numerals:
     "methods that provide Numerals for testing"
@@ -36,17 +36,17 @@ class Accounts:
     @staticmethod
     def of_example_accounts():
         "return Accounts from superpositions of example Accounts"
-        return [t[1] for t in fixture_values.example_accounts]
+        return [t[1] for t in fixture_constants.example_accounts]
 
     @staticmethod
     def of_basic_input_file():
         "return Accounts from basic input file"
-        return fixture_values.BasicInputFile.accounts
+        return fixture_constants.BasicInputFile.accounts
 
     @staticmethod
     def of_flawed_accounts():
         "return [in]valid Accounts from Superpositions with flaws"
-        return [t[3] for t in fixture_values.flawed_accounts]
+        return [t[3] for t in fixture_constants.flawed_accounts]
 
 class Figures:
     "methods that provide Figures for testing"
@@ -82,7 +82,7 @@ class Figures:
     @staticmethod
     def flawed():
         "return ordered list of flawed Figures"
-        figures = [f for f, _ in fixture_values.flawed_figures]
+        figures = [f for f, _ in fixture_constants.flawed_figures]
         return sorted(figures)
 
 class Strokes:
@@ -186,29 +186,29 @@ class Superpositions:
     @staticmethod
     def of_valid_figures():
         "return list of Superpositions for all un-flawed Figures"
-        return copy.deepcopy(fixture_values.valid_figure_superpositions)
+        return copy.deepcopy(fixture_constants.valid_figure_superpositions)
 
     @classmethod
     def of_example_accounts(cls):
         "return Superpositions made from example accounts"
-        example_accounts = [t[0] for t in fixture_values.example_accounts]
+        example_accounts = [t[0] for t in fixture_constants.example_accounts]
         return map(cls.from_account, example_accounts)
 
     @staticmethod
     def of_flawed_figures():
         "return Superpositions of flawed figures"
-        return [s for _, s in fixture_values.flawed_figures]
+        return [s for _, s in fixture_constants.flawed_figures]
 
     @classmethod
     def of_flawed_accounts(cls):
         "return Superpositions of Accounts including flawed figures"
-        count_of_flawed_accounts = len(fixture_values.flawed_accounts)
+        count_of_flawed_accounts = len(fixture_constants.flawed_accounts)
         return [cls.by_flawed_figure_index(i) for i in range(count_of_flawed_accounts)]
 
     @classmethod
     def by_flawed_figure_index(cls, flawed_figure_index):
         "return Superpositions of an Account including a flawed figure"
-        flawed_account = fixture_values.flawed_accounts[flawed_figure_index]
+        flawed_account = fixture_constants.flawed_accounts[flawed_figure_index]
         account_prefix, flawed_figure_index, account_suffix, _, _ = flawed_account
         prefix_superpositions = cls.from_account(account_prefix)
         flawed_figure_superposition = cls.of_flawed_figures()[flawed_figure_index]
@@ -221,22 +221,22 @@ class Results:
     @staticmethod
     def of_example_accounts():
         "return Results from example accounts"
-        return [t[2] for t in fixture_values.example_accounts]
+        return [t[2] for t in fixture_constants.example_accounts]
 
     @staticmethod
     def of_basic_input_file():
         "return Results from the basic input file"
-        return fixture_values.BasicInputFile.results
+        return fixture_constants.BasicInputFile.results
 
     @staticmethod
     def of_advanced_input_file():
         "return Results from the advanced input file"
-        return fixture_values.AdvancedInputFile.results
+        return fixture_constants.AdvancedInputFile.results
 
     @staticmethod
     def of_flawed_accounts():
         "return Results of Accounts including flawed figures"
-        return [t[4] for t in fixture_values.flawed_accounts]
+        return [t[4] for t in fixture_constants.flawed_accounts]
 
 class ArbitraryValues:
     "methods that provide arbitrary values for testing"
@@ -319,9 +319,9 @@ class Paths:
     @staticmethod
     def basic_input_file():
         "return the path to the basic input file"
-        return fixture_values.BasicInputFile.path
+        return fixture_constants.BasicInputFile.path
 
     @staticmethod
     def advanced_input_file():
         "return the path to the advanced input file"
-        return fixture_values.AdvancedInputFile.path
+        return fixture_constants.AdvancedInputFile.path

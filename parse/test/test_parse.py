@@ -3,11 +3,11 @@
 import pytest
 import subprocess
 
-import fixtures
+from fixture_methods import Results, Paths
 
 @pytest.fixture(params=(
-        (fixtures.Results.of_basic_input_file(), fixtures.Paths.basic_input_file()),
-        (fixtures.Results.of_advanced_input_file(), fixtures.Paths.advanced_input_file()),
+        (Results.of_basic_input_file(), Paths.basic_input_file()),
+        (Results.of_advanced_input_file(), Paths.advanced_input_file()),
         ))
 def expectations_and_source(request):
     "return expected results and input path from which to find them"

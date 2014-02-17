@@ -6,7 +6,7 @@ from parse import settings
 from parse.generators.entries_from_lines import entries_from_lines
 
 import check_generator
-from fixtures import Entries, Lines
+from fixture_methods import Entries, Lines
 
 test_iterability = check_generator.raises_on_non_iterable(generator=entries_from_lines)
 

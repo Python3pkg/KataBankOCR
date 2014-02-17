@@ -5,7 +5,7 @@ import pytest
 from parse.generators.accounts_from_superpositions import accounts_from_superpositions
 
 import check_generator
-from fixtures import Accounts, Superpositions
+from fixture_methods import Accounts, Superpositions
 
 test_iterability = check_generator.raises_on_non_iterable(generator=accounts_from_superpositions)
 

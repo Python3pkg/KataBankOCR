@@ -3,7 +3,7 @@
 import pytest
 
 from common_tools import bad_length_duplicator, adulterate_iterable
-from fixtures import ArbitraryValues
+from fixture_methods import ArbitraryValues
 
 def raises_on_non_iterable(generator):
     "return test of error raised on non-iterable input"

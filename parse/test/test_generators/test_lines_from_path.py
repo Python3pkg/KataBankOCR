@@ -5,7 +5,7 @@ import pytest
 from parse import settings
 from parse.generators.lines_from_path import lines_from_path
 
-import fixtures
+from fixture_methods import Accounts, Paths
 
 def test_with_bad_path():
     "confirm a bad path raises an expected error"
@@ -14,8 +14,8 @@ def test_with_bad_path():
 
 def test_line_count():
     "confirm all Lines read"
-    accounts = fixtures.Accounts.of_basic_input_file()
+    accounts = Accounts.of_basic_input_file()
     expected_line_count = len(accounts) * settings.lines_per_entry
-    iterator = lines_from_path(fixtures.Paths.basic_input_file())
+    iterator = lines_from_path(Paths.basic_input_file())
     found_line_count =  len(list(iterator))
     assert expected_line_count == found_line_count
