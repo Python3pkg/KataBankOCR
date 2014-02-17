@@ -1,7 +1,5 @@
 "generator that yields Entries"
 
-from itertools import islice
-
 from parse import settings
 
 def entries_from_lines(lines):
