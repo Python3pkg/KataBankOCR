@@ -5,20 +5,22 @@ from types import FunctionType
 
 from parse import settings
 
-expected_setting_types = (('lines_per_entry', int),
-                          ('figures_per_entry', int),
-                          ('strokes_per_substring', int),
-                          ('strokes_per_figure', int),
-                          ('strokes_per_line', int),
-                          ('approximate_entries_per_file', int),
-                          ('some_known_valid_accounts', tuple),
-                          ('some_known_invalid_accounts', tuple),
-                          ('valid_strokes', set),
-                          ('valid_numerals', set),
-                          ('figures', dict),
-                          ('illegible_numeral', str),
-                          ('ambiguous_status', str),
-                          ('checksum', FunctionType),)
+expected_setting_types = (
+    ('lines_per_entry', int),
+    ('figures_per_entry', int),
+    ('strokes_per_substring', int),
+    ('strokes_per_figure', int),
+    ('strokes_per_line', int),
+    ('approximate_entries_per_file', int),
+    ('some_known_valid_accounts', tuple),
+    ('some_known_invalid_accounts', tuple),
+    ('valid_strokes', set),
+    ('valid_numerals', set),
+    ('figures', dict),
+    ('illegible_numeral', str),
+    ('ambiguous_status', str),
+    ('checksum', FunctionType),
+    )
 
 class TestDefinition:
     "confirm expected settings defined and of correct type"
@@ -35,9 +37,9 @@ class TestDefinition:
 
     def test_setting_of_correct_type(self, setting_name_and_type):
         "confirm setting has expected type"
-        n, t = setting_name_and_type
-        value = settings.__dict__[n]
-        assert isinstance(value, t)
+        setting_name, setting_type = setting_name_and_type
+        value = settings.__dict__[setting_name]
+        assert isinstance(value, setting_type)
 
     def test_total_setting_count_matches_expectations(self):
         "confirm settings contains exactly as many entries as expected"
@@ -66,19 +68,19 @@ class TestStringConstruction:
     "confirm length and composition of strings"
 
     class TestFigureConstruction:
-        "confirm length and composition of all figures"
+        "confirm length and composition of all Figures"
 
         @pytest.fixture(params=settings.figures.keys())
         def figure(self, request):
-            "return a figure that represents a numeral"
+            "return a Figure that represents a Numeral"
             return request.param
 
         def test_length_of_figure(self, figure):
-            "confirm figure contains the correct stroke count"
+            "confirm Figure contains the correct number of Strokes"
             assert len(figure) == settings.strokes_per_figure
 
         def test_figure_composition(self, figure):
-            "confirm figure composed only of valid Strokes"
+            "confirm Figure composed only of valid Strokes"
             assert set(figure).issubset(settings.valid_strokes)
 
     class TestAccountConstruction:
@@ -97,7 +99,7 @@ class TestStringConstruction:
 
         def test_account_composition(self, account):
             "confirm Account composed only of valid Numerals"
-            assert set(account).issubset(set(settings.valid_numerals))
+            assert set(account).issubset(settings.valid_numerals)
 
     class TestNumeralConstruction:
         "confirm length and composition of valid Numerals"
@@ -115,41 +117,52 @@ class TestStringConstruction:
             "confirm numeral validity"
             assert numeral in settings.valid_numerals
 
-class TestChecksumArgumentCount:
-    "confirm checksum accepts exactly one argument"
+    class TestStrokeConstruction:
+        "confirm length of valid Strokes"
 
-    def test_with_no_argument(self):
-        "confirm checksum requires more than zero arguments"
-        pytest.raises(TypeError, settings.checksum)
+        @pytest.mark.parametrize('stroke', settings.valid_strokes)
+        def test_length_of_stroke(self, stroke):
+            "confirm Stroke exactly one character long"
+            assert len(stroke) == 1
 
-    @pytest.mark.parametrize('arg_count', range(2, 20))
-    def test_with_multiple_arguments(self, arg_count):
-        "confirm checksum raises error on multiple arguments"
-        pytest.raises(TypeError, settings.checksum, *range(arg_count))
+    class TestIllegibleNumeralConstruction:
+        "confirm length and uniqueness of illegible_numeral"
 
-class TestChecksumFunctionality:
-    "confirm checksum correct categorizes known Accounts"
+        def test_length_of_illegible_numeral(self):
+            "confirm llegible_numeral exactly one character long"
+            assert len(settings.illegible_numeral) == 1
 
-    @pytest.mark.parametrize('valid_account', settings.some_known_valid_accounts)
-    def test_with_known_good_account(self, valid_account):
-        "confirm checksum reports a known good Account as valid"
-        assert settings.checksum(valid_account)
+        def test_illegible_numeral_distinct_from_valid_numerals(self):
+            "confirm llegible_numeral not in valid_numerals"
+            assert settings.illegible_numeral not in settings.valid_numerals
 
-    @pytest.mark.parametrize('invalid_account', settings.some_known_invalid_accounts)
-    def test_with_known_bad_account(self, invalid_account):
-        "confirm checksum reports a known bad Account as invalid"
-        assert not settings.checksum(invalid_account)
+class TestChecksumFunction:
+    "confirm checksum meets expectations"
 
-class TestIllegibleNumeral:
-    "confirm illegible_numeral's characteristics"
+    class TestArgumentCount:
+        "confirm checksum accepts exactly one argument"
 
-    def test_length_of_illegible_numeral(self):
-        "confirm llegible_numeral exactly one character long"
-        assert len(settings.illegible_numeral) == 1
+        def test_with_no_argument(self):
+            "confirm checksum requires more than zero arguments"
+            pytest.raises(TypeError, settings.checksum)
 
-    def test_illegible_numeral_distinct_from_valid_numerals(self):
-        "confirm llegible_numeral not in valid_numerals"
-        assert settings.illegible_numeral not in settings.valid_numerals
+        @pytest.mark.parametrize('arg_count', range(2, 20))
+        def test_with_multiple_arguments(self, arg_count):
+            "confirm checksum raises error on multiple arguments"
+            pytest.raises(TypeError, settings.checksum, *range(arg_count))
+
+    class TestFunctionality:
+        "confirm checksum correctly categorizes known Accounts"
+
+        @pytest.mark.parametrize('valid_account', settings.some_known_valid_accounts)
+        def test_with_known_good_account(self, valid_account):
+            "confirm checksum reports a known good Account as valid"
+            assert settings.checksum(valid_account)
+
+        @pytest.mark.parametrize('invalid_account', settings.some_known_invalid_accounts)
+        def test_with_known_bad_account(self, invalid_account):
+            "confirm checksum reports a known bad Account as invalid"
+            assert not settings.checksum(invalid_account)
 
 class TestIntegerValues:
     "confirm integer settings have reasonable values"
@@ -162,18 +175,7 @@ class TestIntegerValues:
             ('strokes_per_figure', 250),
             ('strokes_per_line', 1000),
             ))
-    def test_integer_value_below_arbitrary_maximum(self, setting_name, arbitrary_maximum):
+    def test_integer_setting_has_reasonable_value(self, setting_name, arbitrary_maximum):
         "confirm value does not exceed arbitrary maximum"
         value = settings.__dict__[setting_name]
-        assert value <= arbitrary_maximum
-
-    integer_setting_names = (k for k, v in expected_setting_types if v is int)
-    @pytest.fixture(params=integer_setting_names)
-    def integer_setting(self, request):
-        "return an integer setting"
-        setting_name = request.param
-        return settings.__dict__[setting_name]
-
-    def test_integer_not_negative(self, integer_setting):
-        "confirm integer setting has value of at least zero"
-        assert integer_setting >= 0
+        assert 0 <= value <= arbitrary_maximum
