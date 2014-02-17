@@ -11,7 +11,6 @@ expected_setting_types = (
     ('strokes_per_substring', int),
     ('strokes_per_figure', int),
     ('strokes_per_line', int),
-    ('approximate_entries_per_file', int),
     ('some_known_valid_accounts', tuple),
     ('some_known_invalid_accounts', tuple),
     ('valid_strokes', set),
@@ -168,7 +167,6 @@ class TestIntegerValues:
     "confirm integer settings have reasonable values"
 
     @pytest.mark.parametrize('setting_name, arbitrary_maximum', (
-            ('approximate_entries_per_file', 100000),
             ('lines_per_entry', 50),
             ('figures_per_entry', 50),
             ('strokes_per_substring', 50),

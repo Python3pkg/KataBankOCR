@@ -1,8 +1,6 @@
 " Static values that restate kata.txt "
 
-# All Input Files consist of _approximately_ the same number of Entries
-approximate_entries_per_file = 500
-# An Entry consists of a defined number of Lines
+# An Entry contains a defined number of Lines from an input File.
 lines_per_entry = 4
 # An Entry represents an Account composed of Numerals
 # The four Lines in this example Entry represent the Account '123456789'
@@ -12,7 +10,12 @@ lines_per_entry = 4
 '                           '
 # All Entries contain the same number of Figures
 figures_per_entry = 9
-# A Figure consist of Strokes that represents a Numeral
+# A Figure consist of Strokes and represents a Numeral
+# The Figure in this example represents the Numeral '5'
+' _ '
+'|_ '
+' _|'
+'   '
 # A Figure results from the joining of vertically adjacent Substrings within an Entry
 # All Substrings have a known length
 strokes_per_substring = 3
@@ -20,16 +23,11 @@ strokes_per_substring = 3
 strokes_per_line = strokes_per_substring * figures_per_entry
 # All Figures have a known length
 strokes_per_figure = strokes_per_substring * lines_per_entry
-# Every Figure is composed only of valid Strokes
+# All Figures contain only of valid Strokes
 valid_strokes = set('_ |')
-# The Figure in this example represents the Numeral '5'
-' _ '
-'|_ '
-' _|'
-'   '
-# Every Numeral consists of a single digit string
+# All Numerals consist of a single digit string
 valid_numerals = set('0123456789')
-# Every Figure uniquely represents a unique Numeral
+# All known Figures uniquely represent a unique Numeral
 figures = {' _ ' +
            '| |' +
            '|_|' +
@@ -88,7 +86,7 @@ some_known_valid_accounts = ('123456789', '490867715', '899999999',
 some_known_invalid_accounts = ('490067715', '888888888', '555555555',
                                '333333333', '111111111', '777777777')
 
-# A Result includes an Account and, if not valid, a Status
+# A Result includes an Account and, for invalid Accounts, a Status
 
 # Some Entries may contain one or more flawed Figures.
 # A flawed Figure does not directly represent a valid Numeral due to missing or additional strokes.
@@ -96,7 +94,7 @@ some_known_invalid_accounts = ('490067715', '888888888', '555555555',
 # A Superposition tracks how many strokes one must add or remove to properly represent a Numeral.
 # A collection of Superpositions, one for each Figure in an Entry, represents one or more Accounts.
 
-# When a collection of Superpositions does not represent one account better than all other,
+# When a collection of Superpositions does not represent one account better than all others,
 #   (ie: with fewer missing/additional Strokes required for that Account than all others),
 #   then the Result for that Entry will include the Ambiguous Status.
 ambiguous_status = ' AMB'
