@@ -2,7 +2,7 @@
 
 import pytest
 
-from common_tools import invalid_lengths, fit_to_length, adulterate_iterable
+from common_tools import bad_length_duplicator, adulterate_iterable
 from fixtures import ArbitraryValues
 
 def raises_on_non_iterable(generator):
@@ -25,10 +25,8 @@ def raises_on_bad_element_type(generator, value_or_type):
 
 def raises_on_bad_element_length(generator, valid_element):
     "return test of error raised on element of unexpected length"
-    valid_length = len(valid_element)
     def element_length_test():
-        for invalid_length in invalid_lengths(valid_length):
-            invalid_length_element = fit_to_length(valid_element, invalid_length)
+        for invalid_length_element in bad_length_duplicator(valid_element):
             iterator = generator([invalid_length_element])
             error = pytest.raises(ValueError, list, iterator)
             assert 'unexpected length' in error.value.message

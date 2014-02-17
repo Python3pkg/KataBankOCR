@@ -7,8 +7,7 @@ from functools import partial
 
 from parse import settings
 
-from common_tools import get_one_or_more
-from common_tools import invalid_lengths, fit_to_length, adulterate_iterable
+from common_tools import get_one_or_more, adulterate_iterable, bad_length_duplicator
 import fixture_values
 
 class Numerals:
@@ -120,12 +119,7 @@ class Lines:
     @classmethod
     def of_invalid_lengths(cls):
         "return Lines of invalid length"
-        return map(cls._by_invalid_length, invalid_lengths(settings.strokes_per_line))
-
-    @classmethod
-    def _by_invalid_length(cls, invalid_line_length):
-        "return a Line of invalid length"
-        return fit_to_length(cls.get_random(), invalid_line_length)
+        return bad_length_duplicator(cls.get_random())
 
     @classmethod
     def with_invalid_strokes(cls):
