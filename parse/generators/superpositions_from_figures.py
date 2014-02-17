@@ -6,10 +6,7 @@ the provided Figure and actual Figure for each valid Numeral.
 The generator yields this relationship as a dictionary:
   superposition[difference_count] = numeral_set
   {difference_count: set of valid numerals with that many differences}
-See test_superpositions.py for examples or valid_accounts for consumer.
 """
-
-from itertools import repeat
 
 from parse import settings
 from parse.validators import Validate
@@ -35,6 +32,6 @@ def _superposition_from_figure(figure):
     return d
 
 def _count_differences(figure_a, figure_b):
-    "return count of differing strokes between two figures"
-    stroke_from_each_figure = zip(figure_a, figure_b)
-    return len(['' for (a, b) in stroke_from_each_figure if a != b])
+    "return count of differing Strokes between two Figures"
+    paired_strokes = zip(figure_a, figure_b)
+    return len(['' for a, b in paired_strokes if a != b])
