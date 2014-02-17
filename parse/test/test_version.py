@@ -1,14 +1,14 @@
-"test parse module's version and version_info"
+"test the parse module's version and version_info"
 
 import parse
 from parse import version
 
 def test_parse_version_matches_version_version():
-    "confirm parse module shares version with version module"
+    "confirm parse module has same version as version module"
     assert version.__version__ == parse.__version__
 
 def test_parse_version_info_matches_version_version_info():
-    "confirm parse module shares version_info with version module"
+    "confirm parse module has same version_info as version module"
     assert version.__version_info__ == parse.__version_info__
 
 def test_version_type():
