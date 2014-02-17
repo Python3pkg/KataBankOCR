@@ -25,15 +25,6 @@ class Validate():
                 message = message % (name, value, element, index)
                 raise(TypeError(message))
 
-    @classmethod
-    def iterable(cls, value):
-        "confirm we can iterate over value"
-        try:
-            iterator = iter(value)
-        except TypeError:
-            message = '"%s" not iterable' % str(value)
-            raise(TypeError(message))
-
 def _build_message(name, value, error, expected, found):
     message = '%s "%s" of unexpected %s. Expected:%s. Found:%s.'
     return message % (name, value, error, str(expected), str(found))

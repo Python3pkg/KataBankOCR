@@ -73,18 +73,3 @@ class TestComposition():
         arguments = (allowed_components, value, _name)
         e = pytest.raises(TypeError, Validate.composition, *arguments)
         assert message == e.value.message
-
-class TestIterable():
-    "exercise the Validate.iterable method"
-
-    @pytest.mark.parametrize("iterable", ArbitraryValues.iterables())
-    def test_with_iterable(self, iterable):
-        "confirm passes silently on iterable value"
-        assert None == Validate.iterable(iterable)
-
-    @pytest.mark.parametrize("non_iterable", ArbitraryValues.non_iterables())
-    def test_with_non_iterable(self, non_iterable):
-        "confirm raises correctly on non-iterable value"
-        e = pytest.raises(TypeError, Validate.iterable, non_iterable)
-        message = '"%s" not iterable' % str(non_iterable)
-        assert message == e.value.message

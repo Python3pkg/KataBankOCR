@@ -7,18 +7,10 @@ from parse.validators import Validate
 
 def figures_from_entries(entries):
     "generator that consumes Entries and yields figures"
-    Validate.iterable(entries)
     for entry in entries:
         _validate_entry(entry)
         for figure in _figures_in_entry(entry):
             yield figure
-
-def _figures_in_entry(entry):
-    "return Figures within Entry"
-    lists_of_substrings_by_line = map(_substrings_in_line, entry)
-    figure_strings = zip(*lists_of_substrings_by_line)
-    figures = map(''.join, figure_strings)
-    return figures
 
 def _validate_entry(entry):
     "confirm type, length, and composition of entry and its elements"
@@ -28,6 +20,13 @@ def _validate_entry(entry):
         Validate.type(basestring, line, 'Entry Line')
         Validate.length(settings.strokes_per_line, line, 'Entry Line')
         Validate.composition(settings.valid_strokes, line, 'Entry Line')
+
+def _figures_in_entry(entry):
+    "return Figures within Entry"
+    lists_of_substrings_by_line = map(_substrings_in_line, entry)
+    figure_strings = zip(*lists_of_substrings_by_line)
+    figures = map(''.join, figure_strings)
+    return figures
 
 def _substrings_in_line(line):
     "return list of Substrings within a single Line"
