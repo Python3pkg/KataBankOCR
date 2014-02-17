@@ -279,7 +279,7 @@ class ArbitraryValues:
         "return list of arbitrary single character basestrings"
         litmus = lambda value: len(value) == 1
         return filter(litmus, cls.basestrings())
- 
+
     @classmethod
     def basestrings(cls):
         "return list of arbitrary basestrings"

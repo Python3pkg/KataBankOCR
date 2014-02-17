@@ -55,7 +55,7 @@ def test_version():
     found_version = subprocess.check_output(['parse/parse', '--version']).rstrip('\n')
     assert expected_version == found_version
 
-@pytest.mark.parametrize('argument',('-h','--help'))
+@pytest.mark.parametrize('argument', ('-h', '--help'))
 def test_help(argument):
     "confirm parse --help displays expected docstring"
     expected_docstring = __doc__
