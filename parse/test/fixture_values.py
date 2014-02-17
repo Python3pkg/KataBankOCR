@@ -2,6 +2,7 @@
 
 import os
 
+# {error_count:set_of_numerals} for Figures representing Numeral 0 to 9
 valid_figure_superpositions = [
     {0: {'0'}, 1: {'8'}, 2: {'6', '9'}, 3: {'2', '3', '5', '7'}, 4: {'1', '4'}},
     {0: {'1'}, 1: {'7'}, 2: {'4'}, 3: {'3'}, 4: {'0', '9'}, 5: {'2', '5', '8'}, 6: {'6'}},
