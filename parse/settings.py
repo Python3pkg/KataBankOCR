@@ -86,7 +86,7 @@ some_known_valid_accounts = ('123456789', '490867715', '899999999',
 some_known_invalid_accounts = ('490067715', '888888888', '555555555',
                                '333333333', '111111111', '777777777')
 
-# A Result includes an Account and, for invalid Accounts, a Status
+# A Result includes an Account and, if not valid, a Status
 
 # Some Entries may contain one or more flawed Figures.
 # A flawed Figure does not directly represent a valid Numeral due to missing or additional strokes.
