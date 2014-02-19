@@ -7,7 +7,7 @@ You can find the kata specifications in kata.txt and the latest version at http:
 Installation:
   pip install KataBankOCR
 
-Example Syntax:
+Example Syntax::
   parse input.txt
   parse input.txt output.txt
   cat input.txt | parse -
