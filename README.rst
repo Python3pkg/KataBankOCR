@@ -8,6 +8,7 @@ Installation:
   pip install KataBankOCR
 
 Example Syntax::
+
   parse input.txt
   parse input.txt output.txt
   cat input.txt | parse -
