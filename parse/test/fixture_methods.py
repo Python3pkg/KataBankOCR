@@ -1,10 +1,12 @@
 "methods that provide values for testing and an interface to constants"
 
+import os
 import copy
 import random
 import fileinput
 
 from parse import settings
+import parse
 
 from common_tools import get_one_or_more, adulterate_iterable, bad_length_duplicator
 import fixture_constants
@@ -310,12 +312,26 @@ class ArbitraryValues:
 class Paths:
     "methods that provide Paths for testing"
 
-    @staticmethod
-    def basic_input_file():
-        "return the path to the basic input file"
-        return fixture_constants.BasicInputFile.path
+    _input_files_parent_directory = os.path.dirname(fixture_constants.__file__)
+    _path_to_input_files = os.path.join(_input_files_parent_directory, 'input_files')
 
-    @staticmethod
-    def advanced_input_file():
+    @classmethod
+    def basic_input_file(cls):
+        "return the path to the basic input file"
+        directory = cls._path_to_input_files
+        file_name = fixture_constants.BasicInputFile.file_name
+        return os.path.join(directory, file_name)
+
+    @classmethod
+    def advanced_input_file(cls):
         "return the path to the advanced input file"
-        return fixture_constants.AdvancedInputFile.path
+        directory = cls._path_to_input_files
+        file_name = fixture_constants.AdvancedInputFile.file_name
+        return os.path.join(directory, file_name)
+
+    @classmethod
+    def parse(cls):
+        "return the path to the parse application"
+        directory = os.path.dirname(parse.__file__)
+        file_name = 'parse'
+        return os.path.join(directory, file_name)

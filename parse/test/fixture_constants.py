@@ -1,7 +1,5 @@
 "constants used for testing but bound to settings"
 
-import os
-
 # {error_count:set_of_numerals} for Figures representing Numeral 0 to 9
 valid_figure_superpositions = [
     {0: {'0'}, 1: {'8'}, 2: {'6', '9'}, 3: {'2', '3', '5', '7'}, 4: {'1', '4'}},
@@ -54,12 +52,10 @@ flawed_accounts = [
     ('1', 0, '3456789', '1?3456789', '1?3456789 AMB'),
     ]
 
-_path_to_input_files = os.path.join(os.path.dirname(__file__), 'input_files')
-
 class BasicInputFile:
     "details regarding the Basic input file"
 
-    path = os.path.join(_path_to_input_files, 'basic.txt')
+    file_name = 'basic.txt'
     accounts = [
         '000000000',
         '111111111',
@@ -90,7 +86,7 @@ class BasicInputFile:
 class AdvancedInputFile:
     "details regarding the Advanced input file"
 
-    path = os.path.join(_path_to_input_files, 'advanced.txt')
+    file_name = 'advanced.txt'
     results = [
         '000000051',
         '49006771? AMB',
