@@ -23,18 +23,21 @@ def _fit_to_length(value, length):
     return _fit_to_length(value + value, length)
 
 def adulterate_iterable(target, new_element, index=None):
-    "return string or list after replacing a [random] element"
-    assert isinstance(target, (list, basestring))
+    "return string, tuple, or list after replacing a [random] element"
     if index is None:
         index = random.randrange(0, len(target))
-    if isinstance(target, basestring):
-        return ''.join((target[:index], new_element, target[index + 1:]))
-    elif isinstance(target, list):
-        target[index] = new_element
-        return target
+    accepted_iterable_types = {
+        list: lambda L: L,
+        tuple: lambda L: tuple(L),
+        str: lambda  L: ''.join(L),
+        }
+    assert type(target) in accepted_iterable_types
+    target_list = list(target)
+    target_list[index] = new_element
+    return accepted_iterable_types[type(target)](target_list)
 
 def get_one_or_more(function, count=None):
-    "return just one or a list of function's return values"
+    "return just one or a tuple of function's return values"
     if count is None:
         return function()
-    return [function() for _ in range(count)]
+    return (function() for _ in range(count))
