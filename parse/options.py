@@ -15,7 +15,7 @@ from version import __version__
 
 def in_path_and_out_path():
     "return input_path and output_path from arguments"
-    arguments = docopt(__doc__, version=version_name())
+    arguments = docopt(__doc__, version=_version_name())
     if arguments['<input_file>'] is None:
         input_path = '-'
     else:
@@ -23,7 +23,7 @@ def in_path_and_out_path():
     output_path = arguments['<output_file>']
     return (input_path, output_path)
 
-def version_name():
-    "return input_path and output_path from arguments"
+def _version_name():
+    "return application name including version"
     parser_name = 'Kata Bank OCR Parser'
     return ' '.join((parser_name, 'version', __version__))

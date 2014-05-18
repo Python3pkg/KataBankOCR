@@ -15,7 +15,7 @@ def _validate_account(account):
     "confirm account type, length, and composition or raise ValueError"
     Validate.type(basestring, account, 'Account')
     Validate.length(settings.figures_per_entry, account, 'Account')
-    expected_numerals = settings.valid_numerals | set(settings.illegible_numeral)
+    expected_numerals = settings.valid_numerals | set((settings.illegible_numeral,))
     Validate.composition(expected_numerals, account, 'Account')
 
 def _status_from_account(account):

@@ -2,6 +2,8 @@
 
 import pytest
 
+from toolz import pipe, concat
+
 from parse.generators.accounts_from_superpositions import accounts_from_superpositions
 
 import check_generator
@@ -13,12 +15,11 @@ test_element_type = \
     check_generator.raises_on_bad_element_type(generator=accounts_from_superpositions,
                                                value_or_type=dict)
 
-accounts = Accounts.of_example_accounts() + Accounts.of_flawed_accounts()
-superpositions = Superpositions.of_example_accounts() + Superpositions.of_flawed_accounts()
+accounts = (Accounts.of_example_accounts(), Accounts.of_flawed_accounts())
+superpositions = (Superpositions.of_example_accounts(), Superpositions.of_flawed_accounts())
 
-@pytest.mark.parametrize('expected_account, superpositions', (zip(accounts, superpositions)))
-def test_known_superpositions_yield_expected_account(expected_account, superpositions):
+def test_known_superpositions_yield_expected_account():
     "confirm known superpositions yield expected accounts"
-    iterator = accounts_from_superpositions(superpositions)
-    found_accounts = list(iterator)
-    assert [expected_account] == found_accounts
+    expected_accounts = pipe(accounts, concat, tuple)
+    found_accounts = pipe(superpositions, concat, concat, accounts_from_superpositions, tuple)
+    assert expected_accounts == found_accounts

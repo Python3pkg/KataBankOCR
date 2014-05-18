@@ -33,5 +33,4 @@ def _superposition_from_figure(figure):
 
 def _count_differences(figure_a, figure_b):
     "return count of differing Strokes between two Figures"
-    paired_strokes = zip(figure_a, figure_b)
-    return len(['' for a, b in paired_strokes if a != b])
+    return sum(a != b for a, b in zip(figure_a, figure_b))

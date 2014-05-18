@@ -37,7 +37,7 @@ def adulterate_iterable(target, new_element, index=None):
     return accepted_iterable_types[type(target)](target_list)
 
 def get_one_or_more(function, count=None):
-    "return just one or a tuple of function's return values"
+    "return either just one or a generator of function's return values"
     if count is None:
         return function()
     return (function() for _ in range(count))

@@ -1,7 +1,7 @@
-"constants used for testing but bound to settings"
+"constants used for testing. Tightly coupled to settings.py"
 
 # {error_count:set_of_numerals} for Figures representing Numeral 0 to 9
-valid_figure_superpositions = [
+valid_figure_superpositions = (
     {0: {'0'}, 1: {'8'}, 2: {'6', '9'}, 3: {'2', '3', '5', '7'}, 4: {'1', '4'}},
     {0: {'1'}, 1: {'7'}, 2: {'4'}, 3: {'3'}, 4: {'0', '9'}, 5: {'2', '5', '8'}, 6: {'6'}},
     {0: {'2'}, 2: {'3', '8'}, 3: {'0', '6', '9'}, 4: {'5', '7'}, 5: {'1', '4'}},
@@ -12,10 +12,10 @@ valid_figure_superpositions = [
     {0: {'7'}, 1: {'1'}, 2: {'3'}, 3: {'0', '4', '9'}, 4: {'2', '5', '8'}, 5: {'6'}},
     {0: {'8'}, 1: {'0', '6', '9'}, 2: {'2', '3', '5'}, 3: {'4'}, 4: {'7'}, 5: {'1'}},
     {0: {'9'}, 1: {'3', '5', '8'}, 2: {'0', '4', '6'}, 3: {'2', '7'}, 4: {'1'}},
-    ]
+    )
 
 # account, account_from_superpositions, result
-example_accounts = [
+example_accounts =  (
     ('123456789', '123456789', '123456789'),
     ('111111111', '711111111', '711111111'),
     ('777777777', '777777177', '777777177'),
@@ -26,10 +26,10 @@ example_accounts = [
     ('888888888', '888888888', '888888888 AMB'),
     ('999999999', '999999999', '999999999 AMB'),
     ('490067715', '490067715', '490067715 AMB'),
-    ]
+    )
 
 # flawed_figure, superposition
-flawed_figures = [
+flawed_figures = (
     ('   ' +
      ' _|' +
      '  |' +
@@ -42,21 +42,21 @@ flawed_figures = [
      ' _ ' +
      ' _|' +
      '   ', {1: {'3', '5'}, 2: {'6', '9'}, 3: {'2', '7', '8'}, 4: {'0', '1', '4'}}),
-    ]
+    )
 
 # account_prefix, flawed_figure_index, account_suffix, account, result
-flawed_accounts = [
+flawed_accounts = (
     ('', 0, '23456789', '123456789', '123456789'),
     ('0', 1, '0000051', '000000051', '000000051'),
     ('49086771', 2, '', '490867715', '490867715'),
     ('1', 0, '3456789', '1?3456789', '1?3456789 AMB'),
-    ]
+    )
 
 class BasicInputFile:
     "details regarding the Basic input file"
 
     file_name = 'basic.txt'
-    accounts = [
+    accounts = (
         '000000000',
         '111111111',
         '222222222',
@@ -68,8 +68,8 @@ class BasicInputFile:
         '888888888',
         '999999999',
         '123456789',
-        ]
-    results = [
+        )
+    results = (
         '000000000',
         '711111111',
         '222222222 AMB',
@@ -81,13 +81,13 @@ class BasicInputFile:
         '888888888 AMB',
         '999999999 AMB',
         '123456789',
-        ]
+        )
 
 class AdvancedInputFile:
     "details regarding the Advanced input file"
 
     file_name = 'advanced.txt'
-    results = [
+    results = (
         '000000051',
         '49006771? AMB',
         '123456789',
@@ -96,4 +96,4 @@ class AdvancedInputFile:
         '123456789',
         '000000051',
         '490867715',
-        ]
+        )

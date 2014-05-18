@@ -1,5 +1,7 @@
 "test the superpositions_from_figures generator"
 
+from toolz import pipe, concat
+
 from parse.generators.superpositions_from_figures import superpositions_from_figures
 
 import check_generator
@@ -23,8 +25,8 @@ test_element_composition = check_generator.raises_on_bad_element_composition(
 
 def test_parses_figures_to_superpositions():
     "confirm figures yield expected superpositions"
-    expected_superpositions = (Superpositions.of_valid_figures()
-                               + Superpositions.of_flawed_figures())
-    iterator = superpositions_from_figures(Figures.valid() + Figures.flawed())
-    found_superpositions = list(iterator)
+    superpositions = (Superpositions.of_valid_figures(), Superpositions.of_flawed_figures())
+    expected_superpositions = pipe(superpositions, concat, tuple)
+    figures = (Figures.valid(), Figures.flawed())
+    found_superpositions = pipe(figures, concat, superpositions_from_figures, tuple)
     assert expected_superpositions == found_superpositions

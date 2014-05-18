@@ -3,13 +3,22 @@
 import os
 import copy
 import random
-import fileinput
+
+from toolz import pipe, curry
+from toolz.curried import nth
+from toolz.curried import map as cmap
 
 from parse import settings
 import parse
 
 from common_tools import get_one_or_more, adulterate_iterable, bad_length_duplicator
 import fixture_constants
+
+_first_elements = cmap(curry(nth, 0))
+_second_elements = cmap(curry(nth, 1))
+_third_elements = cmap(curry(nth, 2))
+_fourth_elements = cmap(curry(nth, 3))
+_fifth_elements = cmap(curry(nth, 4))
 
 class Numerals:
     "methods that provide Numerals for testing"
@@ -22,14 +31,16 @@ class Numerals:
 
     @staticmethod
     def valid():
-        "return ordered list of valid Numerals"
-        return sorted(list(settings.valid_numerals))
+        "return ordered tuple of valid Numerals"
+        return pipe(settings.valid_numerals, sorted, tuple)
 
     @classmethod
     def invalid(cls):
-        "return list of arbitrary basestrings that includes no valid numerals"
-        litmus = lambda value: value not in cls.valid()
-        return set(filter(litmus, ArbitraryValues.single_character_basestrings()))
+        "return tuple of arbitrary basestrings that includes no valid numerals"
+        chars = ArbitraryValues.single_character_basestrings()
+        not_valid = lambda value: value not in cls.valid()
+        limit_to_invalid = curry(filter, not_valid)
+        return pipe(chars, limit_to_invalid, tuple)
 
 class Accounts:
     "methods that provide Accounts for testing"
@@ -43,7 +54,7 @@ class Accounts:
     @staticmethod
     def of_example_accounts():
         "return Accounts from superpositions of example Accounts"
-        return [t[1] for t in fixture_constants.example_accounts]
+        return _second_elements(fixture_constants.example_accounts)
 
     @staticmethod
     def of_basic_input_file():
@@ -53,7 +64,7 @@ class Accounts:
     @staticmethod
     def of_flawed_accounts():
         "return [in]valid Accounts from Superpositions with flaws"
-        return [t[3] for t in fixture_constants.flawed_accounts]
+        return _fourth_elements(fixture_constants.flawed_accounts)
 
 class Figures:
     "methods that provide Figures for testing"
@@ -67,24 +78,22 @@ class Figures:
     @staticmethod
     def from_numeral(numeral):
         "return the Figure that represents the given Numeral"
-        for figure in settings.figures:
-            if settings.figures[figure] == numeral:
-                return figure
+        return settings.figures.keys()[settings.figures.values().index(numeral)]
 
     @classmethod
     def from_account(cls, account):
         "return the Figures that represent the given Account"
-        return map(cls.from_numeral, list(account))
+        return pipe(account, tuple, cmap(cls.from_numeral), tuple)
 
     @classmethod
     def valid(cls):
-        "return ordered list of figures representing Numerals 0-9"
-        return map(cls.from_numeral, Numerals.valid())
+        "return ordered Figures representing Numerals 0-9"
+        return cmap(cls.from_numeral, Numerals.valid())
 
     @staticmethod
     def flawed():
-        "return list of flawed Figures from fixture_constants"
-        return [t[0] for t in fixture_constants.flawed_figures]
+        "return flawed Figures from fixture_constants"
+        return pipe(fixture_constants.flawed_figures, _first_elements)
 
 class Strokes:
     "methods that provide Strokes for testing"
@@ -97,14 +106,16 @@ class Strokes:
 
     @staticmethod
     def valid():
-        "return ordered list of valid Strokes"
-        return sorted(list(settings.valid_strokes))
+        "return ordered tuple of valid Strokes"
+        return pipe(settings.valid_strokes, sorted, tuple)
 
     @classmethod
     def invalid(cls):
-        "return list of arbitrary single-char basestrings with 0 valid strokes"
-        litmus = lambda value: value not in cls.valid()
-        return filter(litmus, ArbitraryValues.single_character_basestrings())
+        "return tuple of arbitrary single-char basestrings with 0 valid strokes"
+        chars = ArbitraryValues.single_character_basestrings()
+        not_valid = lambda value: value not in cls.valid()
+        limit_to_invalid = curry(filter, not_valid)
+        return pipe(chars, limit_to_invalid, tuple)
 
 class Lines:
     "methods that provide Lines for testing"
@@ -112,13 +123,7 @@ class Lines:
     @staticmethod
     def get_random(count=None):
         "return random Lines[s] composed of Strokes"
-        return ''.join(Strokes.get_random(settings.strokes_per_line))
-
-    @staticmethod
-    def of_basic_input_file():
-        "return Lines from basic input file"
-        file = fileinput.input(Paths.basic_input_file())
-        return [line.rstrip('\n') for line in file]
+        return pipe(settings.strokes_per_line, Strokes.get_random, ''.join)
 
     @staticmethod
     def of_invalid_types():
@@ -132,8 +137,8 @@ class Lines:
 
     @classmethod
     def with_invalid_strokes(cls):
-        "return Lines that each include an invalid stroke"
-        return map(cls._by_invalid_stroke, Strokes.invalid())
+        "return tuple of Lines that each include an invalid stroke"
+        return pipe(Strokes.invalid(), cmap(cls._by_invalid_stroke), tuple)
 
     @classmethod
     def _by_invalid_stroke(cls, invalid_stroke):
@@ -151,30 +156,32 @@ class Entries:
 
     @classmethod
     def from_account(cls, account):
-        "return the Entry (list of Lines) that represents the given Account"
-        figures = Figures.from_account(account)
-        return cls.from_figures(figures)
+        "return the Entry (tuple of Lines) that represents the given Account"
+        return pipe(account, Figures.from_account, cls.from_figures)
 
     @classmethod
     def from_figures(cls, figures):
-        "return the Entry (list of Lines) that contains the given Figures"
-        line_indexes = range(settings.lines_per_entry)
-        return [cls._line_from_figures(line_index, figures) for line_index in line_indexes]
+        "return the Entry (tuple of Lines) that contains the given Figures"
+        lines = cmap(curry(cls._line_by_index, figures))
+        return pipe(settings.lines_per_entry, range, lines, tuple)
+
+    @classmethod
+    def _line_by_index(cls, figures, line_index):
+        "return a Line composed of Figures Substrings"
+        substrings = cmap(curry(cls._substring_by_index, line_index))
+        return pipe(figures, substrings, ''.join)
 
     @staticmethod
-    def _line_from_figures(line_index, figures):
-        "return a Line composed of Figures Substrings"
-        first_figure_stroke = line_index * settings.strokes_per_substring
-        last_figure_stroke = first_figure_stroke + settings.strokes_per_substring
-        slice_indexes = (first_figure_stroke, last_figure_stroke)
-        figure_substrings = [figure[slice(*slice_indexes)] for figure in figures]
-        line = ''.join(figure_substrings)
-        return line
+    def _substring_by_index(line_index, figure):
+        "return Substring of Figure by Entry Line index"
+        start_index = line_index * settings.strokes_per_substring
+        end_index = start_index + settings.strokes_per_substring
+        return figure[start_index:end_index]
 
     @classmethod
     def of_basic_input_file(cls):
         "return Entries from basic input file"
-        return map(cls.from_account, Accounts.of_basic_input_file())
+        return pipe(Accounts.of_basic_input_file(), cmap(cls.from_account), tuple)
 
 class Superpositions:
     "methods that provide Superpositions for testing"
@@ -182,9 +189,7 @@ class Superpositions:
     @classmethod
     def from_numeral(cls, numeral):
         "return Superposition of Figure representing Numeral"
-        index = Numerals.valid().index(numeral)
-        superposition = cls.of_valid_figures()[index]
-        return superposition
+        return cls.of_valid_figures()[Numerals.valid().index(numeral)]
 
     @classmethod
     def from_account(cls, account):
@@ -193,25 +198,24 @@ class Superpositions:
 
     @staticmethod
     def of_valid_figures():
-        "return list of Superpositions for all un-flawed Figures"
+        "return tuple of Superpositions for all un-flawed Figures"
         return copy.deepcopy(fixture_constants.valid_figure_superpositions)
-
-    @staticmethod
-    def of_flawed_figures():
-        "return Superpositions of flawed figures"
-        return [t[1] for t in fixture_constants.flawed_figures]
 
     @classmethod
     def of_example_accounts(cls):
-        "return Superpositions made from example accounts"
-        accounts = [t[0] for t in fixture_constants.example_accounts]
-        return map(cls.from_account, accounts)
+        "return lists of Superpositions made from example accounts"
+        return pipe(fixture_constants.example_accounts, _first_elements, cmap(cls.from_account))
+
+    @staticmethod
+    def of_flawed_figures():
+        "return tuple of Superpositions of flawed figures"
+        return pipe(fixture_constants.flawed_figures, _second_elements, tuple)
 
     @classmethod
     def of_flawed_accounts(cls):
-        "return Superpositions of Accounts including flawed figures"
-        count = len(fixture_constants.flawed_accounts)
-        return [cls._by_flawed_figure_index(i) for i in range(count)]
+        "return tuple of Superpositions of Accounts including flawed figures"
+        superpositions = lambda indexes: (cls._by_flawed_figure_index(i) for i in indexes)
+        return pipe(fixture_constants.flawed_accounts, len, range, superpositions, tuple)
 
     @classmethod
     def _by_flawed_figure_index(cls, flawed_figure_index):
@@ -229,7 +233,7 @@ class Results:
     @staticmethod
     def of_example_accounts():
         "return Results from example accounts"
-        return [t[2] for t in fixture_constants.example_accounts]
+        return pipe(fixture_constants.example_accounts, _third_elements, tuple)
 
     @staticmethod
     def of_basic_input_file():
@@ -244,22 +248,17 @@ class Results:
     @staticmethod
     def of_flawed_accounts():
         "return Results of Accounts including flawed figures"
-        return [t[4] for t in fixture_constants.flawed_accounts]
+        return pipe(fixture_constants.flawed_accounts, _fifth_elements, tuple)
 
 class ArbitraryValues:
     "methods that provide arbitrary values for testing"
 
-    _all = [0, 1, -10, -999999999, 123456789, 3.14159, -.00000000001,
+    _all = (0, 1, -10, -999999999, 123456789, 3.14159, -.00000000001,
             False, True, [], (), {}, '', None, object, int, list, dict, bool,
             [1, 2, 3], {1: 2}, {0}, (1, 2, 3), {1: 'a', 2: 'b'},
             'abc', '|', '-', '\r', 'foo', '1', '0', 'c', '=', '\t', '\r',
             u'abc', u'|', u'-', u'\r', u'foo', u'1', u'0', u'c', u'=', u'\t', u'\r',
-            ]
-
-    @classmethod
-    def iterables(cls):
-        "return a list of arbitrary values over which one can iterate"
-        return filter(cls._iterable, cls._all)
+            )
 
     @classmethod
     def non_iterables(cls):

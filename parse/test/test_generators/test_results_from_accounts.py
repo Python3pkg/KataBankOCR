@@ -29,5 +29,5 @@ test_element_composition = \
 def test_parses_known_accounts_to_results(expected_results, accounts):
     "confirm known account recognized correctly"
     iterator = results_from_accounts(accounts)
-    found_results = list(iterator)
+    found_results = tuple(iterator)
     assert expected_results == found_results
