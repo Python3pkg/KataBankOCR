@@ -41,7 +41,7 @@ setup(
     license='GNU General Public License',
     author='Jason Green',
     tests_require=['pytest', 'docopt'],
-    install_requires=['docopt>=0.6.1'],
+    install_requires=['docopt>=0.6.1','toolz>=0.5.2'],
     cmdclass={'test': PyTest},
     author_email='KataBankOCR@JasonGreen.Name',
     description='Programming kata to parse output from fictitious OCR machine',
