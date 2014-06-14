@@ -23,8 +23,8 @@ class TestType():
         message = '%s "%s" of unexpected type. Expected:%s. Found:%s.'
         message = message % (_name, value, expected_type, str(type(value)))
         arguments = (expected_type, value, _name)
-        e = pytest.raises(TypeError, Validate.type, *arguments)
-        assert message == e.value.message
+        error = pytest.raises(TypeError, Validate.type, *arguments)
+        assert message == error.value.message
 
 class TestLength():
     "exercise the Validate.length method"
@@ -43,8 +43,8 @@ class TestLength():
         message = '%s "%s" of unexpected length. Expected:%d. Found:%d.'
         message = message % (_name, value, expected_length, len(value))
         arguments = (expected_length, value, _name)
-        e = pytest.raises(ValueError, Validate.length, *arguments)
-        assert message == e.value.message
+        error = pytest.raises(ValueError, Validate.length, *arguments)
+        assert message == error.value.message
 
 class TestComposition():
     "exercise the Validate.composition method"
@@ -71,5 +71,5 @@ class TestComposition():
         message = '%s "%s" contains unexpected element "%s" at index %d'
         message = message % (_name, value, unexpected_element, bad_index)
         arguments = (allowed_components, value, _name)
-        e = pytest.raises(TypeError, Validate.composition, *arguments)
-        assert message == e.value.message
+        error = pytest.raises(TypeError, Validate.composition, *arguments)
+        assert message == error.value.message
