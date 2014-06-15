@@ -35,7 +35,10 @@ def _invalid_or_illegible_account(superpositions):
 def _numeral(superposition):
     "return Numeral represented by Superposition"
     try:
-        return superposition[0].pop()
+        number_of_errors = 0
+        represented_numerals = superposition[0]
+        numeral = represented_numerals.pop()
+        return numeral
     except KeyError:
         return settings.illegible_numeral
 
@@ -48,11 +51,12 @@ def _valid_accounts(superpositions):
 
 def _valid_accounts_by_error_count(superpositions, error_count):
     "return valid Accounts containing exactly error_count errors"
-    accounts = set()
+    valid_accounts = set()
     for distribution in _error_distributions(superpositions, error_count):
         numeral_sets = _numeral_sets_by_error_distribution(superpositions, distribution)
-        accounts |= _valid_accounts_from_numeral_sets(numeral_sets)
-    return accounts
+        accounts = map(''.join, product(*numeral_sets))
+        valid_accounts |= set(filter(settings.checksum, accounts))
+    return valid_accounts
 
 def _error_distributions(superpositions, total_errors):
     "return lists of error_counts each list with exactly total_errors"
@@ -67,12 +71,3 @@ def _error_counts_by_superposition(max_error_count, superposition):
 def _numeral_sets_by_error_distribution(superpositions, distribution):
     "return sets of numerals with error counts matching distribution"
     return [sup[err_count] for sup, err_count in zip(superpositions, distribution)]
-
-def _valid_accounts_from_numeral_sets(numeral_sets):
-    "return valid accounts assemblable from numeral sets"
-    accounts = _accounts_from_numeral_sets(numeral_sets)
-    return set(filter(settings.checksum, accounts))
-
-def _accounts_from_numeral_sets(numeral_sets):
-    "return all possible accounts assemblable from numeral sets"
-    return map(''.join, product(*numeral_sets))
