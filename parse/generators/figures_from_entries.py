@@ -1,6 +1,7 @@
 "generator that yields Figures and the functions that support it"
 
-from toolz import curry
+from toolz import curry, pipe, partition
+from toolz.curried import map as cmap
 
 from parse import settings
 from parse.validators import Validate
@@ -23,17 +24,10 @@ def _validate_entry(entry):
 
 def _figures_in_entry(entry):
     "return Figures within Entry"
-    lists_of_substrings_by_line = map(_substrings_in_line, entry)
-    figure_strings = zip(*lists_of_substrings_by_line)
+    figure_strings = zip(*map(_substrings_in_line, entry))
     return map(''.join, figure_strings)
 
 def _substrings_in_line(line):
     "return list of Substrings within a single Line"
-    substring = curry(_figure_substring_from_line, line)
-    return map(substring, range(settings.figures_per_entry))
-
-def _figure_substring_from_line(line, figure_index):
-    "return the Strokes of a figure found within a Line"
-    start_index = figure_index * settings.strokes_per_substring
-    end_index = start_index + settings.strokes_per_substring
-    return line[start_index:end_index]
+    splitter = curry(partition, settings.strokes_per_substring)
+    return pipe(line, splitter, cmap(''.join))
