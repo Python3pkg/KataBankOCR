@@ -2,24 +2,21 @@
 
 from itertools import product
 
-from toolz import pipe, curry
+from toolz import pipe, curry, partition_all
 from toolz.curried import map as cmap
 
 from parse import settings
 from parse.validators import Validate
 
-_superpositions_per_account = settings.figures_per_entry
+_superpositions_per_entry = settings.figures_per_entry
 _maximum_possible_errors_in_an_entry = settings.strokes_per_figure * settings.figures_per_entry
 
 def accounts_from_superpositions(superpositions):
     "generator that consumes Superpositions and yields Accounts"
-    collected = []
-    for superposition in superpositions:
-        Validate.type(dict, superposition, 'Superposition')
-        collected.append(superposition)
-        if len(collected) == _superpositions_per_account:
-            yield _account(collected)
-            collected = []
+    for superpositions_of_entry in partition_all(_superpositions_per_entry, superpositions):
+        for superposition in superpositions_of_entry:
+            Validate.type(dict, superposition, 'Superposition')
+        yield _account(superpositions_of_entry)
 
 def _account(superpositions):
     "return a single [in]valid Account"
@@ -35,9 +32,9 @@ def _invalid_or_illegible_account(superpositions):
 def _numeral(superposition):
     "return Numeral represented by Superposition"
     try:
-        number_of_errors = 0
-        represented_numerals = superposition[0]
-        numeral = represented_numerals.pop()
+        error_count = 0
+        numerals = superposition[error_count]
+        numeral = numerals.pop()
         return numeral
     except KeyError:
         return settings.illegible_numeral
