@@ -42,16 +42,16 @@ class TestDefinition:
 
     def test_total_setting_count_matches_expectations(self):
         "confirm settings contains exactly as many entries as expected"
-        attributes_of_settings_module = settings.__dict__.keys()
-        builtins_of_settings_module = filter(lambda k: '__' in k, attributes_of_settings_module)
+        attributes_of_settings_module = list(settings.__dict__.keys())
+        builtins_of_settings_module = [k for k in attributes_of_settings_module if '__' in k]
         found_settings = set(attributes_of_settings_module) - set(builtins_of_settings_module)
         assert len(expected_setting_types) == len(found_settings)
 
 class TestUniqueness:
     "confirm no duplicate Figures, Numerals, or Strokes"
 
-    @pytest.mark.parametrize('collection', (settings.figures.keys(), settings.valid_numerals,
-                                            settings.figures.values(), settings.valid_strokes,))
+    @pytest.mark.parametrize('collection', (list(settings.figures.keys()), settings.valid_numerals,
+                                            list(settings.figures.values()), settings.valid_strokes,))
     def test_uniqueness_of_collection(self, collection):
         "confirm no duplicates"
         assert len(collection) == len(set(collection))
@@ -60,7 +60,7 @@ class TestRepresentation:
     "confirm a Figure exists that represents each Numeral"
 
     def test_numeral_representation(self):
-        represented_numerals = settings.figures.values()
+        represented_numerals = list(settings.figures.values())
         assert set(represented_numerals) == set(settings.valid_numerals)
 
 class TestStringConstruction:
@@ -69,7 +69,7 @@ class TestStringConstruction:
     class TestFigureConstruction:
         "confirm length and composition of all Figures"
 
-        @pytest.fixture(params=settings.figures.keys())
+        @pytest.fixture(params=list(settings.figures.keys()))
         def figure(self, request):
             "return a Figure that represents a Numeral"
             return request.param
@@ -103,7 +103,7 @@ class TestStringConstruction:
     class TestNumeralConstruction:
         "confirm length and composition of valid Numerals"
 
-        @pytest.fixture(params=settings.figures.values())
+        @pytest.fixture(params=list(settings.figures.values()))
         def numeral(self, request):
             "return a Numeral represented by settings.figures"
             return request.param
@@ -145,10 +145,10 @@ class TestChecksumFunction:
             "confirm checksum requires more than zero arguments"
             pytest.raises(TypeError, settings.checksum)
 
-        @pytest.mark.parametrize('arg_count', range(2, 20))
+        @pytest.mark.parametrize('arg_count', list(range(2, 20)))
         def test_with_multiple_arguments(self, arg_count):
             "confirm checksum raises error on multiple arguments"
-            pytest.raises(TypeError, settings.checksum, *range(arg_count))
+            pytest.raises(TypeError, settings.checksum, *list(range(arg_count)))
 
     class TestFunctionality:
         "confirm checksum correctly categorizes known Accounts"

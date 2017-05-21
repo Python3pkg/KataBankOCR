@@ -18,14 +18,14 @@ def _validate_entry(entry):
     Validate.type(tuple, entry, 'Entry')
     Validate.length(settings.lines_per_entry, entry, 'Entry')
     for line in entry:
-        Validate.type(basestring, line, 'Entry Line')
+        Validate.type(str, line, 'Entry Line')
         Validate.length(settings.strokes_per_line, line, 'Entry Line')
         Validate.composition(settings.valid_strokes, line, 'Entry Line')
 
 def _figures_in_entry(entry):
     "return Figures within Entry"
-    figure_strings = zip(*map(_substrings_in_line, entry))
-    return map(''.join, figure_strings)
+    figure_strings = list(zip(*list(map(_substrings_in_line, entry))))
+    return list(map(''.join, figure_strings))
 
 def _substrings_in_line(line):
     "return list of Substrings within a single Line"

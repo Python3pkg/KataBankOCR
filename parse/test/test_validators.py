@@ -10,13 +10,13 @@ _name = 'Arbitrary Thing'
 class TestType():
     "exercise the Validate.type method"
 
-    matched_type_value_pairs = ((basestring, 'foo'), (list, []), (tuple, ()), (int, 1))
+    matched_type_value_pairs = ((str, 'foo'), (list, []), (tuple, ()), (int, 1))
     @pytest.mark.parametrize("expected_type, value", matched_type_value_pairs)
     def test_with_valid_type(self, expected_type, value):
         "confirm passes silently on value of valid type"
         assert None == Validate.type(expected_type, value, _name)
 
-    mismatched_type_value_pairs = ((int, 'A',), (tuple, [],), (basestring, (1,)))
+    mismatched_type_value_pairs = ((int, 'A',), (tuple, [],), (str, (1,)))
     @pytest.mark.parametrize("expected_type, value", mismatched_type_value_pairs)
     def test_with_invalid_type(self, expected_type, value):
         "confirm raises with expected message on invalid type"

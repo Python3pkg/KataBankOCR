@@ -6,7 +6,7 @@ class Validate():
         "confirm value of expected type or raise TypeError"
         if not isinstance(value, expected_type):
             message = _build_message(name, value, 'type', expected_type, type(value))
-            raise(TypeError(message))
+            raise TypeError
 
     @classmethod
     def length(cls, expected_length, value, name):
@@ -14,7 +14,7 @@ class Validate():
         length = len(value)
         if len(value) != expected_length:
             message = _build_message(name, value, 'length', expected_length, len(value))
-            raise(ValueError(message))
+            raise ValueError
 
     @classmethod
     def composition(cls, allowed_components, value, name):
@@ -23,7 +23,7 @@ class Validate():
             if element not in allowed_components:
                 message = '%s "%s" contains unexpected element "%s" at index %d'
                 message = message % (name, value, element, index)
-                raise(TypeError(message))
+                raise TypeError
 
 def _build_message(name, value, error, expected, found):
     message = '%s "%s" of unexpected %s. Expected:%s. Found:%s.'

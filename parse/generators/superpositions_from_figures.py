@@ -19,14 +19,14 @@ def superpositions_from_figures(figures):
 
 def _validate_figure(figure):
     "confirm figure type, length, and composition or raise ValueError"
-    Validate.type(basestring, figure, 'Figure')
+    Validate.type(str, figure, 'Figure')
     Validate.length(settings.strokes_per_figure, figure, 'Figure')
     Validate.composition(settings.valid_strokes, figure, 'Figure')
 
 def _superposition_from_figure(figure):
     "return Superposition represented by Figure"
     d = {}
-    for valid_figure, numeral in settings.figures.items():
+    for valid_figure, numeral in list(settings.figures.items()):
         difference_count = _count_differences(figure, valid_figure)
         d.setdefault(difference_count, set()).add(numeral)
     return d

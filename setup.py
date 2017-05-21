@@ -1,4 +1,4 @@
-from __future__ import print_function
+
 from setuptools import setup, find_packages
 from setuptools.command.test import test as TestCommand
 import io
@@ -18,7 +18,7 @@ def read(*filenames, **kwargs):
     return sep.join(buf)
 
 long_description = read('README.rst',)
-execfile('parse/version.py')
+exec(compile(open('parse/version.py').read(), 'parse/version.py', 'exec'))
 
 class PyTest(TestCommand):
     def finalize_options(self):

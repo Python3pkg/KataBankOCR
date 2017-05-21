@@ -72,13 +72,13 @@ class Figures:
     @staticmethod
     def get_random(count=None):
         "return random valid Figure[s]"
-        getter = lambda: random.choice(settings.figures.keys())
+        getter = lambda: random.choice(list(settings.figures.keys()))
         return get_one_or_more(getter, count)
 
     @staticmethod
     def from_numeral(numeral):
         "return the Figure that represents the given Numeral"
-        return settings.figures.keys()[settings.figures.values().index(numeral)]
+        return list(settings.figures.keys())[list(settings.figures.values()).index(numeral)]
 
     @classmethod
     def from_account(cls, account):
@@ -194,7 +194,7 @@ class Superpositions:
     @classmethod
     def from_account(cls, account):
         "return list of Superpositions from Figures in Account's Numerals"
-        return map(cls.from_numeral, account)
+        return list(map(cls.from_numeral, account))
 
     @staticmethod
     def of_valid_figures():
@@ -257,14 +257,14 @@ class ArbitraryValues:
             False, True, [], (), {}, '', None, object, int, list, dict, bool,
             [1, 2, 3], {1: 2}, {0}, (1, 2, 3), {1: 'a', 2: 'b'},
             'abc', '|', '-', '\r', 'foo', '1', '0', 'c', '=', '\t', '\r',
-            u'abc', u'|', u'-', u'\r', u'foo', u'1', u'0', u'c', u'=', u'\t', u'\r',
+            'abc', '|', '-', '\r', 'foo', '1', '0', 'c', '=', '\t', '\r',
             )
 
     @classmethod
     def non_iterables(cls):
         "return a list of arbitrary values over which one cannot iterate"
         not_iterable = lambda value: not cls._iterable(value)
-        return filter(not_iterable, cls._all)
+        return list(filter(not_iterable, cls._all))
 
     @staticmethod
     def _iterable(value):
@@ -279,26 +279,26 @@ class ArbitraryValues:
     def single_character_basestrings(cls):
         "return list of arbitrary single character basestrings"
         litmus = lambda value: len(value) == 1
-        return filter(litmus, cls.basestrings())
+        return list(filter(litmus, cls.basestrings()))
 
     @classmethod
     def basestrings(cls):
         "return list of arbitrary basestrings"
-        litmus = lambda value: isinstance(value, basestring)
-        return filter(litmus, cls._all)
+        litmus = lambda value: isinstance(value, str)
+        return list(filter(litmus, cls._all))
 
     @classmethod
     def non_basestrings(cls):
         "return set of arbitrary values that includes no basestrings"
-        litmus = lambda value: not isinstance(value, basestring)
-        return filter(litmus, cls._all)
+        litmus = lambda value: not isinstance(value, str)
+        return list(filter(litmus, cls._all))
 
     @classmethod
     def of_different_type(cls, value_or_type):
         "Return an arbitrary value not of value_or_type"
         avoided_type = cls._type(value_or_type)
         different_type = lambda value: not isinstance(value, avoided_type)
-        return filter(different_type, cls._all)
+        return list(filter(different_type, cls._all))
 
     @staticmethod
     def _type(value_or_type):

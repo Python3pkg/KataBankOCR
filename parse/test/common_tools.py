@@ -10,7 +10,7 @@ def _invalid_lengths(value):
     "return list of ints 0 to (valid_length * 4) excluding valid_length"
     valid_length = len(value)
     maximum_bad_length = valid_length * 4  # an arbitrary multiplier
-    lengths = range(maximum_bad_length + 1)
+    lengths = list(range(maximum_bad_length + 1))
     return [L for L in lengths if L != valid_length]
 
 def _fit_to_length(value, length):

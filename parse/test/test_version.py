@@ -13,7 +13,7 @@ def test_parse_version_info_matches_version_version_info():
 
 def test_version_type():
     "confirm version a string"
-    assert isinstance(parse.__version__, basestring)
+    assert isinstance(parse.__version__, str)
 
 def test_version_format():
     "confirm version contains three dot-delimited strings"

@@ -51,19 +51,19 @@ def _valid_accounts_by_error_count(superpositions, error_count):
     valid_accounts = set()
     for distribution in _error_distributions(superpositions, error_count):
         numeral_sets = _numeral_sets_by_error_distribution(superpositions, distribution)
-        accounts = map(''.join, product(*numeral_sets))
+        accounts = list(map(''.join, product(*numeral_sets)))
         valid_accounts |= set(filter(settings.checksum, accounts))
     return valid_accounts
 
 def _error_distributions(superpositions, total_errors):
     "return lists of error_counts each list with exactly total_errors"
     ECs_by_sup = curry(_error_counts_by_superposition, total_errors)
-    error_distributions = product(*map(ECs_by_sup, superpositions))
+    error_distributions = product(*list(map(ECs_by_sup, superpositions)))
     return [dist for dist in error_distributions if sum(dist) == total_errors]
 
 def _error_counts_by_superposition(max_error_count, superposition):
     "return list of error counts <= max_error_count"
-    return [error_count for error_count in superposition.keys() if error_count <= max_error_count]
+    return [error_count for error_count in list(superposition.keys()) if error_count <= max_error_count]
 
 def _numeral_sets_by_error_distribution(superpositions, distribution):
     "return sets of numerals with error counts matching distribution"

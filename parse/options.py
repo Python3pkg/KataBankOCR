@@ -11,7 +11,7 @@ Options:
 
 from docopt import docopt
 
-from version import __version__
+from .version import __version__
 
 def in_path_and_out_path():
     "return input_path and output_path from arguments"
